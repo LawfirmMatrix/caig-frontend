@@ -15,6 +15,23 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "paths": {
+      "dynamic-form": [
+        "dist/dynamic-form"
+      ],
+      "export-csv": [
+        "dist/export-csv"
+      ],
+      "file-upload": [
+        "dist/file-upload"
+      ],
+      "notifications": [
+        "dist/notifications"
+      ],
+      "vs-table": [
+        "dist/vs-table"
+      ]
+    },
     "importHelpers": true,
     "target": "es2020",
     "module": "es2020",

@@ -3,5 +3,363 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "caig-admin": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/caig-admin",
+      "sourceRoot": "projects/caig-admin/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/caig-admin",
+            "index": "projects/caig-admin/src/index.html",
+            "main": "projects/caig-admin/src/main.ts",
+            "polyfills": "projects/caig-admin/src/polyfills.ts",
+            "tsConfig": "projects/caig-admin/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/caig-admin/src/favicon.ico",
+              "projects/caig-admin/src/assets"
+            ],
+            "styles": [
+              "projects/caig-admin/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/caig-admin/src/environments/environment.ts",
+                  "with": "projects/caig-admin/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "caig-admin:build:production"
+            },
+            "development": {
+              "browserTarget": "caig-admin:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "caig-admin:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/caig-admin/src/test.ts",
+            "polyfills": "projects/caig-admin/src/polyfills.ts",
+            "tsConfig": "projects/caig-admin/tsconfig.spec.json",
+            "karmaConfig": "projects/caig-admin/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/caig-admin/src/favicon.ico",
+              "projects/caig-admin/src/assets"
+            ],
+            "styles": [
+              "projects/caig-admin/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "survey": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/survey",
+      "sourceRoot": "projects/survey/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/survey",
+            "index": "projects/survey/src/index.html",
+            "main": "projects/survey/src/main.ts",
+            "polyfills": "projects/survey/src/polyfills.ts",
+            "tsConfig": "projects/survey/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/survey/src/favicon.ico",
+              "projects/survey/src/assets"
+            ],
+            "styles": [
+              "projects/survey/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/survey/src/environments/environment.ts",
+                  "with": "projects/survey/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "survey:build:production"
+            },
+            "development": {
+              "browserTarget": "survey:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "survey:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/survey/src/test.ts",
+            "polyfills": "projects/survey/src/polyfills.ts",
+            "tsConfig": "projects/survey/tsconfig.spec.json",
+            "karmaConfig": "projects/survey/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/survey/src/favicon.ico",
+              "projects/survey/src/assets"
+            ],
+            "styles": [
+              "projects/survey/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "notifications": {
+      "projectType": "library",
+      "root": "projects/notifications",
+      "sourceRoot": "projects/notifications/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/notifications/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/notifications/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/notifications/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/notifications/src/test.ts",
+            "tsConfig": "projects/notifications/tsconfig.spec.json",
+            "karmaConfig": "projects/notifications/karma.conf.js"
+          }
+        }
+      }
+    },
+    "file-upload": {
+      "projectType": "library",
+      "root": "projects/file-upload",
+      "sourceRoot": "projects/file-upload/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/file-upload/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/file-upload/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/file-upload/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/file-upload/src/test.ts",
+            "tsConfig": "projects/file-upload/tsconfig.spec.json",
+            "karmaConfig": "projects/file-upload/karma.conf.js"
+          }
+        }
+      }
+    },
+    "export-csv": {
+      "projectType": "library",
+      "root": "projects/export-csv",
+      "sourceRoot": "projects/export-csv/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/export-csv/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/export-csv/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/export-csv/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/export-csv/src/test.ts",
+            "tsConfig": "projects/export-csv/tsconfig.spec.json",
+            "karmaConfig": "projects/export-csv/karma.conf.js"
+          }
+        }
+      }
+    },
+    "dynamic-form": {
+      "projectType": "library",
+      "root": "projects/dynamic-form",
+      "sourceRoot": "projects/dynamic-form/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/dynamic-form/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/dynamic-form/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/dynamic-form/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dynamic-form/src/test.ts",
+            "tsConfig": "projects/dynamic-form/tsconfig.spec.json",
+            "karmaConfig": "projects/dynamic-form/karma.conf.js"
+          }
+        }
+      }
+    },
+    "vs-table": {
+      "projectType": "library",
+      "root": "projects/vs-table",
+      "sourceRoot": "projects/vs-table/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/vs-table/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/vs-table/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/vs-table/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/vs-table/src/test.ts",
+            "tsConfig": "projects/vs-table/tsconfig.spec.json",
+            "karmaConfig": "projects/vs-table/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "b8365fe3-6630-4d63-b419-772c5254306b"
   }
 }
