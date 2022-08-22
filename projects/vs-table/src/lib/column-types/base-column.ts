@@ -20,6 +20,6 @@ export abstract class BaseColumn<T> {
     this.color = config.color;
     this.tooltip = config.tooltip;
     this.badge = config.badge;
-    this.fxFlex = config.fxFlex || 100;
+    this.fxFlex = config.fxFlex || 0;
   }
 }

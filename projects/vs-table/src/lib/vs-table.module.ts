@@ -8,8 +8,11 @@ import {AccountingPipe} from './pipes/accounting.pipe';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -20,10 +23,15 @@ import {MatIconModule} from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     ScrollingModule,
+    DragDropModule,
     MatProgressBarModule,
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatMenuModule,
+    MatBadgeModule,
   ],
   exports: [
     VsTableComponent
