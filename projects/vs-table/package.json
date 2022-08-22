@@ -2,8 +2,11 @@
   "name": "vs-table",
   "version": "0.0.1",
   "peerDependencies": {
+    "@angular/cdk": "^14.1.2",
     "@angular/common": "^14.1.0",
-    "@angular/core": "^14.1.0"
+    "@angular/core": "^14.1.0",
+    "@angular/flex-layout": "^14.0.0-beta.40",
+    "@angular/material": "^14.1.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"

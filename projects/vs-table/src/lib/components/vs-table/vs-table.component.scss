@@ -1,0 +1,59 @@
+.header, .footer {
+  z-index: 2;
+  min-height: 56px;
+  width: 100%;
+}
+
+.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+}
+
+th {
+  opacity: 0.8;
+}
+
+.header {
+  top: 0;
+}
+
+.footer {
+  bottom: 0;
+}
+
+.border-bottom {
+  border-bottom: 1px solid rgba(125,125,125,0.5);
+}
+
+.border-top {
+  border-top: 1px solid rgba(125,125,125,0.5);
+}
+
+.border-sides {
+  border-left: 1px solid rgba(125,125,125,0.5);
+  border-right: 1px solid rgba(125,125,125,0.5);
+}
+
+td, th {
+  padding: 0 5px;
+  word-break: break-word;
+}
+
+cdk-virtual-scroll-viewport {
+  tr:nth-child(odd) {
+    background: rgba(150, 150, 150, 0.2);
+  }
+}
+
+.select, .menu {
+  z-index: 3;
+  opacity: 1;
+}
+
+.select {
+  left: 0;
+}
+
+.menu {
+  right: 0;
+}

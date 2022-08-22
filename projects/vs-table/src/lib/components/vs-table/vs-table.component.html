@@ -1,0 +1,52 @@
+<div fxFlexFill fxLayout="column">
+  <div>
+    Options
+  </div>
+  <table fxFlex fxLayout="column" cdkVirtualScrollingElement>
+    <tr class="sticky header mat-app-background mat-elevation-z4 border-bottom" fxLayout="row" [style.minWidth.px]="minRowWidth">
+      <th *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select" fxLayoutAlign="center center">
+        <mat-checkbox [disabled]="disableSelectAll"></mat-checkbox>
+      </th>
+      <th *ngFor="let column of columns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
+        {{column.title}}
+      </th>
+      <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu" fxLayoutAlign="center center">
+        <button *ngIf="tableMenuItems" mat-icon-button>
+          <mat-icon>drag_indicator</mat-icon>
+        </button>
+      </th>
+    </tr>
+    <cdk-virtual-scroll-viewport [itemSize]="rowHeight" fxFlex>
+      <mat-progress-bar *ngIf="!data" mode="indeterminate" color="primary"></mat-progress-bar>
+      <tr *cdkVirtualFor="let row of data; let last = last; let i = index;"
+          [style.minWidth.px]="minRowWidth"
+          [style.minHeight.px]="rowHeight"
+          fxLayout="row"
+          class="border-sides"
+          [ngClass]="{'border-bottom': !last}">
+        <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select" fxLayoutAlign="center center">
+          <mat-checkbox></mat-checkbox>
+        </td>
+        <td *ngFor="let column of columns; let first = first;" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
+          {{row[column.field]}}
+        </td>
+        <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu" fxLayoutAlign="center center">
+          <button *ngIf="rowMenuItems" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </cdk-virtual-scroll-viewport>
+    <tr *ngIf="data && showFooter" class="sticky footer mat-app-background mat-elevation-z4 border-top" fxLayout="row" [style.minWidth.px]="minRowWidth">
+      <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select"></td>
+      <td *ngFor="let column of columns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
+        <div *ngIf="column.sum" [ngSwitch]="column.dataType">
+          <div *ngSwitchCase="columnDataTypes.currency">{{calculateColumnSum(column) | currency:'USD':'$' | accounting}}</div>
+          <div *ngSwitchCase="columnDataTypes.number">{{calculateColumnSum(column) | number:column.format}}</div>
+          <div *ngSwitchDefault>-</div>
+        </div>
+      </td>
+      <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu"></td>
+    </tr>
+  </table>
+</div>
