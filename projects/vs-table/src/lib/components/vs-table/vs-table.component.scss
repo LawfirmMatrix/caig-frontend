@@ -1,3 +1,9 @@
+.vs-table {
+  height: 100%;
+  width: 100%;
+  min-height: 314px;
+}
+
 .header, .footer {
   z-index: 2;
   min-height: 56px;
@@ -77,7 +83,7 @@ cdk-virtual-scroll-viewport {
 .cdk-drag-placeholder {
   background: #ccc;
   border: dotted 3px #999;
-  min-height: 60px;
+  min-height: 56px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
@@ -87,15 +93,16 @@ cdk-virtual-scroll-viewport {
 
 .cdk-drag-handle {
   cursor: move;
-  padding: 4px 4px 0 0;
-}
-
-.column-mouseover {
+  top: 0;
   position: absolute;
 }
 
 .column-filter {
   cursor: pointer;
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+  position: absolute;
 }
 
 mat-form-field {

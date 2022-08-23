@@ -73,6 +73,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
+  public columnFilters: {[key: string]: any} = {}; // @TODO - type
 
   constructor() {
 
@@ -179,6 +180,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     //   this.setVisibleColumns();
     // }
   }
+
+  // public columnFilterMenuToggle(column: TableColumn<T>, opened: boolean): void {
+  //   if (!this.columnFilters[column.field]) {
+  //     this.columnFilters[column.field] = {};
+  //   }
+  //   (this.columnFilters[column.field] as ColumnFilter).menuOpened = opened;
+  // }
 
   private setVisibleColumns(): void {
     this.visibleColumns = this.columns.filter((c) => !c.hide);

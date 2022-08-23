@@ -79,3 +79,13 @@ export interface TableColumn<T> {
 export interface ICalculateColumn<T> extends TableColumn<T> {
   calculate: (row: T) => string;
 }
+
+// export interface IColumnFilter {
+//   [key: string]: ColumnFilter | undefined;
+// }
+
+// export type ColumnFilter = {
+//   menuOpened?: boolean;
+//   filter?: string;
+//   selection?: string[];
+// };
