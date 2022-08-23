@@ -45,16 +45,16 @@ cdk-virtual-scroll-viewport {
   }
 }
 
-.select, .menu {
+.left, .right {
   z-index: 3;
   opacity: 1;
 }
 
-.select {
+.left {
   left: 0;
 }
 
-.menu {
+.right {
   right: 0;
 }
 
@@ -92,20 +92,10 @@ cdk-virtual-scroll-viewport {
 
 .column-mouseover {
   position: absolute;
-  right: 0;
 }
 
 .column-filter {
   cursor: pointer;
-}
-
-.stretch-badge > .mat-badge-content {
-  width: auto !important;
-  border-radius: 13px;
-  min-width: 22px;
-  min-height: 22px;
-  padding: 0 3px;
-  right: unset !important;
 }
 
 mat-form-field {
@@ -114,4 +104,16 @@ mat-form-field {
 
 .mat-mini-fab {
   margin: 0 16px 4px 0;
+}
+
+.selection-count {
+  position: absolute;
+  margin-top: -30px;
+  max-width: 40px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 400;
+  word-break: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

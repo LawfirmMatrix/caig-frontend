@@ -2,9 +2,9 @@
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
     <mat-form-field fxFlex appearance="fill" *ngIf="!disableSearch">
       <mat-label>Search <span *ngIf="data?.length as dataLength">{{dataLength}} record{{dataLength === 1 ? '' : 's'}}</span></mat-label>
-      <mat-icon class="stretch-badge" matPrefix [matBadge]="data && filter ? (filteredData.length | number) : null" matBadgePosition="above before">search</mat-icon>
-      <input #filterInput matInput type="text" [value]="filter" (keyup)="filter$.next(filterInput.value)" [disabled]="!data?.length">
-      <button *ngIf="data && filter" matSuffix mat-icon-button aria-label="Clear" (click)="filterRows('')">
+      <mat-icon class="stretch-badge" matPrefix [matBadge]="data && filteredData.length !== data.length ? (filteredData.length | number) : null" matBadgePosition="above before">search</mat-icon>
+      <input #filterInput="matInput" matInput type="text" [value]="filter" (keyup)="filter$.next(filterInput.value)" [disabled]="!data?.length">
+      <button *ngIf="filterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter(filterInput)">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
@@ -38,17 +38,29 @@
         cdkDropListOrientation="horizontal"
         cdkDropListLockAxis="x"
         cdkDropListAutoScrollDisabled
+        matSort
+        [matSortActive]="sort.active"
+        [matSortDirection]="sort.direction"
+        (matSortChange)="sortData($event)"
         (cdkDropListDropped)="changeColumnOrder($event)">
-      <th *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select" fxLayoutAlign="center center">
+      <th *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center">
+        <div class="selection-count" *ngIf="selection.selected.length as selected">{{selected | number}}</div>
         <mat-checkbox [disabled]="disableSelectAll || !data?.length"
                       (change)="selectAllToggle()"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
       </th>
       <th *ngIf="!visibleColumns.length" fxFlex></th>
-      <th *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign" (mouseenter)="mouseoverColumn = column" (mouseleave)="mouseoverColumn = null" class="cell mat-app-background" cdkDrag cdkDragBoundary=".header">
-        <div fxFlex *cdkDragPlaceholder></div>
-        <div *ngIf="column === mouseoverColumn" class="column-mouseover">
+      <th *ngFor="let column of visibleColumns"
+          [fxFlex]="column.fxFlex"
+          [fxLayoutAlign]="column.fxLayoutAlign"
+          (mouseenter)="mouseoverColumn = column"
+          (mouseleave)="mouseoverColumn = null"
+          class="cell mat-app-background"
+          cdkDrag
+          cdkDragBoundary=".header">
+        <div [fxFlex]="column.fxFlex" *cdkDragPlaceholder></div>
+        <div *ngIf="column === mouseoverColumn" class="column-mouseover" [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'">
           <svg class="column-filter" width="16px" fill="currentColor" viewBox="0 0 48 48">
             <path d="M22 40q-.85 0-1.425-.575Q20 38.85 20 38V26L8.05 10.75q-.7-.85-.2-1.8Q8.35 8 9.4 8h29.2q1.05 0 1.55.95t-.2 1.8L28 26v12q0 .85-.575 1.425Q26.85 40 26 40Zm2-13.8L36 11H12Zm0 0Z"/>
           </svg>
@@ -57,9 +69,9 @@
             <path d="M0 0h24v24H0z" fill="none"></path>
           </svg>
         </div>
-        {{column.title}}
+        <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
       </th>
-      <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu" fxLayoutAlign="center center">
+      <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">
         <button *ngIf="tableMenuItems" mat-icon-button>
           <mat-icon>drag_indicator</mat-icon>
         </button>
@@ -67,20 +79,20 @@
     </tr>
     <cdk-virtual-scroll-viewport [itemSize]="rowHeight" fxFlex>
       <mat-progress-bar *ngIf="!data" mode="indeterminate" color="primary"></mat-progress-bar>
-      <tr *cdkVirtualFor="let row of data; let last = last; let i = index;"
+      <tr *cdkVirtualFor="let row of filteredData; let last = last"
           [style.minWidth.px]="minRowWidth"
           [style.minHeight.px]="rowHeight"
           fxLayout="row"
           class="border-sides"
           [ngClass]="{'border-bottom': !last}">
-        <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select" fxLayoutAlign="center center">
+        <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center">
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
         </td>
         <td *ngIf="!visibleColumns.length" fxFlex></td>
         <td *ngFor="let column of visibleColumns; let first = first;" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
           {{row[column.field]}}
         </td>
-        <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu" fxLayoutAlign="center center">
+        <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">
           <button *ngIf="rowMenuItems" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -88,7 +100,7 @@
       </tr>
     </cdk-virtual-scroll-viewport>
     <tr *ngIf="data && showFooter" class="sticky footer mat-app-background mat-elevation-z4 border-top" fxLayout="row" [style.minWidth.px]="minRowWidth">
-      <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background select"></td>
+      <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background left"></td>
       <td *ngIf="!visibleColumns.length" fxFlex></td>
       <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
         <div *ngIf="column.sum" [ngSwitch]="column.dataType">
@@ -97,7 +109,7 @@
           <div *ngSwitchDefault>-</div>
         </div>
       </td>
-      <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background menu"></td>
+      <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right"></td>
     </tr>
   </table>
 </div>

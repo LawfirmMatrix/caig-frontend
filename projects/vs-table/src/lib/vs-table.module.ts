@@ -13,6 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatInputModule,
     MatMenuModule,
     MatBadgeModule,
+    MatSortModule,
   ],
   exports: [
     VsTableComponent

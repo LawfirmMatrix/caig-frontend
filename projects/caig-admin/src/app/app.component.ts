@@ -18,6 +18,7 @@ export class AppComponent {
     new TextColumn({
       title: 'Employee',
       field: 'employeeName',
+      fxLayoutAlign: 'end center',
     }),
     new DateColumn({
       title: 'Date',
@@ -27,6 +28,7 @@ export class AppComponent {
     new TextColumn({
       title: 'Message',
       field: 'message',
+      fxFlex: 33,
     }),
     new TextColumn({
       title: 'Type',

@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component, EventEmitter, Input,
   OnChanges,
   OnDestroy,
@@ -17,16 +16,16 @@ import {
   TableMenuItem
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
-import {round, some} from 'lodash-es';
+import {orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {Subject} from 'rxjs';
+import {BehaviorSubject, debounceTime, skip} from 'rxjs';
+import {MatInput} from '@angular/material/input';
 
 @Component({
   selector: 'vs-table',
   templateUrl: './vs-table.component.html',
   styleUrls: ['./vs-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() public data: T[] | null = null;
@@ -67,7 +66,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     calc: TableColumnDataType.Calculate,
   };
   public readonly selection = new SelectionModel<T>(true, []);
-  public readonly filter$ = new Subject<string>();
+  public readonly filter$ = new BehaviorSubject<string>('');
 
   public showFooter = false;
   public minRowWidth = 0;
@@ -80,7 +79,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public ngOnInit() {
-
+    this.filter$
+      .pipe(skip(1), debounceTime(200))
+      .subscribe((filter) => this.filterData(filter, true));
   }
 
   public ngAfterViewInit() {
@@ -95,11 +96,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         (this.rowMenuItems || this.tableMenuItems ? this.rowHeight : 0);
       this.setVisibleColumns();
     }
-    if (changes['data']?.currentValue) {
-      this.filteredData = this.data ? this.data.slice() : []; // @TODO
-    }
-    if (changes['filter']?.currentValue) {
-      this.filter$.next(this.filter);
+    if (changes['data']?.currentValue || changes['filter']?.currentValue || changes['sort']?.currentValue) {
+      this.filterData(this.filter$.value, true);
     }
   }
 
@@ -127,27 +125,33 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     }
   }
 
-  public sortChange(event: Sort): void {
+  public sortData(event: Sort = this.sort): void {
     this.sort = event;
-    // this.saveCache(['sort']);
+    if (!event || !event.active || !event.direction) {
+      this.filterData(this.filter$.value, false);
+      return;
+    }
+    this.filteredData = orderBy(this.filteredData, event.active, event.direction);
+    // this.updateTableCache();
   }
 
   public calculateColumnSum(column: TableColumn<T>): number | undefined {
-    console.log(column);
     return this.data?.reduce((prev, curr) =>
       round(prev + Number(curr[column.field] || 0), 2), 0);
   }
 
   public changeColumnOrder(event: CdkDragDrop<TableColumn<T>[]>): void {
-    console.log(event);
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+    const previousIndex = this.columns.findIndex((c) => c === this.visibleColumns[event.previousIndex]);
+    const currentIndex = this.columns.findIndex((c) => c === this.visibleColumns[event.currentIndex]);
+    moveItemInArray(this.visibleColumns, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.columns, previousIndex, currentIndex);
     // this.setVisibleColumns();
     // this.saveCache(['columns']);
   }
 
-  public filterRows(filter: string): void {
-    this.filter = filter;
-    // this.saveCache(['filter']);
+  public clearFilter(input: MatInput): void {
+    input.value = '';
+    this.filter$.next('');
   }
 
   public toggleColumnHide(column: TableColumn<T>, event?: MouseEvent): void {
@@ -178,5 +182,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   private setVisibleColumns(): void {
     this.visibleColumns = this.columns.filter((c) => !c.hide);
+  }
+
+  private filterData(filter: string, sort: boolean): void {
+    const data = this.data || [];
+    this.filteredData = filter ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(filter.toLowerCase())) : data;
+    if (sort) {
+      this.sortData();
+    }
   }
 }
