@@ -45,10 +45,8 @@ td, th {
   word-break: break-word;
 }
 
-cdk-virtual-scroll-viewport {
-  tr:nth-child(odd) {
-    background: rgba(150, 150, 150, 0.2);
-  }
+.odd-row {
+  background: rgba(150, 150, 150, 0.2);
 }
 
 .left, .right {
@@ -123,4 +121,8 @@ mat-form-field {
   word-break: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.pointer {
+  cursor: pointer;
 }

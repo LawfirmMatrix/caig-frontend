@@ -14,11 +14,15 @@ import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSortModule} from '@angular/material/sort';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatDividerModule} from '@angular/material/divider';
+import {CalculatePipe} from './pipes/calculate.pipe';
 
 @NgModule({
   declarations: [
     VsTableComponent,
     AccountingPipe,
+    CalculatePipe,
   ],
   imports: [
     CommonModule,
@@ -34,6 +38,8 @@ import {MatSortModule} from '@angular/material/sort';
     MatMenuModule,
     MatBadgeModule,
     MatSortModule,
+    MatTooltipModule,
+    MatDividerModule,
   ],
   exports: [
     VsTableComponent

@@ -74,6 +74,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
   public columnFilters: {[key: string]: any} = {}; // @TODO - type
+  public columnSummaries: {[key: string]: number} = {};
 
   constructor() {
 
@@ -96,6 +97,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         (this.disableSelection ? 0 : this.rowHeight) +
         (this.rowMenuItems || this.tableMenuItems ? this.rowHeight : 0);
       this.setVisibleColumns();
+      this.calculateColumnSummaries();
     }
     if (changes['data']?.currentValue || changes['filter']?.currentValue || changes['sort']?.currentValue) {
       this.filterData(this.filter$.value, true);
@@ -136,10 +138,10 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     // this.updateTableCache();
   }
 
-  public calculateColumnSum(column: TableColumn<T>): number | undefined {
-    return this.data?.reduce((prev, curr) =>
-      round(prev + Number(curr[column.field] || 0), 2), 0);
-  }
+  // public calculateColumnSum(column: TableColumn<T>): number | undefined {
+  //   return this.data?.reduce((prev, curr) =>
+  //     round(prev + Number(curr[column.field] || 0), 2), 0);
+  // }
 
   public changeColumnOrder(event: CdkDragDrop<TableColumn<T>[]>): void {
     const previousIndex = this.columns.findIndex((c) => c === this.visibleColumns[event.previousIndex]);
@@ -195,8 +197,17 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private filterData(filter: string, sort: boolean): void {
     const data = this.data || [];
     this.filteredData = filter ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(filter.toLowerCase())) : data;
+    this.calculateColumnSummaries();
     if (sort) {
       this.sortData();
     }
+  }
+
+  private calculateColumnSummaries(): void {
+    this.columns
+      .filter((c) => c.sum)
+      .forEach((c) =>
+        this.columnSummaries[c.field] = this.filteredData.reduce((prev, curr) =>
+          round(prev + Number(curr[c.field] || 0), 2), 0));
   }
 }

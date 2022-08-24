@@ -140,7 +140,7 @@
     <cdk-virtual-scroll-viewport [itemSize]="rowHeight" fxFlex>
       <mat-progress-bar *ngIf="!data" mode="indeterminate" color="primary"></mat-progress-bar>
       <h1 *ngIf="data && !filteredData.length">No results found</h1>
-      <tr *cdkVirtualFor="let row of filteredData; let last = last"
+      <tr *cdkVirtualFor="let row of filteredData; let i = index; let last = last;"
           [style.minWidth.px]="minRowWidth"
           [style.minHeight.px]="rowHeight"
           fxLayout="row"
@@ -150,8 +150,34 @@
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
         </td>
         <td *ngIf="!visibleColumns.length" fxFlex></td>
-        <td *ngFor="let column of visibleColumns; let first = first;" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
-          {{row[column.field]}}
+        <td *ngFor="let column of visibleColumns"
+            [fxFlex]="column.fxFlex"
+            [fxLayoutAlign]="column.fxLayoutAlign"
+            [ngSwitch]="column.dataType"
+            [ngClass]="{'pointer': !disableRowClick, 'odd-row': i % 2 !== 0}">
+          <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
+            <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
+                 [matBadgeColor]="column.badge ? column.badge.color : undefined"
+                 [matTooltip]="column.tooltip ? column.tooltip(row) : ''">
+              <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
+              <div *ngSwitchCase="columnDataTypes.currency">{{row[column.field] | currency:'USD':'$' | accounting}}</div>
+              <div *ngSwitchCase="columnDataTypes.number">{{row[column.field] | number:column.format}}</div>
+              <div *ngSwitchCase="columnDataTypes.calc">{{row | calculate:column:columns}}</div>
+              <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row | calculate:column:columns}}</mat-icon></div>
+              <div *ngSwitchCase="columnDataTypes.changes">
+                <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
+                  <b>{{item.field}}:</b>
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+                    <div>{{item.oldValue}}</div>
+                    <mat-icon>arrow_right</mat-icon>
+                    <div>{{item.newValue}}</div>
+                  </div>
+                  <mat-divider *ngIf="!last"></mat-divider>
+                </div>
+              </div>
+              <div *ngSwitchDefault>{{row[column.field]}}</div>
+            </div>
+          </div>
         </td>
         <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">
           <button *ngIf="rowMenuItems" mat-icon-button>
@@ -165,8 +191,8 @@
       <td *ngIf="!visibleColumns.length" fxFlex></td>
       <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
         <div *ngIf="column.sum" [ngSwitch]="column.dataType">
-          <div *ngSwitchCase="columnDataTypes.currency">{{calculateColumnSum(column) | currency:'USD':'$' | accounting}}</div>
-          <div *ngSwitchCase="columnDataTypes.number">{{calculateColumnSum(column) | number:column.format}}</div>
+          <div *ngSwitchCase="columnDataTypes.currency">{{columnSummaries[column.field] | currency:'USD':'$' | accounting}}</div>
+          <div *ngSwitchCase="columnDataTypes.number">{{columnSummaries[column.field] | number:column.format}}</div>
           <div *ngSwitchDefault>-</div>
         </div>
       </td>

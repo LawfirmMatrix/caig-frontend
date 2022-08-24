@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {TableColumn, TextColumn, DateColumn, ChangesColumn} from 'vs-table';
 import {HttpClient} from '@angular/common/http';
 import {delay} from 'rxjs';
+import {CurrencyColumn} from '../../../vs-table/src/lib/column-types/currency-column';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,6 @@ export class AppComponent {
     new TextColumn({
       title: 'Employee',
       field: 'employeeName',
-      fxLayoutAlign: 'end center',
     }),
     new DateColumn({
       title: 'Date',
@@ -42,5 +42,10 @@ export class AppComponent {
       title: 'Changes',
       field: 'changes',
     }),
+    new CurrencyColumn({
+      title: 'Code',
+      field: 'code',
+      sum: true,
+    })
   ];
 }
