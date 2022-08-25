@@ -19,8 +19,9 @@ import {Sort} from '@angular/material/sort';
 import {orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {BehaviorSubject, debounceTime, skip} from 'rxjs';
+import {BehaviorSubject, debounceTime, merge, skip, Subject} from 'rxjs';
 import {MatInput} from '@angular/material/input';
+import {ColumnFilter} from './column-filter';
 
 @Component({
   selector: 'vs-table',
@@ -52,10 +53,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   // @ViewChild(MatSort) public matSort!: MatSort;
 
   public static readonly DEFAULT_SORT: Sort = { active: '', direction: '' };
+  public static readonly FILTER_DEBOUNCE_TIME: number = 200;
 
   public readonly stickyCellWidth = 40;
   public readonly rowHeight = 48;
+  public readonly menuRowHeight = 22;
   public readonly columnWidth = 120;
+  public readonly nullColumnValue = '< blank >';
   public readonly columnDataTypes = {
     text: TableColumnDataType.Text,
     changes: TableColumnDataType.Changes,
@@ -73,8 +77,10 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
-  public columnFilters: {[key: string]: any} = {}; // @TODO - type
+  public columnFilters: {[key: string]: ColumnFilter | undefined } = {};
   public columnSummaries: {[key: string]: number} = {};
+
+  private unsortedFilteredData: T[] = [];
 
   constructor() {
 
@@ -82,8 +88,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   public ngOnInit() {
     this.filter$
-      .pipe(skip(1), debounceTime(200))
-      .subscribe((filter) => this.filterData(filter, true));
+      .pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME))
+      .subscribe(() => this.filterData());
   }
 
   public ngAfterViewInit() {
@@ -100,7 +106,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.calculateColumnSummaries();
     }
     if (changes['data']?.currentValue || changes['filter']?.currentValue || changes['sort']?.currentValue) {
-      this.filterData(this.filter$.value, true);
+      this.filterData();
     }
   }
 
@@ -131,30 +137,24 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public sortData(event: Sort = this.sort): void {
     this.sort = event;
     if (!event || !event.active || !event.direction) {
-      this.filterData(this.filter$.value, false);
+      this.filteredData = this.unsortedFilteredData.slice();
       return;
     }
     this.filteredData = orderBy(this.filteredData, event.active, event.direction);
-    // this.updateTableCache();
+    // this.saveCache(['sort']);
   }
-
-  // public calculateColumnSum(column: TableColumn<T>): number | undefined {
-  //   return this.data?.reduce((prev, curr) =>
-  //     round(prev + Number(curr[column.field] || 0), 2), 0);
-  // }
 
   public changeColumnOrder(event: CdkDragDrop<TableColumn<T>[]>): void {
     const previousIndex = this.columns.findIndex((c) => c === this.visibleColumns[event.previousIndex]);
     const currentIndex = this.columns.findIndex((c) => c === this.visibleColumns[event.currentIndex]);
     moveItemInArray(this.visibleColumns, event.previousIndex, event.currentIndex);
     moveItemInArray(this.columns, previousIndex, currentIndex);
-    // this.setVisibleColumns();
     // this.saveCache(['columns']);
   }
 
-  public clearFilter(input: MatInput): void {
+  public clearFilter(input: MatInput, filter$: Subject<string>): void {
     input.value = '';
-    this.filter$.next('');
+    filter$.next('');
   }
 
   public toggleColumnHide(column: TableColumn<T>, event?: MouseEvent): void {
@@ -165,6 +165,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public exportData(): void {
+    // @TODO
     // const columns = this.filterHiddenColumns();
     // if (!this.exportConfig) {
     //   this.dialog.open(ExportDataComponent, { width: '250px' })
@@ -177,29 +178,63 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public resetCached(): void {
+    // @TODO
     // this.clearCache();
     // if (this.columns) {
     //   this.setVisibleColumns();
     // }
   }
 
-  // public columnFilterMenuToggle(column: TableColumn<T>, opened: boolean): void {
-  //   if (!this.columnFilters[column.field]) {
-  //     this.columnFilters[column.field] = {};
-  //   }
-  //   (this.columnFilters[column.field] as ColumnFilter).menuOpened = opened;
-  // }
+  public openColumnFilter(column: TableColumn<T>): void {
+    if (!this.columnFilters[column.field]) {
+      const columnFilter = new ColumnFilter(column);
+      this.columnFilters[column.field] = columnFilter;
+      this.subscribeToColumnFilter(columnFilter);
+      columnFilter.calculateUniqueColumnValues(this.data || []);
+    }
+    (this.columnFilters[column.field] as ColumnFilter).menuOpened = true;
+  }
+
+  public closeColumnFilter(column: TableColumn<T>): void {
+    if (this.columnFilters[column.field]) {
+      (this.columnFilters[column.field] as ColumnFilter).menuOpened = false;
+    }
+  }
+
+  public clearColumnFilter(column: TableColumn<T>): void {
+    delete this.columnFilters[column.field];
+    this.filterData();
+  }
+
+  private subscribeToColumnFilter(columnFilter: ColumnFilter): void {
+    const freeForm$ = columnFilter.filter$.pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME));
+    merge(freeForm$, columnFilter.selection.changed).subscribe(() => {
+      this.filterData();
+      columnFilter.calculateUniqueColumnValues(this.data || []);
+    });
+  }
 
   private setVisibleColumns(): void {
     this.visibleColumns = this.columns.filter((c) => !c.hide);
   }
 
-  private filterData(filter: string, sort: boolean): void {
+  private filterData(): void {
     const data = this.data || [];
-    this.filteredData = filter ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(filter.toLowerCase())) : data;
+    this.filteredData = this.filter$.value ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
+    for (let columnFiltersKey in this.columnFilters) {
+      this.filterByColumn(this.columnFilters[columnFiltersKey] as ColumnFilter);
+    }
+    this.unsortedFilteredData = this.filteredData.slice();
     this.calculateColumnSummaries();
-    if (sort) {
-      this.sortData();
+    this.sortData();
+  }
+
+  private filterByColumn(columnFilter: ColumnFilter): void {
+    if (columnFilter.selection.selected.length) {
+      this.filteredData = this.filteredData.filter((row: any) => columnFilter.selection.selected.indexOf(row[columnFilter.column.field].toString()) > -1);
+    }
+    if (columnFilter.filter$.value) {
+      this.filteredData = this.filteredData.filter((row: any) => JSON.stringify(row[columnFilter.column.field]).toLowerCase().includes(columnFilter.filter$.value.toLowerCase()));
     }
   }
 

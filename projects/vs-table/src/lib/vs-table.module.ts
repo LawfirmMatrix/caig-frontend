@@ -17,6 +17,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
 import {CalculatePipe} from './pipes/calculate.pipe';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {CalculatePipe} from './pipes/calculate.pipe';
     FlexLayoutModule,
     ScrollingModule,
     DragDropModule,
+    OverlayModule,
     MatProgressBarModule,
     MatCheckboxModule,
     MatButtonModule,
