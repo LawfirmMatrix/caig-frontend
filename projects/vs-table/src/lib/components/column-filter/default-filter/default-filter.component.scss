@@ -1,0 +1,10 @@
+.default-filter {
+  max-height: 200px;
+}
+
+.value {
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+}

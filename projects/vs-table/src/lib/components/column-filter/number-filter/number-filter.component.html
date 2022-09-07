@@ -1,0 +1,16 @@
+<div fxLayout="column">
+  <mat-form-field appearance="outline">
+    <mat-label>From</mat-label>
+    <input #from="matInput" matInput type="number">
+    <button *ngIf="from.value" matSuffix mat-icon-button aria-label="Clear" (click)="from.value = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>To</mat-label>
+    <input #to="matInput" matInput type="number">
+    <button *ngIf="to.value" matSuffix mat-icon-button aria-label="Clear" (click)="to.value = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

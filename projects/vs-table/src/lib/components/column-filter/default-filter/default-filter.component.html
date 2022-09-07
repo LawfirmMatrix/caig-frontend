@@ -1,0 +1,8 @@
+<div cdkVirtualScrollingElement class="default-filter" [style.height.px]="uniqueColumnValues.length * rowHeight">
+  <cdk-virtual-scroll-viewport (scrolledIndexChange)="currentIndex = $event" fxFlex [itemSize]="rowHeight" minBufferPx="200">
+    <div *cdkVirtualFor="let value of uniqueColumnValues" [style.height.px]="rowHeight" fxLayout="row" fxLayoutGap="10px">
+      <mat-checkbox [checked]="selection.isSelected(value)" (change)="selection.toggle(value)"></mat-checkbox>
+      <div class="value">{{value}}</div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

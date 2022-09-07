@@ -3,7 +3,7 @@
     <mat-form-field fxFlex appearance="fill" *ngIf="!disableSearch">
       <mat-label>Search <span *ngIf="data?.length as dataLength">{{dataLength}} record{{dataLength === 1 ? '' : 's'}}</span></mat-label>
       <mat-icon class="stretch-badge" matPrefix [matBadge]="data && filteredData.length !== data.length ? (filteredData.length | number) : null" matBadgePosition="above before">search</mat-icon>
-      <input #filterInput="matInput" matInput type="text" [value]="filter" (keyup)="filter$.next(filterInput.value)" [disabled]="!data?.length">
+      <input #filterInput="matInput" matInput type="text" [value]="filter" (change)="filter$.next(filterInput.value)" (keyup)="filter$.next(filterInput.value)" [disabled]="!data?.length">
       <button *ngIf="filterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter(filterInput, filter$)">
         <mat-icon>close</mat-icon>
       </button>
@@ -54,6 +54,7 @@
       <th *ngFor="let column of visibleColumns"
           [fxFlex]="column.fxFlex"
           [fxLayoutAlign]="column.fxLayoutAlign"
+          [ngClass]="{'th-border': mouseoverColumn === column}"
           (mouseenter)="mouseoverColumn = column"
           (mouseleave)="mouseoverColumn = null"
           class="cell mat-app-background"
@@ -68,61 +69,95 @@
         </mat-icon>
         <mat-icon class="column-filter"
                   aria-label="Filter"
-                  *ngIf="column === mouseoverColumn || columnFilters[column.field]?.menuOpened || columnFilters[column.field]?.isActive"
+                  #trigger="matMenuTrigger"
+                  [style.display]="column !== mouseoverColumn && !trigger.menuOpen ? 'none' : 'initial'"
                   [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"
-                  [matMenuTriggerFor]="columnFilterMenu"
-                  (click)="openColumnFilter(column)"
-                  [color]="columnFilters[column.field]?.isActive ? 'accent' : undefined">
+                  [matMenuTriggerFor]="columnFilterMenu">
           filter_alt
         </mat-icon>
-        <mat-icon *ngIf="columnFilters[column.field]?.isActive"
-                  [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"
-                  class="column-filter"
-                  aria-label="Clear"
-                  style="bottom: 0"
-                  (click)="clearColumnFilter(column)"
-                  color="warn">
-          close
-        </mat-icon>
+<!--        <mat-icon class="column-filter"-->
+<!--                  aria-label="Filter"-->
+<!--                  *ngIf="column === mouseoverColumn || columnFilters[column.field]?.isActive"-->
+<!--                  [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"-->
+<!--                  [matMenuTriggerFor]="columnFilterMenu"-->
+<!--                  (click)="openColumnFilter(column)"-->
+<!--                  [color]="columnFilters[column.field]?.isActive ? 'accent' : undefined">-->
+<!--          filter_alt-->
+<!--        </mat-icon>-->
+<!--        <mat-icon *ngIf="columnFilters[column.field]?.isActive"-->
+<!--                  [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"-->
+<!--                  class="column-filter"-->
+<!--                  aria-label="Clear"-->
+<!--                  style="bottom: 0"-->
+<!--                  (click)="clearColumnFilter(column)"-->
+<!--                  color="warn">-->
+<!--          close-->
+<!--        </mat-icon>-->
         <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
-        <mat-menu #columnFilterMenu="matMenu" (close)="closeColumnFilter(column)">
-          <div *ngIf="columnFilters[column.field] as cf" fxLayout="column" class="column-filter-viewport" (click)="$event.stopPropagation()">
+        <mat-menu #columnFilterMenu="matMenu">
+          <div fxLayout="column" class="column-filter-viewport" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
             <mat-form-field color="accent">
               <input autocomplete="off"
                      matInput
                      #colFilterInput="matInput"
-                     (keyup)="cf.filter$.next(colFilterInput.value)"
-                     [disabled]="!cf.uniqueColumnValues.length"
                      placeholder="Filter by {{column.title}}">
-              <button *ngIf="colFilterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter(colFilterInput, cf.filter$)">
+              <button *ngIf="colFilterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="colFilterInput.value = ''">
                 <mat-icon color="warn">close</mat-icon>
               </button>
             </mat-form-field>
             <mat-divider></mat-divider>
-            <div cdkVirtualScrollingElement [style.height.px]="cf.selection.selected.length * menuRowHeight" class="filter-selected">
-              <cdk-virtual-scroll-viewport fxFlex [itemSize]="menuRowHeight">
-                <div *cdkVirtualFor="let value of cf.selection.selected; let i = index;" class="row" fxLayout="row" fxLayoutGap="10px">
-                  <mat-icon color="warn" class="deselect" (click)="cf.selection.toggle(value)">close</mat-icon>
-                  <div>{{value}}</div>
-                </div>
-              </cdk-virtual-scroll-viewport>
-            </div>
-            <mat-divider *ngIf="cf.selection.selected.length"></mat-divider>
             <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">
               <mat-checkbox></mat-checkbox>
-              <div [fxLayoutAlign]="column.fxLayoutAlign">{{ nullColumnValue }}</div>
+              <b> [ No Value ] </b>
             </div>
-            <mat-divider></mat-divider>
-            <div cdkVirtualScrollingElement fxFlex>
-              <cdk-virtual-scroll-viewport fxFlex [itemSize]="menuRowHeight" minBufferPx="200">
-                <div *cdkVirtualFor="let value of cf.uniqueColumnValues" class="row" fxLayout="row" fxLayoutGap="10px">
-                  <mat-checkbox [checked]="cf.selection.isSelected(value)" (change)="cf.selection.toggle(value)"></mat-checkbox>
-                  <div>{{value}}</div>
-                </div>
-              </cdk-virtual-scroll-viewport>
-            </div>
-            <mat-divider></mat-divider>
+            <mat-divider style="margin-bottom: 16px"></mat-divider>
+            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date"></vs-table-date-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency"></vs-table-number-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number"></vs-table-number-filter>
+            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon"></vs-table-icon-filter>
+            <vs-table-default-filter *ngSwitchCase="columnDataTypes.changes"></vs-table-default-filter>
+            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc"></vs-table-default-filter>
+            <vs-table-default-filter *ngSwitchDefault [menuOpen]="trigger.menuOpen"></vs-table-default-filter>
           </div>
+
+
+<!--          <div *ngIf="columnFilters[column.field] as cf" fxLayout="column" class="column-filter-viewport" (click)="$event.stopPropagation()">-->
+<!--            <mat-form-field color="accent">-->
+<!--              <input autocomplete="off"-->
+<!--                     matInput-->
+<!--                     #colFilterInput="matInput"-->
+<!--                     (keyup)="cf.filter$.next(colFilterInput.value)"-->
+<!--                     [disabled]="!cf.uniqueColumnValues.length"-->
+<!--                     placeholder="Filter by {{column.title}}">-->
+<!--              <button *ngIf="colFilterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter(colFilterInput, cf.filter$)">-->
+<!--                <mat-icon color="warn">close</mat-icon>-->
+<!--              </button>-->
+<!--            </mat-form-field>-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div cdkVirtualScrollingElement [style.height.px]="cf.selection.selected.length * menuRowHeight" class="filter-selected">-->
+<!--              <cdk-virtual-scroll-viewport fxFlex [itemSize]="menuRowHeight">-->
+<!--                <div *cdkVirtualFor="let value of cf.selection.selected; let i = index;" class="row" fxLayout="row" fxLayoutGap="10px">-->
+<!--                  <mat-icon color="warn" class="deselect" (click)="cf.selection.toggle(value)">close</mat-icon>-->
+<!--                  <div>{{value}}</div>-->
+<!--                </div>-->
+<!--              </cdk-virtual-scroll-viewport>-->
+<!--            </div>-->
+<!--            <mat-divider *ngIf="cf.selection.selected.length"></mat-divider>-->
+<!--            <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">-->
+<!--              <mat-checkbox [checked]="cf.filterBlank$.value" (change)="cf.filterBlank$.next($event.checked)"></mat-checkbox>-->
+<!--              <div>{{ nullColumnValue }}</div>-->
+<!--            </div>-->
+<!--            <mat-divider></mat-divider>-->
+<!--            <div cdkVirtualScrollingElement fxFlex>-->
+<!--              <cdk-virtual-scroll-viewport fxFlex [itemSize]="menuRowHeight" minBufferPx="200">-->
+<!--                <div *cdkVirtualFor="let value of cf.uniqueColumnValues" class="row" fxLayout="row" fxLayoutGap="10px">-->
+<!--                  <mat-checkbox [checked]="cf.selection.isSelected(value)" (change)="cf.selection.toggle(value)"></mat-checkbox>-->
+<!--                  <div>{{value}}</div>-->
+<!--                </div>-->
+<!--              </cdk-virtual-scroll-viewport>-->
+<!--            </div>-->
+<!--            <mat-divider></mat-divider>-->
+<!--          </div>-->
         </mat-menu>
       </th>
       <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">

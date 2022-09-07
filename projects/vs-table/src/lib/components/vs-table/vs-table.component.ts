@@ -1,9 +1,12 @@
 import {
   AfterViewInit,
-  Component, EventEmitter, Input,
+  Component,
+  EventEmitter,
+  Input,
   OnChanges,
   OnDestroy,
-  OnInit, Output,
+  OnInit,
+  Output,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -19,9 +22,8 @@ import {Sort} from '@angular/material/sort';
 import {orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {BehaviorSubject, debounceTime, merge, skip, Subject} from 'rxjs';
+import {BehaviorSubject, debounceTime, skip, Subject} from 'rxjs';
 import {MatInput} from '@angular/material/input';
-import {ColumnFilter} from './column-filter';
 
 @Component({
   selector: 'vs-table',
@@ -57,9 +59,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   public readonly stickyCellWidth = 40;
   public readonly rowHeight = 48;
-  public readonly menuRowHeight = 22;
   public readonly columnWidth = 120;
-  public readonly nullColumnValue = '< blank >';
   public readonly columnDataTypes = {
     text: TableColumnDataType.Text,
     changes: TableColumnDataType.Changes,
@@ -77,7 +77,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
-  public columnFilters: {[key: string]: ColumnFilter | undefined } = {};
+  // public columnFilters: {[key: string]: ColumnFilter | undefined } = {};
   public columnSummaries: {[key: string]: number} = {};
 
   private unsortedFilteredData: T[] = [];
@@ -185,34 +185,34 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     // }
   }
 
-  public openColumnFilter(column: TableColumn<T>): void {
-    if (!this.columnFilters[column.field]) {
-      const columnFilter = new ColumnFilter(column);
-      this.columnFilters[column.field] = columnFilter;
-      this.subscribeToColumnFilter(columnFilter);
-      columnFilter.calculateUniqueColumnValues(this.data || []);
-    }
-    (this.columnFilters[column.field] as ColumnFilter).menuOpened = true;
-  }
+  // public openColumnFilter(column: TableColumn<T>): void {
+  //   if (!this.columnFilters[column.field]) {
+  //     const columnFilter = this.columnFilterService.create(column);
+  //     this.columnFilters[column.field] = columnFilter;
+  //     this.subscribeToColumnFilter(columnFilter);
+  //     columnFilter.calculateUniqueColumnValues(this.data || []);
+  //   }
+  //   (this.columnFilters[column.field] as ColumnFilter).menuOpened = true;
+  // }
 
-  public closeColumnFilter(column: TableColumn<T>): void {
-    if (this.columnFilters[column.field]) {
-      (this.columnFilters[column.field] as ColumnFilter).menuOpened = false;
-    }
-  }
+  // public closeColumnFilter(column: TableColumn<T>): void {
+  //   if (this.columnFilters[column.field]) {
+  //     (this.columnFilters[column.field] as ColumnFilter).menuOpened = false;
+  //   }
+  // }
 
-  public clearColumnFilter(column: TableColumn<T>): void {
-    delete this.columnFilters[column.field];
-    this.filterData();
-  }
-
-  private subscribeToColumnFilter(columnFilter: ColumnFilter): void {
-    const freeForm$ = columnFilter.filter$.pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME));
-    merge(freeForm$, columnFilter.selection.changed).subscribe(() => {
-      this.filterData();
-      columnFilter.calculateUniqueColumnValues(this.data || []);
-    });
-  }
+  // public clearColumnFilter(column: TableColumn<T>): void {
+  //   delete this.columnFilters[column.field];
+  //   this.filterData();
+  // }
+  //
+  // private subscribeToColumnFilter(columnFilter: ColumnFilter): void {
+  //   const freeForm$ = columnFilter.filter$.pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME));
+  //   merge(freeForm$, columnFilter.selection.changed, columnFilter.filterBlank$).subscribe(() => {
+  //     this.filterData();
+  //     columnFilter.calculateUniqueColumnValues(this.data || []);
+  //   });
+  // }
 
   private setVisibleColumns(): void {
     this.visibleColumns = this.columns.filter((c) => !c.hide);
@@ -221,22 +221,40 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private filterData(): void {
     const data = this.data || [];
     this.filteredData = this.filter$.value ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
-    for (let columnFiltersKey in this.columnFilters) {
-      this.filterByColumn(this.columnFilters[columnFiltersKey] as ColumnFilter);
-    }
+    // for (let columnFiltersKey in this.columnFilters) {
+    //   this.filterByColumn(this.columnFilters[columnFiltersKey] as ColumnFilter);
+    // }
     this.unsortedFilteredData = this.filteredData.slice();
     this.calculateColumnSummaries();
     this.sortData();
   }
 
-  private filterByColumn(columnFilter: ColumnFilter): void {
-    if (columnFilter.selection.selected.length) {
-      this.filteredData = this.filteredData.filter((row: any) => columnFilter.selection.selected.indexOf(row[columnFilter.column.field].toString()) > -1);
-    }
-    if (columnFilter.filter$.value) {
-      this.filteredData = this.filteredData.filter((row: any) => JSON.stringify(row[columnFilter.column.field]).toLowerCase().includes(columnFilter.filter$.value.toLowerCase()));
-    }
-  }
+  // private filterByColumn(columnFilter: ColumnFilter): void {
+  //   const selectionFilter = (row: any) => columnFilter.selection.selected.indexOf(row[columnFilter.column.field]?.toString()) > -1;
+  //   const blankFilter = (row: any) => {
+  //     const value = row[columnFilter.column.field];
+  //     return value === '' || value === null || value === undefined;
+  //   };
+  //   const selectionFilterWithBlank = (row: any) => {
+  //     const value = row[columnFilter.column.field];
+  //     const isBlank = value === '' || value === null || value === undefined;
+  //     return isBlank || columnFilter.selection.selected.indexOf(value?.toString()) > -1;
+  //   };
+  //   const columnSelectionFilter = columnFilter.selection.selected.length && columnFilter.filterBlank$.value ?
+  //     selectionFilterWithBlank : columnFilter.filterBlank$.value ? blankFilter : selectionFilter;
+  //   if (columnFilter.filterBlank$.value || columnFilter.selection.selected.length) {
+  //     switch (columnFilter.column.dataType) {
+  //       case TableColumnDataType.Changes:
+  //         this.filteredData = []; // @TODO
+  //         break;
+  //       default:
+  //         this.filteredData = this.filteredData.filter(columnSelectionFilter);
+  //     }
+  //   }
+  //   if (columnFilter.filter$.value) {
+  //     this.filteredData = this.filteredData.filter((row: any) => JSON.stringify(row[columnFilter.column.field]).toLowerCase().includes(columnFilter.filter$.value.toLowerCase()));
+  //   }
+  // }
 
   private calculateColumnSummaries(): void {
     this.columns

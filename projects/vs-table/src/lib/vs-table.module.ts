@@ -18,10 +18,22 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
 import {CalculatePipe} from './pipes/calculate.pipe';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {NumberFilterComponent} from './components/column-filter/number-filter/number-filter.component';
+import {DateFilterComponent} from './components/column-filter/date-filter/date-filter.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule} from '@angular/material-moment-adapter';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {DefaultFilterComponent} from './components/column-filter/default-filter/default-filter.component';
+import {IconFilterComponent} from './components/column-filter/calc-filter/icon-filter.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
     VsTableComponent,
+    NumberFilterComponent,
+    DateFilterComponent,
+    DefaultFilterComponent,
+    IconFilterComponent,
     AccountingPipe,
     CalculatePipe,
   ],
@@ -42,9 +54,16 @@ import {OverlayModule} from '@angular/cdk/overlay';
     MatSortModule,
     MatTooltipModule,
     MatDividerModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatGridListModule,
   ],
   exports: [
     VsTableComponent
+  ],
+  providers: [
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}},
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
   ]
 })
 export class VsTableModule { }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {TableColumn, TextColumn, DateColumn, ChangesColumn} from 'vs-table';
+import {TableColumn, TextColumn, DateColumn, ChangesColumn, IconColumn} from 'vs-table';
 import {HttpClient} from '@angular/common/http';
 import {delay} from 'rxjs';
 import {CurrencyColumn} from '../../../vs-table/src/lib/column-types/currency-column';
@@ -46,6 +46,11 @@ export class AppComponent {
       title: 'Code',
       field: 'code',
       sum: true,
+    }),
+    new IconColumn({
+      title: 'Even',
+      field: 'id',
+      calculate: (row) => row.id % 2 === 0 ? 'check' : 'close',
     })
   ];
 }
