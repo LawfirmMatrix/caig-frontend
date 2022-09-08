@@ -10,7 +10,9 @@ import {CurrencyColumn} from '../../../vs-table/src/lib/column-types/currency-co
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // setTimeout(() => this.columns = this.columns.slice(1), 10000);
+  }
   public data$ = this.http.get<any[]>('assets/data.json')
     .pipe(
       delay(1000)

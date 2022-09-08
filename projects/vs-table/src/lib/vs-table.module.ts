@@ -27,6 +27,7 @@ import {DefaultFilterComponent} from './components/column-filter/default-filter/
 import {IconFilterComponent} from './components/column-filter/icon-filter/icon-filter.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {ChangesFilterComponent} from './components/column-filter/changes-filter/changes-filter.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {ChangesFilterComponent} from './components/column-filter/changes-filter/
   imports: [
     CommonModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
     ScrollingModule,
     DragDropModule,
     OverlayModule,
