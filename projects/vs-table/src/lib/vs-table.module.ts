@@ -24,8 +24,9 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule} from '@angular/material-moment-adapter';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {DefaultFilterComponent} from './components/column-filter/default-filter/default-filter.component';
-import {IconFilterComponent} from './components/column-filter/calc-filter/icon-filter.component';
+import {IconFilterComponent} from './components/column-filter/icon-filter/icon-filter.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {ChangesFilterComponent} from './components/column-filter/changes-filter/changes-filter.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
     DateFilterComponent,
     DefaultFilterComponent,
     IconFilterComponent,
+    ChangesFilterComponent,
     AccountingPipe,
     CalculatePipe,
   ],

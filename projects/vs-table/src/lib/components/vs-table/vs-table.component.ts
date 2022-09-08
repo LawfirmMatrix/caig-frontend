@@ -19,7 +19,7 @@ import {
   TableMenuItem
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
-import {orderBy, round, some} from 'lodash-es';
+import {omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, debounceTime, skip, Subject} from 'rxjs';
@@ -71,13 +71,14 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   };
   public readonly selection = new SelectionModel<T>(true, []);
   public readonly filter$ = new BehaviorSubject<string>('');
+  public readonly columnFilter$ = new BehaviorSubject<{[key: string]: string}>({});
+  public readonly columnFilterBlankSelection = new SelectionModel<TableColumn<T>>(true, []);
 
   public showFooter = false;
   public minRowWidth = 0;
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
-  // public columnFilters: {[key: string]: ColumnFilter | undefined } = {};
   public columnSummaries: {[key: string]: number} = {};
 
   private unsortedFilteredData: T[] = [];
@@ -90,6 +91,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.filter$
       .pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME))
       .subscribe(() => this.filterData());
+    this.columnFilter$.subscribe(console.log);
+    this.columnFilterBlankSelection.changed.subscribe(console.log);
   }
 
   public ngAfterViewInit() {
@@ -152,9 +155,21 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     // this.saveCache(['columns']);
   }
 
-  public clearFilter(input: MatInput, filter$: Subject<string>): void {
+  public clearFilter(input: MatInput): void {
     input.value = '';
-    filter$.next('');
+    this.filter$.next('');
+  }
+
+  public clearColumnFilter(input: MatInput, column: TableColumn<T>): void {
+    input.value = '';
+    this.columnFilter$.next(omit(this.columnFilter$.value, column.field));
+  }
+
+  public columnFilterChange(column: TableColumn<T>, filter: string): void {
+    this.columnFilter$.next({
+      ...this.columnFilter$.value,
+      [column.field]: filter,
+    });
   }
 
   public toggleColumnHide(column: TableColumn<T>, event?: MouseEvent): void {
