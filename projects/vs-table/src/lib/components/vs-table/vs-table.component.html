@@ -79,9 +79,9 @@
         <mat-icon *ngIf="columnFilter$.value[column.field].isActive"
                   [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"
                   class="column-filter"
+                  (click)="resetColumnFilter(colFilterInput, column)"
                   style="bottom: 0"
                   aria-label="Clear"
-                  (click)="fullClearColumnFilter(colFilterInput, column)"
                   color="warn">
           close
         </mat-icon>
@@ -91,24 +91,25 @@
             <mat-form-field color="accent">
               <input autocomplete="off"
                      matInput
+                     [type]="column.dataType === columnDataTypes.currency || column.dataType === columnDataTypes.number ? 'number' : 'text'"
                      #colFilterInput="matInput"
                      [disabled]="column.dataType === columnDataTypes.icon"
                      (keyup)="columnFilterChange(column, colFilterInput.value)"
                      (change)="columnFilterChange(column, colFilterInput.value)"
                      placeholder="Filter by {{column.title}}">
-              <button *ngIf="colFilterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearColumnFilter(colFilterInput, column)">
+              <button *ngIf="colFilterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="columnFilterClear(colFilterInput, column)">
                 <mat-icon color="warn">close</mat-icon>
               </button>
             </mat-form-field>
             <mat-divider></mat-divider>
             <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">
-              <mat-checkbox [checked]="columnFilter$.value[column.field].noValue" (change)="toggleColumnFilterNoValue(column, $event.checked)"></mat-checkbox>
+              <mat-checkbox [checked]="columnFilter$.value[column.field].noValue" (change)="toggleColumnNoValue(column, $event.checked)"></mat-checkbox>
               <b> [ No Value ] </b>
             </div>
             <mat-divider style="margin-bottom: 16px"></mat-divider>
-            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date"></vs-table-date-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency"></vs-table-number-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number"></vs-table-number-filter>
+            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-date-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
             <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon" [data]="data" [column]="column"></vs-table-icon-filter>
             <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen"></vs-table-changes-filter>
             <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [valueSelector]="column.calculate"></vs-table-default-filter>
@@ -144,6 +145,8 @@
           [style.minHeight.px]="rowHeight"
           fxLayout="row"
           class="border-sides"
+          matRipple
+          [matRippleDisabled]="disableRowClick"
           [ngClass]="{'border-bottom': !last}">
         <td *ngIf="!disableSelection" [style.minWidth.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center">
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>

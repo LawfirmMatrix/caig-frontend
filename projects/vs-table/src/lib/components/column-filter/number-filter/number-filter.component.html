@@ -1,15 +1,15 @@
-<div fxLayout="column">
+<div fxLayout="column" [formGroup]="form">
   <mat-form-field appearance="outline">
     <mat-label>From</mat-label>
-    <input autocomplete="off" #from="matInput" matInput type="number">
-    <button *ngIf="from.value" matSuffix mat-icon-button aria-label="Clear" (click)="from.value = ''">
+    <input autocomplete="off" matInput type="number" formControlName="start">
+    <button *ngIf="form.value.start !== null" matSuffix mat-icon-button aria-label="Clear" (click)="form.patchValue({start: null})">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>To</mat-label>
-    <input autocomplete="off" #to="matInput" matInput type="number">
-    <button *ngIf="to.value" matSuffix mat-icon-button aria-label="Clear" (click)="to.value = ''">
+    <input autocomplete="off" matInput type="number" formControlName="end">
+    <button *ngIf="form.value.end !== null" matSuffix mat-icon-button aria-label="Clear" (click)="form.patchValue({end: null})">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>

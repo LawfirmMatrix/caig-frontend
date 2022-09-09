@@ -22,7 +22,7 @@ import {Sort} from '@angular/material/sort';
 import {omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {BehaviorSubject, debounceTime, skip} from 'rxjs';
+import {BehaviorSubject, debounceTime, merge, skip} from 'rxjs';
 import {MatInput} from '@angular/material/input';
 import {ColumnFilter} from '../column-filter/column-filter';
 
@@ -73,8 +73,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly selection = new SelectionModel<T>(true, []);
   public readonly filter$ = new BehaviorSubject<string>('');
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
-  // public readonly columnFilterBlankSelection = new SelectionModel<string>(true, []);
-  // public readonly columnFilterSelection: { [key: string]: SelectionModel<string | number> } = {};
 
   public showFooter = false;
   public minRowWidth = 0;
@@ -90,11 +88,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public ngOnInit() {
-    this.filter$
+    merge(this.filter$, this.columnFilter$)
       .pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME))
       .subscribe(() => this.filterData());
-    this.columnFilter$.subscribe(console.log);
-    // this.columnFilterBlankSelection.changed.subscribe(console.log);
   }
 
   public ngAfterViewInit() {
@@ -164,14 +160,14 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.filter$.next('');
   }
 
-  public fullClearColumnFilter(input: MatInput, column: TableColumn<T>): void {
+  public resetColumnFilter(input: MatInput, column: TableColumn<T>): void {
     input.value = '';
     const columnFilter = this.columnFilter$.value;
-    columnFilter[column.field] = new ColumnFilter();
+    columnFilter[column.field].reset();
     this.columnFilter$.next(columnFilter);
   }
 
-  public clearColumnFilter(input: MatInput, column: TableColumn<T>): void {
+  public columnFilterClear(input: MatInput, column: TableColumn<T>): void {
     input.value = '';
     const columnFilter = this.columnFilter$.value;
     columnFilter[column.field].filter = '';
@@ -212,52 +208,17 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     // }
   }
 
-  // public openColumnFilter(column: TableColumn<T>): void {
-  //   if (!this.columnFilters[column.field]) {
-  //     const columnFilter = this.columnFilterService.create(column);
-  //     this.columnFilters[column.field] = columnFilter;
-  //     this.subscribeToColumnFilter(columnFilter);
-  //     columnFilter.calculateUniqueColumnValues(this.data || []);
-  //   }
-  //   (this.columnFilters[column.field] as ColumnFilter).menuOpened = true;
-  // }
-
-  // public closeColumnFilter(column: TableColumn<T>): void {
-  //   if (this.columnFilters[column.field]) {
-  //     (this.columnFilters[column.field] as ColumnFilter).menuOpened = false;
-  //   }
-  // }
-
-  // public clearColumnFilter(column: TableColumn<T>): void {
-  //   delete this.columnFilters[column.field];
-  //   this.filterData();
-  // }
-  //
-  // private subscribeToColumnFilter(columnFilter: ColumnFilter): void {
-  //   const freeForm$ = columnFilter.filter$.pipe(skip(1), debounceTime(VsTableComponent.FILTER_DEBOUNCE_TIME));
-  //   merge(freeForm$, columnFilter.selection.changed, columnFilter.filterBlank$).subscribe(() => {
-  //     this.filterData();
-  //     columnFilter.calculateUniqueColumnValues(this.data || []);
-  //   });
-  // }
-
   private initializeColumnFilters(): void {
     const columnFilters: { [key: string]: ColumnFilter } = { };
     this.columns.forEach((column) => columnFilters[column.field] = new ColumnFilter());
     this.columnFilter$.next(columnFilters);
   }
 
-  public toggleColumnFilterNoValue(column: TableColumn<T>, checked: boolean): void {
+  public toggleColumnNoValue(column: TableColumn<T>, checked: boolean): void {
     const columnFilters: any = this.columnFilter$.value;
     columnFilters[column.field].noValue = checked;
     this.columnFilter$.next(columnFilters);
   }
-
-  // public setColumnFilterProp(column: TableColumn<T>, prop: keyof ColumnFilter, value: any): void {
-  //   const columnFilters: any = this.columnFilter$.value;
-  //   columnFilters[column.field][prop] = value;
-  //   this.columnFilter$.next(columnFilters);
-  // }
 
   private removeOldColumnFilters(): void {
     const fields: string[] = this.columns.map((c) => c.field);
@@ -272,6 +233,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private filterData(): void {
+    console.log('FILTER');
     const data = this.data || [];
     this.filteredData = this.filter$.value ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
     // for (let columnFiltersKey in this.columnFilters) {

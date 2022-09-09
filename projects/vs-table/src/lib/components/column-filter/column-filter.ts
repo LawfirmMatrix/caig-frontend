@@ -12,4 +12,10 @@ export class ColumnFilter {
   public get isActive(): boolean {
     return !!this.filter || this.noValue || this.selection.hasValue() || !!(this.range.value.start || this.range.value.end);
   }
+  public reset(): void {
+    this.filter = '';
+    this.noValue = false;
+    this.selection.clear();
+    this.range.reset();
+  }
 }
