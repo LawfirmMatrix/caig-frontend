@@ -1,5 +1,6 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FormControl, FormGroup} from '@angular/forms';
+import {TableColumn} from '../../utils/interfaces';
 
 export class ColumnFilter {
   public filter: string = '';
@@ -9,6 +10,7 @@ export class ColumnFilter {
     start: new FormControl<any | null>(null),
     end: new FormControl<any | null>(null),
   });
+  constructor(public column: TableColumn<any>) { }
   public get isActive(): boolean {
     return !!this.filter || this.noValue || this.selection.hasValue() || !!(this.range.value.start || this.range.value.end);
   }

@@ -28,6 +28,7 @@ import {IconFilterComponent} from './components/column-filter/icon-filter/icon-f
 import {MatGridListModule} from '@angular/material/grid-list';
 import {ChangesFilterComponent} from './components/column-filter/changes-filter/changes-filter.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatMomentDateModule,
     MatGridListModule,
     MatRippleModule,
+    MatSlideToggleModule,
   ],
   exports: [
     VsTableComponent

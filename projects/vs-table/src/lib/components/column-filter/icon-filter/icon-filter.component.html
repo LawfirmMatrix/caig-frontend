@@ -1,9 +1,14 @@
-<div class="icon-filter" [style.height.px]="viewportHeight">
-  <mat-grid-list [cols]="columns" [rowHeight]="rowHeight">
-    <mat-grid-tile *ngFor="let value of uniqueColumnValues">
-      <button mat-icon-button class="mat-elevation-z{{selection.isSelected(value) ? 1 : 4}}" [ngClass]="{'selected': selection.isSelected(value)}" (click)="selection.toggle(value)">
-        <mat-icon>{{value}}</mat-icon>
-      </button>
-    </mat-grid-tile>
-  </mat-grid-list>
+<div fxLayout="column">
+  <div fxLayoutAlign="end center">
+    <mat-slide-toggle labelPosition="before" (change)="filterOptionsToggle($event.checked)">Filter options</mat-slide-toggle>
+  </div>
+  <div class="icon-filter" [style.height.px]="viewportHeight">
+    <mat-grid-list [cols]="columns" [rowHeight]="rowHeight">
+      <mat-grid-tile *ngFor="let value of uniqueColumnValues">
+        <button [disabled]="disabled" mat-icon-button class="mat-elevation-z{{selection.isSelected(value) ? 1 : 4}}" [ngClass]="{'selected': selection.isSelected(value)}" (click)="selection.toggle(value)">
+          <mat-icon>{{value}}</mat-icon>
+        </button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
 </div>

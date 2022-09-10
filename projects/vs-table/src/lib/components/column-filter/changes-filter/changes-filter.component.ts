@@ -8,8 +8,12 @@ import {uniq, flatten} from 'lodash-es';
   styleUrls: ['../default-filter/default-filter.component.scss']
 })
 export class ChangesFilterComponent extends DefaultFilterComponent<any> {
-  protected override calculateUniqueColumnValues(data: any[]): string[] {
-    return uniq(flatten(data
+  protected override calculateUniqueColumnValues(): void {
+    if (!this.data) {
+      return;
+    }
+    const data = this.filterOptions ? this.filteredData : this.data;
+    this.uniqueColumnValues = uniq(flatten(data
       .filter((row) => row[this.column.field] !== null && row[this.column.field] !== undefined)
       .map((row) => row.changes.map((change: any) => change.field))
     ));

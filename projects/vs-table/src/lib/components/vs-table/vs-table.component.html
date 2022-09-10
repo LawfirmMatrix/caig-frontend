@@ -93,7 +93,7 @@
                      matInput
                      [type]="column.dataType === columnDataTypes.currency || column.dataType === columnDataTypes.number ? 'number' : 'text'"
                      #colFilterInput="matInput"
-                     [disabled]="column.dataType === columnDataTypes.icon"
+                     [disabled]="column.dataType === columnDataTypes.icon || noValueCheckbox.checked"
                      (keyup)="columnFilterChange(column, colFilterInput.value)"
                      (change)="columnFilterChange(column, colFilterInput.value)"
                      placeholder="Filter by {{column.title}}">
@@ -103,17 +103,53 @@
             </mat-form-field>
             <mat-divider></mat-divider>
             <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">
-              <mat-checkbox [checked]="columnFilter$.value[column.field].noValue" (change)="toggleColumnNoValue(column, $event.checked)"></mat-checkbox>
+              <mat-checkbox [checked]="columnFilter$.value[column.field].noValue"
+                            #noValueCheckbox
+                            [disabled]="columnFilter$.value[column.field].isActive && !noValueCheckbox.checked"
+                            (change)="toggleColumnNoValue(column, $event.checked)"></mat-checkbox>
               <b> [ No Value ] </b>
             </div>
             <mat-divider style="margin-bottom: 16px"></mat-divider>
-            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-date-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
-            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon" [data]="data" [column]="column" [columnFilter$]="columnFilter$"></vs-table-icon-filter>
-            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [columnFilter$]="columnFilter$"></vs-table-changes-filter>
-            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [valueSelector]="column.calculate" [columnFilter$]="columnFilter$"></vs-table-default-filter>
-            <vs-table-default-filter *ngSwitchDefault [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [columnFilter$]="columnFilter$"></vs-table-default-filter>
+            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date"
+                                  [columnFilter$]="columnFilter$"
+                                  [field]="column.field"
+                                  [disabled]="noValueCheckbox.checked"></vs-table-date-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency"
+                                    [columnFilter$]="columnFilter$"
+                                    [field]="column.field"
+                                    [disabled]="noValueCheckbox.checked"></vs-table-number-filter>
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number"
+                                    [columnFilter$]="columnFilter$"
+                                    [field]="column.field"
+                                    [disabled]="noValueCheckbox.checked"></vs-table-number-filter>
+            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon"
+                                  [data]="data"
+                                  [filteredData]="filteredData"
+                                  [column]="column"
+                                  [columnFilter$]="columnFilter$"
+                                  [disabled]="noValueCheckbox.checked"></vs-table-icon-filter>
+            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes"
+                                     [data]="data"
+                                     [filteredData]="filteredData"
+                                     [column]="column"
+                                     [menuOpen]="trigger.menuOpen"
+                                     [columnFilter$]="columnFilter$"
+                                     [disabled]="noValueCheckbox.checked"></vs-table-changes-filter>
+            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc"
+                                     [data]="data"
+                                     [filteredData]="filteredData"
+                                     [column]="column"
+                                     [menuOpen]="trigger.menuOpen"
+                                     [valueSelector]="column.calculate"
+                                     [columnFilter$]="columnFilter$"
+                                     [disabled]="noValueCheckbox.checked"></vs-table-default-filter>
+            <vs-table-default-filter *ngSwitchDefault
+                                     [data]="data"
+                                     [filteredData]="filteredData"
+                                     [column]="column"
+                                     [menuOpen]="trigger.menuOpen"
+                                     [columnFilter$]="columnFilter$"
+                                     [disabled]="noValueCheckbox.checked"></vs-table-default-filter>
           </div>
         </mat-menu>
       </th>

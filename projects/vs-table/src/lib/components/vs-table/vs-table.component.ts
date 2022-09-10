@@ -19,12 +19,14 @@ import {
   TableMenuItem
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
-import {omit, orderBy, round, some} from 'lodash-es';
+import {intersection, omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {BehaviorSubject, debounceTime, merge, skip} from 'rxjs';
 import {MatInput} from '@angular/material/input';
 import {ColumnFilter} from '../column-filter/column-filter';
+import moment from 'moment';
+import {CalculateColumn} from '../../column-types/calculate-column';
 
 @Component({
   selector: 'vs-table',
@@ -212,7 +214,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     const columnFilters: { [key: string]: ColumnFilter } = this.columnFilter$.value;
     this.columns
       .filter((column) => !columnFilters[column.field])
-      .forEach((column) => columnFilters[column.field] = new ColumnFilter());
+      .forEach((column) => columnFilters[column.field] = new ColumnFilter(column));
     this.columnFilter$.next(columnFilters);
   }
 
@@ -235,43 +237,63 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private filterData(): void {
-    console.log(this.columnFilter$.value);
     const data = this.data || [];
+    const columnFilters = this.columnFilter$.value;
     this.filteredData = this.filter$.value ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
-    // for (let columnFiltersKey in this.columnFilters) {
-    //   this.filterByColumn(this.columnFilters[columnFiltersKey] as ColumnFilter);
-    // }
+    for (let columnFiltersKey in columnFilters) {
+      if (columnFilters[columnFiltersKey].isActive) {
+        this.filterByColumn(columnFilters[columnFiltersKey]);
+      }
+    }
     this.unsortedFilteredData = this.filteredData.slice();
     this.calculateColumnSummaries();
     this.sortData();
   }
 
-  // private filterByColumn(columnFilter: ColumnFilter): void {
-  //   const selectionFilter = (row: any) => columnFilter.selection.selected.indexOf(row[columnFilter.column.field]?.toString()) > -1;
-  //   const blankFilter = (row: any) => {
-  //     const value = row[columnFilter.column.field];
-  //     return value === '' || value === null || value === undefined;
-  //   };
-  //   const selectionFilterWithBlank = (row: any) => {
-  //     const value = row[columnFilter.column.field];
-  //     const isBlank = value === '' || value === null || value === undefined;
-  //     return isBlank || columnFilter.selection.selected.indexOf(value?.toString()) > -1;
-  //   };
-  //   const columnSelectionFilter = columnFilter.selection.selected.length && columnFilter.filterBlank$.value ?
-  //     selectionFilterWithBlank : columnFilter.filterBlank$.value ? blankFilter : selectionFilter;
-  //   if (columnFilter.filterBlank$.value || columnFilter.selection.selected.length) {
-  //     switch (columnFilter.column.dataType) {
-  //       case TableColumnDataType.Changes:
-  //         this.filteredData = []; // @TODO
-  //         break;
-  //       default:
-  //         this.filteredData = this.filteredData.filter(columnSelectionFilter);
-  //     }
-  //   }
-  //   if (columnFilter.filter$.value) {
-  //     this.filteredData = this.filteredData.filter((row: any) => JSON.stringify(row[columnFilter.column.field]).toLowerCase().includes(columnFilter.filter$.value.toLowerCase()));
-  //   }
-  // }
+  private filterByColumn(columnFilter: ColumnFilter): void {
+    if (columnFilter.filter) {
+      this.filteredData = this.filteredData.filter((row: any) => `${row[columnFilter.column.field]}`.toLowerCase().includes(columnFilter.filter.toLowerCase()));
+    }
+
+    if (columnFilter.noValue) {
+      this.filteredData = this.filteredData.filter((row: any) => ['', null, undefined].indexOf(row[columnFilter.column.field]) > -1);
+    }
+
+    if (columnFilter.range.value.start || columnFilter.range.value.end) {
+      if (columnFilter.range.value.start && columnFilter.range.value.end) {
+        const getValue = columnFilter.column.dataType === this.columnDataTypes.currency || columnFilter.column.dataType === this.columnDataTypes.number ?
+          ((row: any) => row[columnFilter.column.field]) : ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase());
+        const dateFilter = (row: any) => {
+          const value = new Date(getValue(row));
+          const m = moment.utc(value);
+          return m.isValid() && m.isBetween(columnFilter.range.value.start, columnFilter.range.value.end, 'date', '[]');
+        };
+        const defaultFilter = (row: any) => {
+          const value = getValue(row);
+          return columnFilter.range.value.start <= value && value <= columnFilter.range.value.end;
+        };
+        const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
+        this.filteredData = this.filteredData.filter(filterFunc);
+      } else {
+        const dateFilter = (row: any) => {
+          const value = moment.utc(row[columnFilter.column.field]);
+          return value.isValid() && value.isSame(columnFilter.range.value.start || columnFilter.range.value.end, 'date');
+        };
+        const defaultFilter = (row: any) => row[columnFilter.column.field] == columnFilter.range.value.start || columnFilter.range.value.end;
+        const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
+        this.filteredData = this.filteredData.filter(filterFunc);
+      }
+    }
+
+    if (columnFilter.selection.hasValue()) {
+      const filterFunc = columnFilter.column.dataType === this.columnDataTypes.changes ?
+        ((row: any) => !!(row.changes && intersection(row.changes.map((change: any) => change.field), columnFilter.selection.selected).length)) :
+        columnFilter.column.calculate ?
+        ((row: any) => columnFilter.selection.selected.indexOf((columnFilter.column as CalculateColumn<T>).calculate(row)) > -1) :
+        ((row: any) => columnFilter.selection.selected.indexOf(`${row[columnFilter.column.field]}`) > -1);
+      this.filteredData = this.filteredData.filter(filterFunc);
+    }
+  }
 
   private calculateColumnSummaries(): void {
     this.columns
