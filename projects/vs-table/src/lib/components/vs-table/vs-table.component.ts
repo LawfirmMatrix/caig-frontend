@@ -209,8 +209,10 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private initializeColumnFilters(): void {
-    const columnFilters: { [key: string]: ColumnFilter } = { };
-    this.columns.forEach((column) => columnFilters[column.field] = new ColumnFilter());
+    const columnFilters: { [key: string]: ColumnFilter } = this.columnFilter$.value;
+    this.columns
+      .filter((column) => !columnFilters[column.field])
+      .forEach((column) => columnFilters[column.field] = new ColumnFilter());
     this.columnFilter$.next(columnFilters);
   }
 
@@ -233,7 +235,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private filterData(): void {
-    console.log('FILTER');
+    console.log(this.columnFilter$.value);
     const data = this.data || [];
     this.filteredData = this.filter$.value ? data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
     // for (let columnFiltersKey in this.columnFilters) {

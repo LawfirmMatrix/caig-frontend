@@ -110,10 +110,10 @@
             <vs-table-date-filter *ngSwitchCase="columnDataTypes.date" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-date-filter>
             <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
             <vs-table-number-filter *ngSwitchCase="columnDataTypes.number" [columnFilter$]="columnFilter$" [field]="column.field"></vs-table-number-filter>
-            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon" [data]="data" [column]="column"></vs-table-icon-filter>
-            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen"></vs-table-changes-filter>
-            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [valueSelector]="column.calculate"></vs-table-default-filter>
-            <vs-table-default-filter *ngSwitchDefault [data]="data" [column]="column" [menuOpen]="trigger.menuOpen"></vs-table-default-filter>
+            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon" [data]="data" [column]="column" [columnFilter$]="columnFilter$"></vs-table-icon-filter>
+            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [columnFilter$]="columnFilter$"></vs-table-changes-filter>
+            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc" [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [valueSelector]="column.calculate" [columnFilter$]="columnFilter$"></vs-table-default-filter>
+            <vs-table-default-filter *ngSwitchDefault [data]="data" [column]="column" [menuOpen]="trigger.menuOpen" [columnFilter$]="columnFilter$"></vs-table-default-filter>
           </div>
         </mat-menu>
       </th>
