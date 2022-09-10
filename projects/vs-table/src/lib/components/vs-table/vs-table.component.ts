@@ -252,7 +252,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   private filterByColumn(columnFilter: ColumnFilter): void {
     if (columnFilter.filter) {
-      this.filteredData = this.filteredData.filter((row: any) => `${row[columnFilter.column.field]}`.toLowerCase().includes(columnFilter.filter.toLowerCase()));
+      const filter = columnFilter.filter.toLowerCase();
+      const changesFilter = (row: any) => !!row.changes?.find((change: any) => `${change.oldValue}`.toLowerCase().includes(filter) || `${change.newValue}`.toLowerCase().includes(filter));
+      const filterFunc = columnFilter.column.calculate ?
+        ((row: any) => (columnFilter.column as CalculateColumn<T>).calculate(row).includes(filter)) :
+        columnFilter.column.dataType === this.columnDataTypes.changes ? changesFilter :
+        ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase().includes(filter));
+      this.filteredData = this.filteredData.filter(filterFunc);
     }
 
     if (columnFilter.noValue) {

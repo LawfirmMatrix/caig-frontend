@@ -88,12 +88,12 @@
         <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
         <mat-menu #columnFilterMenu="matMenu">
           <div fxLayout="column" class="column-filter-viewport" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
-            <mat-form-field color="accent">
+            <mat-form-field color="accent" [style.display]="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes ? 'initial' : 'none'">
               <input autocomplete="off"
                      matInput
                      [type]="column.dataType === columnDataTypes.currency || column.dataType === columnDataTypes.number ? 'number' : 'text'"
                      #colFilterInput="matInput"
-                     [disabled]="column.dataType === columnDataTypes.icon || noValueCheckbox.checked"
+                     [disabled]="noValueCheckbox.checked"
                      (keyup)="columnFilterChange(column, colFilterInput.value)"
                      (change)="columnFilterChange(column, colFilterInput.value)"
                      placeholder="Filter by {{column.title}}">
@@ -101,7 +101,7 @@
                 <mat-icon color="warn">close</mat-icon>
               </button>
             </mat-form-field>
-            <mat-divider></mat-divider>
+            <mat-divider *ngIf="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes"></mat-divider>
             <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">
               <mat-checkbox [checked]="columnFilter$.value[column.field].noValue"
                             #noValueCheckbox
@@ -192,7 +192,7 @@
             [fxFlex]="column.fxFlex"
             [fxLayoutAlign]="column.fxLayoutAlign"
             [ngSwitch]="column.dataType"
-            [ngClass]="{'pointer': !disableRowClick, 'odd-row': i % 2 !== 0}">
+            [ngClass]="{'pointer': !disableRowClick, 'even-row': i % 2 === 0}">
           <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
             <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
                  [matBadgeColor]="column.badge ? column.badge.color : undefined"
