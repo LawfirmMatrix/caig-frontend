@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Export Data</h1>
+<div mat-dialog-content>
+  <p>Enter a name for the .csv file</p>
+  <mat-form-field color="accent" appearance="fill">
+    <mat-label>Filename</mat-label>
+    <input matInput cdkFocusInitial [(ngModel)]="filename">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="filename" [disabled]="!filename">Download</button>
+</div>

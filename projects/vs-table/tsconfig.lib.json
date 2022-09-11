@@ -5,6 +5,7 @@
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
+    "esModuleInterop": true,
     "inlineSources": true,
     "types": []
   },
