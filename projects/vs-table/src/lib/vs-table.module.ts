@@ -27,8 +27,10 @@ import {DefaultFilterComponent} from './components/column-filter/default-filter/
 import {IconFilterComponent} from './components/column-filter/icon-filter/icon-filter.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {ChangesFilterComponent} from './components/column-filter/changes-filter/changes-filter.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {ExportDataComponent} from './components/export-data/export-data.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DefaultFilterComponent,
     IconFilterComponent,
     ChangesFilterComponent,
+    ExportDataComponent,
     AccountingPipe,
     CalculatePipe,
   ],
@@ -45,6 +48,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    FormsModule,
     ScrollingModule,
     DragDropModule,
     OverlayModule,
@@ -64,6 +68,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatGridListModule,
     MatRippleModule,
     MatSlideToggleModule,
+    MatDialogModule,
   ],
   exports: [
     VsTableComponent

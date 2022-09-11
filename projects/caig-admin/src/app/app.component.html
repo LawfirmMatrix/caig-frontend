@@ -4,9 +4,12 @@
 <!--  </div>-->
 <!--</div>-->
 <vs-table
+  id="test"
   [columns]="columns"
   [data]="data$ | async"
   [tableMenuItems]="[]"
   [rowMenuItems]="[]"
+  (rowClick)="rowClick($event)"
+  (selectionChange)="rowSelect($event)"
   [disableRowClick]="false">
 </vs-table>
