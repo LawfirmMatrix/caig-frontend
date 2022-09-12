@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {TableColumn} from '../../../utils/interfaces';
+import {TableColumn, TableColumnDataType} from '../../../utils/interfaces';
 import {uniq} from 'lodash-es';
 import {BehaviorSubject} from 'rxjs';
 import {ColumnFilter} from '../column-filter';
@@ -52,9 +52,12 @@ export class DefaultFilterComponent<T> implements OnInit, OnChanges {
       return;
     }
     const data = this.filterOptions ? this.filteredData : this.data;
-    this.uniqueColumnValues = uniq(data
-      .filter((row) => row[this.column.field] !== null && row[this.column.field] !== undefined)
-      .map(this.valueSelector || this.defaultValueSelector)
-    );
+    const isCalculateColumn = this.column.dataType === TableColumnDataType.Calculate;
+    const filteredData = isCalculateColumn ? data :
+      data.filter((row) => row[this.column.field] !== null && row[this.column.field] !== undefined);
+    this.uniqueColumnValues = uniq(filteredData.map(this.valueSelector || this.defaultValueSelector));
+    if (isCalculateColumn) {
+      this.uniqueColumnValues = this.uniqueColumnValues.filter((value) => value !== '');
+    }
   }
 }

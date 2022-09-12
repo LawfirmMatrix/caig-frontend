@@ -173,18 +173,19 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.initializeColumnFilters();
     }
 
-    const data = changes['data']?.currentValue;
+    const data = changes['data'];
+    const hasData = data?.currentValue;
     const sort = changes['sort']?.currentValue;
-    if (data || changes['filter']?.currentValue || sort) {
+    if (hasData || changes['filter']?.currentValue || sort) {
       this.filterData();
     }
-    // if (sort) {
-    //   this.sortData(sort);
-    // }
-    if (data) {
+    if (hasData) {
       this.selection.clear();
       this.preselectRows();
       this.initializeScrollOffset();
+    }
+    if (data && !hasData) {
+      this.filteredData = [];
     }
     const preselect = changes['preselect'];
     if (preselect) {

@@ -52,12 +52,18 @@
           </mat-grid-tile>
           <mat-grid-tile colspan="2">
             <h2>Disable Feature</h2>
-            <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
-              <mat-checkbox [(ngModel)]="disableRowClick">Row Click</mat-checkbox>
-              <mat-checkbox [(ngModel)]="disableSelection">Selection</mat-checkbox>
-              <mat-checkbox [(ngModel)]="disableSelectAll">Select All</mat-checkbox>
-              <mat-checkbox [(ngModel)]="disableOptions">Options</mat-checkbox>
-              <mat-checkbox [(ngModel)]="disableSearch">Search</mat-checkbox>
+            <div fxLayout="column" style="width: 100%" fxLayoutGap="10px">
+              <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+                <mat-checkbox [(ngModel)]="disableSelection">Selection</mat-checkbox>
+                <mat-checkbox [(ngModel)]="disableSelectAll">Select All</mat-checkbox>
+                <mat-checkbox [(ngModel)]="disableOptions">Options</mat-checkbox>
+                <mat-checkbox [(ngModel)]="disableSearch">Search</mat-checkbox>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+                <mat-checkbox [(ngModel)]="disableRowClick">Row Click</mat-checkbox>
+                <mat-checkbox (change)="rowMenuItems = rowMenuItems ? undefined : []">Row Menu</mat-checkbox>
+                <mat-checkbox (change)="tableMenuItems = tableMenuItems ? undefined : []">Table Menu</mat-checkbox>
+              </div>
             </div>
           </mat-grid-tile>
           <mat-grid-tile>
