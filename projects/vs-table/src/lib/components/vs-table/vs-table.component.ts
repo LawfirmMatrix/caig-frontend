@@ -66,8 +66,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   @Input() public preselect: ((row: T) => boolean) | undefined;
   @Input() public filter = '';
 
-  @Output() public rowClick = new EventEmitter<RowClick<T>>();
-  @Output() public selectionChange = new EventEmitter<SelectionChange<T>>();
+  @Output() public rowClick = new EventEmitter<RowClick<T>>(true);
+  @Output() public selectionChange = new EventEmitter<SelectionChange<T>>(true);
 
   @ViewChild(CdkVirtualScrollableElement) public scrollingElement!: CdkVirtualScrollableElement;
   @ViewChild(CdkVirtualScrollViewport) public viewport!: CdkVirtualScrollViewport;
@@ -85,6 +85,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public static readonly DEFAULT_SORT: Sort = { active: '', direction: '' };
+  public static readonly SCROLLBAR_WIDTH: number = measureScrollbarWidth();
 
   public readonly stickyCellWidth = 40;
   public readonly rowHeight = 48;
@@ -102,7 +103,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly selection = new SelectionModel<T>(true, []);
   public readonly filter$ = new BehaviorSubject<string>('');
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
-  public readonly scrollbarWidth = measureScrollbarWidth();
+  public readonly scrollbarWidth = VsTableComponent.SCROLLBAR_WIDTH;
   public readonly onWindowResize$ = new Subject<void>();
   private readonly cacheKey = this.elementRef.nativeElement.id ?
     `vs-table-${this.elementRef.nativeElement.id}` : undefined;
@@ -158,6 +159,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       .subscribe((left) => this.footerRow.nativeElement.style.transform = `translateX(${-left}px)`);
 
     this.initializeScrollOffset();
+
+    const obs = new ResizeObserver(() => this.viewport.checkViewportSize());
+    obs.observe(this.scrollingElement.getElementRef().nativeElement);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -170,16 +174,25 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     }
 
     const data = changes['data']?.currentValue;
-    if (data || changes['filter']?.currentValue || changes['sort']?.currentValue) {
+    const sort = changes['sort']?.currentValue;
+    if (data || changes['filter']?.currentValue || sort) {
       this.filterData();
     }
+    // if (sort) {
+    //   this.sortData(sort);
+    // }
     if (data) {
       this.selection.clear();
       this.preselectRows();
       this.initializeScrollOffset();
     }
-    if (changes['preselect']?.currentValue) {
-      this.preselectRows();
+    const preselect = changes['preselect'];
+    if (preselect) {
+      if (preselect.currentValue) {
+        this.preselectRows();
+      } else {
+        this.selection.clear();
+      }
     }
   }
 

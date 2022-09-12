@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:libs": "ng build export-csv && ng build vs-table"
   },
   "private": true,
   "dependencies": {

@@ -34,7 +34,10 @@
             ],
             "scripts": [],
             "serviceWorker": true,
-            "ngswConfigPath": "projects/caig-admin/ngsw-config.json"
+            "ngswConfigPath": "projects/caig-admin/ngsw-config.json",
+            "allowedCommonJsDependencies": [
+              "moment"
+            ]
           },
           "configurations": {
             "production": {
@@ -136,7 +139,10 @@
             "styles": [
               "projects/survey/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "moment"
+            ]
           },
           "configurations": {
             "production": {

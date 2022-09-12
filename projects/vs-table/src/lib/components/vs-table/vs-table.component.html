@@ -180,7 +180,7 @@
       <mat-progress-bar *ngIf="!data" mode="indeterminate" color="primary"></mat-progress-bar>
       <h1 *ngIf="data && !filteredData.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
         <div>No results found</div>
-        <button mat-fab color="accent" matTooltip="Clear all filters" aria-label="Clear all filters" (click)="clearAllFilters()">
+        <button *ngIf="data.length" mat-fab color="accent" matTooltip="Clear all filters" aria-label="Clear all filters" (click)="clearAllFilters()">
           <mat-icon>filter_alt_off</mat-icon>
         </button>
       </h1>

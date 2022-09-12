@@ -1,6 +1,5 @@
 import {ThemePalette} from '@angular/material/core';
 import {Sort} from '@angular/material/sort';
-import {SelectionModel} from '@angular/cdk/collections';
 
 export interface BadgeConfig<T> {
   value: (row: T) => string | number | undefined | null;

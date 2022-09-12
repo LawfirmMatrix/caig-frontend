@@ -1,15 +1,1 @@
-<!--<div style="height: 100%; width: 100%;">-->
-<!--  <div style="height: 600px; width: 600px; padding: 20px;">-->
-<!--    <vs-table [columns]="columns" [data]="data$ | async" [tableMenuItems]="[]" [rowMenuItems]="[]"></vs-table>-->
-<!--  </div>-->
-<!--</div>-->
-<vs-table
-  id="test"
-  [columns]="columns"
-  [data]="data$ | async"
-  [tableMenuItems]="[]"
-  [rowMenuItems]="[]"
-  (rowClick)="rowClick($event)"
-  (selectionChange)="rowSelect($event)"
-  [disableRowClick]="false">
-</vs-table>
+<app-test></app-test>
