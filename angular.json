@@ -134,15 +134,19 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/survey/src/favicon.ico",
-              "projects/survey/src/assets"
+              "projects/survey/src/assets",
+              "projects/survey/src/manifest.webmanifest"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "projects/survey/src/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
               "moment"
-            ]
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "projects/survey/ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -205,9 +209,11 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/survey/src/favicon.ico",
-              "projects/survey/src/assets"
+              "projects/survey/src/assets",
+              "projects/survey/src/manifest.webmanifest"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "projects/survey/src/styles.scss"
             ],
             "scripts": []
@@ -308,37 +314,6 @@
         }
       }
     },
-    "dynamic-form": {
-      "projectType": "library",
-      "root": "projects/dynamic-form",
-      "sourceRoot": "projects/dynamic-form/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/dynamic-form/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/dynamic-form/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/dynamic-form/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/dynamic-form/src/test.ts",
-            "tsConfig": "projects/dynamic-form/tsconfig.spec.json",
-            "karmaConfig": "projects/dynamic-form/karma.conf.js"
-          }
-        }
-      }
-    },
     "vs-table": {
       "projectType": "library",
       "root": "projects/vs-table",
@@ -366,6 +341,37 @@
             "main": "projects/vs-table/src/test.ts",
             "tsConfig": "projects/vs-table/tsconfig.spec.json",
             "karmaConfig": "projects/vs-table/karma.conf.js"
+          }
+        }
+      }
+    },
+    "dynamic-form": {
+      "projectType": "library",
+      "root": "projects/dynamic-form",
+      "sourceRoot": "projects/dynamic-form/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/dynamic-form/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/dynamic-form/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/dynamic-form/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dynamic-form/src/test.ts",
+            "tsConfig": "projects/dynamic-form/tsconfig.spec.json",
+            "karmaConfig": "projects/dynamic-form/karma.conf.js"
           }
         }
       }

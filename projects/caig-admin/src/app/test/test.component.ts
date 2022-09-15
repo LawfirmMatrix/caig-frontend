@@ -44,6 +44,7 @@ export class TestComponent {
         const sqrt = Math.sqrt(row.id);
         return sqrt % 1 === 0 ? `${sqrt} x ${sqrt}` : ''
       },
+      fxLayoutAlign: 'center center'
     }),
     new TextColumn({
       title: 'Text',
@@ -143,43 +144,30 @@ const iconMap: { [key: number]: string } = {
   13: 'create_new_folder',
 };
 
-const generateChanges: (seed: number) => {field: string, oldValue: any, newValue: any}[] | undefined = (seed) => {
-  if (seed <= 0.6) {
+const generateChanges: () => {field: string, oldValue: any, newValue: any}[] | undefined = () => {
+  if (Math.random() < 0.75) {
     return undefined;
   }
-  const fields: string[] = [];
-  if (seed <= 0.7) {
-    fields.push('text');
-  }
-  if (seed <= 0.8) {
-    fields.push('date');
-  }
-  if (seed <= 0.9) {
-    fields.push('amount');
-  }
-  if (seed <= 1) {
-    fields.push('quantity');
-  }
-  return fields.map((field) => ({
+  const fields: string[] = ['Date', 'Amount', 'Quantity'];
+  return fields.slice(0, Math.ceil(Math.random() * fields.length)).map((field) => ({
     field,
     oldValue: 'A',
     newValue: 'B',
   }))
 };
 
-const data: TestItem[] = Array.from({length: 100000}).map((v, id) => {
-  const seed = Math.random();
-  const amount = seed * 1000;
-  const quantity = Math.ceil(seed * 10);
+const data: TestItem[] = Array.from({length: 100}).map((v, id) => {
+  const amount = Math.random() * 1000;
+  const quantity = Math.ceil(Math.random() * 10);
   return {
     id,
-    text: 'dadsp dspsd d, sdiksdi ds'.repeat(Math.ceil(seed * 3)),
+    text: 'dadsp dspsd d, sdiksdi ds'.repeat(Math.ceil(Math.random() * 3)),
     date: randomDate(new Date(2012, 0, 1), new Date()).toLocaleDateString(),
     amount,
     quantity,
     total: amount * quantity,
-    icon: iconMap[Math.floor(seed * 14)],
-    changes: generateChanges(seed),
+    icon: iconMap[Math.floor(Math.random() * 14)],
+    changes: generateChanges(),
   };
 });
 

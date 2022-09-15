@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:libs": "ng build export-csv && ng build vs-table"
+    "build:libs": "ng build export-csv && ng build vs-table && ng build dynamic-form"
   },
   "private": true,
   "dependencies": {

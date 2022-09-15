@@ -1,7 +1,7 @@
 <div class="vs-table" fxLayout="column">
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px">
     <mat-form-field fxFlex appearance="fill" *ngIf="!disableSearch">
-      <mat-label>Search <span *ngIf="data?.length as dataLength">{{dataLength}} record{{dataLength === 1 ? '' : 's'}}</span></mat-label>
+      <mat-label>Search <span *ngIf="data?.length as dataLength">{{dataLength | number}} record{{dataLength === 1 ? '' : 's'}}</span></mat-label>
       <mat-icon class="stretch-badge" matPrefix [matBadge]="data && filteredData.length !== data.length ? (filteredData.length | number) : null" matBadgePosition="above before" aria-label="Search table">search</mat-icon>
       <input autocomplete="off" #filterInput="matInput" matInput type="text" [value]="filter" (change)="filter$.next(filterInput.value)" (keyup)="filter$.next(filterInput.value)" [disabled]="!data?.length">
       <button *ngIf="filterInput.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearFilter(filterInput)">
@@ -28,7 +28,8 @@
         </button>
       </mat-menu>
       <button mat-menu-item (click)="exportData()" [disabled]="!data?.length">Export data to .csv</button>
-      <button mat-menu-item (click)="resetCached()">Clear Cache</button>
+      <button mat-menu-item (click)="clearAllFilters()">Clear all filters</button>
+      <button mat-menu-item (click)="resetCached()">Clear cache</button>
     </mat-menu>
   </div>
   <table fxFlex fxLayout="column" cdkVirtualScrollingElement>
@@ -192,7 +193,7 @@
           [matTooltip]="rowTooltip ? rowTooltip(row) : ''"
           (click)="onRowClick(row, i)"
           fxLayout="row"
-          class="border-sides"
+          class="border-sides table-row"
           [ngClass]="{'pointer': !disableRowClick, 'even-row': i % 2 === 0, 'border-bottom': !last}">
         <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
@@ -202,8 +203,6 @@
             [fxFlex]="column.fxFlex"
             [fxLayoutAlign]="column.fxLayoutAlign"
             [ngSwitch]="column.dataType"
-            matRipple
-            [matRippleDisabled]="disableRowClick"
             style="border-radius: 15px">
           <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
             <div [matBadge]="column.badge ? column.badge.value(row) : undefined"

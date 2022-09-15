@@ -118,6 +118,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
+  private resizeObserver = new ResizeObserver(() => this.viewport.checkViewportSize());
 
   constructor(
     private csvService: NgxCsvService,
@@ -160,8 +161,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
     this.initializeScrollOffset();
 
-    const obs = new ResizeObserver(() => this.viewport.checkViewportSize());
-    obs.observe(this.scrollingElement.getElementRef().nativeElement);
+    this.resizeObserver.observe(this.scrollingElement.getElementRef().nativeElement);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -188,17 +188,14 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.filteredData = [];
     }
     const preselect = changes['preselect'];
-    if (preselect) {
-      if (preselect.currentValue) {
-        this.preselectRows();
-      } else {
-        this.selection.clear();
-      }
+    if (preselect?.currentValue) {
+      this.preselectRows();
     }
   }
 
   public ngOnDestroy() {
     this.saveCache(['scrollOffset']);
+    this.resizeObserver.disconnect();
   }
 
   public selectAllToggle() {
@@ -233,6 +230,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.filteredData = this.unsortedFilteredData.slice();
       return;
     }
+    // const column = this.columns.find((c) => c.field === event.active);
+    // const calculate = column?.calculate;
     this.filteredData = orderBy(this.filteredData, event.active, event.direction);
     this.saveCache(['sort']);
   }

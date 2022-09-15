@@ -17,6 +17,8 @@
     "moduleResolution": "node",
     "paths": {
       "dynamic-form": [
+        "dist/dynamic-form",
+        "dist/dynamic-form",
         "dist/dynamic-form"
       ],
       "export-csv": [

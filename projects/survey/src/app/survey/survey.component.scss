@@ -1,0 +1,30 @@
+mat-toolbar {
+  overflow: auto;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.toolbar-title {
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+}
+
+.small-subtitle {
+  font-size: 12px;
+  line-height: 14px;
+}
+.large-subtitle {
+  line-height: 20px;
+  font-size: 18px;
+}
+.small-title {
+  font-size: 16px;
+  line-height: 18px;
+}
+.large-title {
+  line-height: 24px;
+  font-size: 22px;
+}

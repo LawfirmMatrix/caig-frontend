@@ -1,0 +1,15 @@
+<div *ngIf="fields">
+  <form (ngSubmit)="formSubmit.emit({value: form.value, rawValue: form.getRawValue()})" [formGroup]="form">
+
+    <div *ngFor="let row of fields" class="form-row">
+      <div *ngFor="let field of row" class="form-row">
+        <dynamic-form-field [field]="field" [form]="form"></dynamic-form-field>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <button type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </form>
+
+</div>

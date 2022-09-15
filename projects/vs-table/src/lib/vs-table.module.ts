@@ -22,7 +22,7 @@ import {NumberFilterComponent} from './components/column-filter/number-filter/nu
 import {DateFilterComponent} from './components/column-filter/date-filter/date-filter.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule} from '@angular/material-moment-adapter';
-import {MAT_DATE_LOCALE, MatRippleModule} from '@angular/material/core';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {DefaultFilterComponent} from './components/column-filter/default-filter/default-filter.component';
 import {IconFilterComponent} from './components/column-filter/icon-filter/icon-filter.component';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -66,7 +66,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatDatepickerModule,
     MatMomentDateModule,
     MatGridListModule,
-    MatRippleModule,
     MatSlideToggleModule,
     MatDialogModule,
   ],
