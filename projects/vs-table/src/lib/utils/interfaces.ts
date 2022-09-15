@@ -79,3 +79,12 @@ export interface TableColumn<T> {
 export interface ICalculateColumn<T> extends TableColumn<T> {
   calculate: (row: T) => string;
 }
+
+export interface ButtonColumn<T> {
+  position: 'start' | 'end';
+  title: string;
+  label: (row: T) => string | number;
+  callback: (row: T) => void;
+  color?: (row: T) => ThemePalette;
+  disabled?: (row: T) => boolean;
+}

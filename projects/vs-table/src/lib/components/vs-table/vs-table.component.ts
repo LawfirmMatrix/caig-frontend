@@ -16,7 +16,7 @@ import {
   SelectionChange, TableCache,
   TableColumn,
   TableColumnDataType,
-  TableMenuItem
+  TableMenuItem, ButtonColumn
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some} from 'lodash-es';
@@ -65,6 +65,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   @Input() public textPainter: ((row: T) => string) | undefined;
   @Input() public preselect: ((row: T) => boolean) | undefined;
   @Input() public filter = '';
+  @Input() public buttonColumns: ButtonColumn<T>[] | undefined;
 
   @Output() public rowClick = new EventEmitter<RowClick<T>>(true);
   @Output() public selectionChange = new EventEmitter<SelectionChange<T>>(true);
@@ -115,6 +116,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
   public columnSummaries: {[key: string]: number} = {};
+  public buttonColumnsStart: ButtonColumn<T>[] | undefined;
+  public buttonColumnsEnd: ButtonColumn<T>[] | undefined;
 
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
@@ -172,7 +175,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.removeOldColumnFilters();
       this.initializeColumnFilters();
     }
-
     const data = changes['data'];
     const hasData = data?.currentValue;
     const sort = changes['sort']?.currentValue;
@@ -190,6 +192,10 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     const preselect = changes['preselect'];
     if (preselect?.currentValue) {
       this.preselectRows();
+    }
+    if (changes['buttonColumns']) {
+      this.buttonColumnsStart = this.buttonColumns?.filter((b) => b.position === 'start');
+      this.buttonColumnsEnd = this.buttonColumns?.filter((b) => b.position === 'end');
     }
   }
 
@@ -274,6 +280,11 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     column.hide = !column.hide;
     this.setVisibleColumns();
     this.saveCache(['columns']);
+  }
+
+  public buttonColumnClick(event: MouseEvent, column: ButtonColumn<T>, row: T): void {
+    event.stopPropagation();
+    column.callback(row);
   }
 
   public clearAllFilters(): void {

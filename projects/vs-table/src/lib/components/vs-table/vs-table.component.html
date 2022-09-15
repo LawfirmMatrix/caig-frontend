@@ -53,7 +53,13 @@
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
       </th>
-      <th *ngIf="!visibleColumns.length" fxFlex></th>
+      <th *ngIf="!visibleColumns.length && !buttonColumns?.length" fxFlex></th>
+      <th *ngFor="let column of buttonColumnsStart"
+          [style.width.px]="columnWidth"
+          fxLayoutAlign="center center"
+          class="cell mat-app-background">
+        {{column.title}}
+      </th>
       <th *ngFor="let column of visibleColumns"
           [fxFlex]="column.fxFlex"
           [fxLayoutAlign]="column.fxLayoutAlign"
@@ -156,6 +162,12 @@
           </div>
         </mat-menu>
       </th>
+      <th *ngFor="let column of buttonColumnsEnd"
+          [style.width.px]="columnWidth"
+          fxLayoutAlign="center center"
+          class="cell mat-app-background">
+        {{column.title}}
+      </th>
       <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">
         <button *ngIf="tableMenuItems"
                 [disabled]="!selection.selected.length"
@@ -198,7 +210,15 @@
         <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
         </td>
-        <td *ngIf="!visibleColumns.length" fxFlex></td>
+        <td *ngIf="!visibleColumns.length && !buttonColumns?.length" fxFlex></td>
+        <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center">
+          <button mat-raised-button
+                  [color]="column.color && column.color(row)"
+                  (click)="buttonColumnClick($event, column, row)"
+                  [disabled]="column.disabled && column.disabled(row)">
+            {{ column.label(row) }}
+          </button>
+        </td>
         <td *ngFor="let column of visibleColumns"
             [fxFlex]="column.fxFlex"
             [fxLayoutAlign]="column.fxLayoutAlign"
@@ -228,6 +248,14 @@
             </div>
           </div>
         </td>
+        <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center">
+          <button mat-raised-button
+                  [color]="column.color && column.color(row)"
+                  (click)="buttonColumnClick($event, column, row)"
+                  [disabled]="column.disabled && column.disabled(row)">
+            {{ column.label(row) }}
+          </button>
+        </td>
         <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <button *ngIf="rowMenuItems"
                   mat-icon-button
@@ -252,7 +280,8 @@
   </table>
   <tr #footer *ngIf="data && showFooter" [style.minHeight.px]="headerHeight" [style.minWidth.px]="minRowWidth + (padScrollbar ? scrollbarWidth : 0)" [style.paddingRight.px]="padScrollbar ? scrollbarWidth : 0" class="footer mat-app-background mat-elevation-z4 border-top">
     <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" fxLayoutAlign="center center"></td>
-    <td *ngIf="!visibleColumns.length" fxFlex></td>
+    <td *ngIf="!visibleColumns.length && !buttonColumns?.length" fxFlex></td>
+    <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center"></td>
     <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">
       <div *ngIf="column.sum" [ngSwitch]="column.dataType">
         <div *ngSwitchCase="columnDataTypes.currency">{{columnSummaries[column.field] | currency:'USD':'$' | accounting}}</div>
@@ -260,6 +289,7 @@
         <div *ngSwitchDefault>-</div>
       </div>
     </td>
+    <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center"></td>
     <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" fxLayoutAlign="center center"></td>
   </tr>
 </div>

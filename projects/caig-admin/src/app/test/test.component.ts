@@ -10,7 +10,7 @@ import {
   RowClick,
   SelectionChange,
   TextColumn,
-  DateColumn, CurrencyColumn, NumberColumn, CalculateColumn, IconColumn, ChangesColumn
+  DateColumn, CurrencyColumn, NumberColumn, CalculateColumn, IconColumn, ChangesColumn, ButtonColumn
 } from 'vs-table';
 import {Sort} from '@angular/material/sort';
 
@@ -102,6 +102,22 @@ export class TestComponent {
   public textPainter: undefined | ((row: TestItem) => string);
   public preselect: undefined | ((row: TestItem) => boolean);
   public filter = '';
+  public buttonColumns: ButtonColumn<TestItem>[] = [
+    {
+      title: '',
+      position: 'start',
+      label: (row) => 'Test',
+      color: () => 'primary',
+      callback: (row) => console.log(row),
+    },
+    {
+      title: 'Button',
+      position: 'end',
+      label: (row) => `Log ${row.id}`,
+      color: () => 'accent',
+      callback: (row) => console.log(row),
+    },
+  ];
 
   public rowClickEvent: RowClick<TestItem> | undefined;
   public rowSelectEvent: SelectionChange<TestItem> | undefined;
