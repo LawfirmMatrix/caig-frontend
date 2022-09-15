@@ -27,14 +27,19 @@
       <h1 fxLayoutAlign="center center">Configuration</h1>
       <div style="height: 300px; overflow: auto;">
         <mat-grid-list rowHeight="200px" cols="3">
-          <mat-grid-tile>
-            <h2>Load</h2>
-            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-              <button mat-stroked-button (click)="refreshData$.next()">Refresh Data</button>
+          <mat-grid-tile colspan="2">
+            <h2>Data</h2>
+            <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+              <button mat-stroked-button (click)="refreshData$.next(refreshData$.value)">Refresh</button>
               <mat-form-field>
-                <mat-label>Data Delay</mat-label>
+                <mat-label>Delay</mat-label>
                 <input matInput [(ngModel)]="dataDelay" type="number" />
                 <mat-hint>Milliseconds</mat-hint>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Rows</mat-label>
+                <input matInput [(ngModel)]="rowCount" (ngModelChange)="refreshData$.next(rowCount)" type="number" min="0" max="1000000" />
+                <mat-hint>0 - 1,000,000</mat-hint>
               </mat-form-field>
             </div>
           </mat-grid-tile>
@@ -123,6 +128,9 @@
               <mat-button-toggle value="odd">Odd Rows</mat-button-toggle>
             </mat-button-toggle-group>
           </mat-grid-tile>
+<!--          <mat-grid-tile>-->
+<!--            <h2>Button Columns</h2>-->
+<!--          </mat-grid-tile>-->
         </mat-grid-list>
       </div>
     </mat-card>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import {Observable, BehaviorSubject, delay, switchMap, of, startWith} from 'rxjs';
+import {Observable, BehaviorSubject, delay, switchMap, of, startWith, distinctUntilChanged, debounceTime} from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {
   TableColumn,
@@ -26,7 +26,7 @@ export class TestComponent {
       shareReplay()
     );
 
-  public refreshData$ = new BehaviorSubject<void>(void 0);
+  public refreshData$ = new BehaviorSubject<number>(10000);
   public dataDelay = 1000;
 
   public height = 600;
@@ -81,8 +81,11 @@ export class TestComponent {
   ]
   public data$: Observable<TestItem[] | null> = this.refreshData$
     .pipe(
-      switchMap(() =>
-        of(data).pipe(
+      debounceTime(200),
+      map((length) => length < 0 ? 0 : Math.min(length, 1000000)),
+      distinctUntilChanged(),
+      switchMap((length) =>
+        of(data(length)).pipe(
           delay(this.dataDelay),
           startWith(null)
         )
@@ -121,6 +124,8 @@ export class TestComponent {
 
   public rowClickEvent: RowClick<TestItem> | undefined;
   public rowSelectEvent: SelectionChange<TestItem> | undefined;
+
+  public rowCount: number = this.refreshData$.value;
 
   constructor(private breakpointObserver: BreakpointObserver) { }
 
@@ -172,7 +177,7 @@ const generateChanges: () => {field: string, oldValue: any, newValue: any}[] | u
   }))
 };
 
-const data: TestItem[] = Array.from({length: 100}).map((v, id) => {
+const data: (length: number) => TestItem[] = (length) => Array.from({length}).map((v, id) => {
   const amount = Math.random() * 1000;
   const quantity = Math.ceil(Math.random() * 10);
   return {
