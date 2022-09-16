@@ -16,7 +16,6 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
-import {CalculatePipe} from './pipes/calculate.pipe';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {NumberFilterComponent} from './components/column-filter/number-filter/number-filter.component';
 import {DateFilterComponent} from './components/column-filter/date-filter/date-filter.component';
@@ -42,7 +41,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     ChangesFilterComponent,
     ExportDataComponent,
     AccountingPipe,
-    CalculatePipe,
   ],
   imports: [
     CommonModule,

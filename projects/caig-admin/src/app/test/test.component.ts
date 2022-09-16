@@ -83,7 +83,6 @@ export class TestComponent {
     .pipe(
       debounceTime(200),
       map((length) => length < 0 ? 0 : Math.min(length, 1000000)),
-      distinctUntilChanged(),
       switchMap((length) =>
         of(data(length)).pipe(
           delay(this.dataDelay),

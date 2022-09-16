@@ -56,7 +56,7 @@
       <th *ngFor="let column of buttonColumnsStart"
           [style.width.px]="columnWidth"
           fxLayoutAlign="center center"
-          class="cell mat-app-background">
+          class="mat-app-background">
         {{column.title}}
       </th>
       <th *ngIf="!visibleColumns.length" fxFlex></th>
@@ -66,7 +66,7 @@
           [ngClass]="{'th-border': mouseoverColumn === column || columnFilter$.value[column.field].isActive}"
           (mouseenter)="mouseoverColumn = column"
           (mouseleave)="mouseoverColumn = null"
-          class="cell mat-app-background"
+          class="mat-app-background"
           cdkDrag
           cdkDragBoundary=".header">
         <div [fxFlex]="column.fxFlex" *cdkDragPlaceholder [style.minHeight.px]="headerHeight"></div>
@@ -165,7 +165,7 @@
       <th *ngFor="let column of buttonColumnsEnd"
           [style.width.px]="columnWidth"
           fxLayoutAlign="center center"
-          class="cell mat-app-background">
+          class="mat-app-background">
         {{column.title}}
       </th>
       <th *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center">
@@ -223,7 +223,7 @@
             [fxFlex]="column.fxFlex"
             [fxLayoutAlign]="column.fxLayoutAlign"
             [ngSwitch]="column.dataType"
-            style="border-radius: 15px">
+            style="border-radius: 15px;">
           <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
             <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
                  [matBadgeColor]="column.badge ? column.badge.color : undefined"
@@ -231,8 +231,8 @@
               <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
               <div *ngSwitchCase="columnDataTypes.currency">{{row[column.field] | currency:'USD':'$' | accounting}}</div>
               <div *ngSwitchCase="columnDataTypes.number">{{row[column.field] | number:column.format}}</div>
-              <div *ngSwitchCase="columnDataTypes.calc">{{row | calculate:column:columns}}</div>
-              <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row | calculate:column:columns}}</mat-icon></div>
+              <div *ngSwitchCase="columnDataTypes.calc">{{row[calcColumnPrefix + column.field]}}</div>
+              <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
               <div *ngSwitchCase="columnDataTypes.changes">
                 <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
                   <b>{{item.field}}:</b>
