@@ -2,12 +2,17 @@ import {ThemePalette} from '@angular/material/core';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
 import {FormGroup, ValidatorFn} from '@angular/forms';
 
+export abstract class FieldBaseComponent<T extends FieldBase<any>> {
+  public field!: T;
+  public form!: FormGroup;
+  public get control() { return this.form.controls[this.field.key] };
+}
+
 export abstract class FieldBase<T> {
   public value: T|undefined;
   public key: string;
   public label: string;
   public required: boolean;
-  public hide: boolean;
   public fxFlex: number;
   public color: ThemePalette;
   public hint: FormFieldHint|undefined;
@@ -23,7 +28,6 @@ export abstract class FieldBase<T> {
     this.key = options.key || '';
     this.label = options.label || '';
     this.required = !!options.required;
-    this.hide = !!options.hide;
     this.fxFlex = options.fxFlex === undefined ? 100 : options.fxFlex;
     this.color = options.color || 'accent';
     this.appearance = options.appearance || 'outline';
@@ -66,9 +70,8 @@ export enum ControlType {
   DateRange
 }
 
-export interface FormFieldHint {
-  msg: string;
-  align: 'start' | 'end';
+export class FormFieldHint {
+  constructor(public message: string, public align: 'start' | 'end' = 'start') { }
 }
 
 export type FieldPosition = 'start' | 'center' | 'end';

@@ -1,2 +1,5 @@
 <!--<router-outlet></router-outlet>-->
-<dynamic-form [form]="form" [fields]="fields" (formSubmit)="onSubmit($event)"></dynamic-form>
+
+<div style="height: 400px; width: 800px; overflow: auto;">
+  <dynamic-form [form]="form" [fields]="fields" (submitted)="onSubmit($event)"></dynamic-form>
+</div>
