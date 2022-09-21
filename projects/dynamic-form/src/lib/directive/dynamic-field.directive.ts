@@ -2,13 +2,17 @@ import {ComponentRef, Directive, Input, OnDestroy, OnInit, Type, ViewContainerRe
 import {FormGroup} from '@angular/forms';
 import {ControlType, FieldBase, FieldBaseComponent} from '../fields/field-base';
 import {InputComponent} from '../fields/input.component';
+import {SelectComponent} from '../fields/select.component';
+import {TextareaComponent} from '../fields/textarea.component';
+import {ButtonComponent} from '../fields/button.component';
+import {CheckboxComponent} from '../fields/checkbox.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
-  [ ControlType.Select ]: InputComponent,
-  [ ControlType.Textarea ]: InputComponent,
-  [ ControlType.Button ]: InputComponent,
-  [ ControlType.Checkbox ]: InputComponent,
+  [ ControlType.Select ]: SelectComponent,
+  [ ControlType.Textarea ]: TextareaComponent,
+  [ ControlType.Button ]: ButtonComponent,
+  [ ControlType.Checkbox ]: CheckboxComponent,
   [ ControlType.Radio ]: InputComponent,
   [ ControlType.Autocomplete ]: InputComponent,
   [ ControlType.Chips ]: InputComponent,

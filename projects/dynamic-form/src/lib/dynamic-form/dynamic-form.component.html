@@ -1,7 +1,7 @@
 <form fxLayout="column"
       (ngSubmit)="submitted.emit({value: form.value, rawValue: form.getRawValue()})"
       [formGroup]="form">
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" *ngFor="let row of fields">
+  <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="8px" *ngFor="let row of fields">
     <div *ngIf="!row.length" class="divider"></div>
     <div *ngFor="let field of row" [fxFlex]="field.fxFlex">
       <ng-container dynamicField [field]="field" [form]="form"></ng-container>

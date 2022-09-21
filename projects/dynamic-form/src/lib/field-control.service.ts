@@ -8,7 +8,7 @@ export class FieldControlService {
   public mergeControls(form: FormGroup, fields: FieldBase<any>[][]): void {
     const existingControls = Object.keys(form.controls);
     const flattenedFields = flatten(fields);
-    const flattenedFieldKeys = flattenedFields.map((field) => field.key);
+    const flattenedFieldKeys = flattenedFields.map((field) => field.key).filter((key) => !!key);
     const fieldsToAdd = flattenedFieldKeys.filter((field) => existingControls.indexOf(field) === -1);
     const fieldsToRemove = existingControls.filter((field) => flattenedFieldKeys.indexOf(field) === -1);
 

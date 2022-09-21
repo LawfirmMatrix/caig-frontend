@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FieldBase, InputField} from 'dynamic-form';
+import {FieldBase, InputField, SelectField, TextareaField, ButtonField, CheckboxField} from 'dynamic-form';
 import {FormGroup} from '@angular/forms';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -76,6 +77,53 @@ export class AppComponent implements OnInit {
         key: 'test0',
         label: 'Test 0',
       }),
+      new CheckboxField({
+        key: 'aaa',
+        label: 'AAA',
+      })
+    ],
+    [
+      new SelectField({
+        key: 'select1',
+        label: 'Select 1',
+        options: of([
+          { key: 'a', value: 'A' },
+          { key: 'b', value: 'B' },
+        ]),
+        displayField: 'value',
+        itemKey: 'key',
+        deselect: true,
+        optionFilter: {
+          label: 'what',
+          filter: (o) => o.key !== 'a',
+        },
+        multiple: true,
+      }),
+      new InputField({
+        key: 'test99',
+        label: 'Test 99',
+      }),
+      new ButtonField({
+        callback: () => console.log('test2'),
+        label: 'Test2',
+        key: '',
+      })
+    ],
+    [
+      new TextareaField({
+        key: 'textarea',
+        label: 'Text Area',
+        placeholder: 'Type here!',
+      }),
+      new ButtonField({
+        callback: () => console.log('test'),
+        label: 'Test',
+        key: '',
+      }),
+      new CheckboxField({
+        label: 'Check Me!',
+        key: 'checkbox',
+      })
     ]
   ];
   public form = new FormGroup({});

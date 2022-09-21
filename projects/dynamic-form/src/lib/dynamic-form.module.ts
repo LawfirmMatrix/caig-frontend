@@ -13,12 +13,23 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {SelectComponent} from './fields/select.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSelectModule} from '@angular/material/select';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {TextareaComponent} from './fields/textarea.component';
+import {ButtonComponent} from './fields/button.component';
+import {CheckboxComponent} from './fields/checkbox.component';
 
 @NgModule({
   declarations: [
     DynamicFormComponent,
     DynamicFieldDirective,
     InputComponent,
+    SelectComponent,
+    TextareaComponent,
+    ButtonComponent,
+    CheckboxComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +42,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatMenuModule,
     MatInputModule,
     MatTooltipModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatProgressBarModule,
   ],
   exports: [ DynamicFormComponent ],
   providers: [ FieldControlService ],
