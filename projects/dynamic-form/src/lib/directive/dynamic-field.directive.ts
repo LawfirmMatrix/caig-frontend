@@ -6,6 +6,7 @@ import {SelectComponent} from '../fields/select.component';
 import {TextareaComponent} from '../fields/textarea.component';
 import {ButtonComponent} from '../fields/button.component';
 import {CheckboxComponent} from '../fields/checkbox.component';
+import {RadioComponent} from '../fields/radio.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
@@ -13,7 +14,7 @@ const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Textarea ]: TextareaComponent,
   [ ControlType.Button ]: ButtonComponent,
   [ ControlType.Checkbox ]: CheckboxComponent,
-  [ ControlType.Radio ]: InputComponent,
+  [ ControlType.Radio ]: RadioComponent,
   [ ControlType.Autocomplete ]: InputComponent,
   [ ControlType.Chips ]: InputComponent,
   [ ControlType.Currency ]: InputComponent,

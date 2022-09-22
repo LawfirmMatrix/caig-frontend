@@ -20,6 +20,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {TextareaComponent} from './fields/textarea.component';
 import {ButtonComponent} from './fields/button.component';
 import {CheckboxComponent} from './fields/checkbox.component';
+import {RadioComponent} from './fields/radio.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import {CheckboxComponent} from './fields/checkbox.component';
     TextareaComponent,
     ButtonComponent,
     CheckboxComponent,
+    RadioComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +48,7 @@ import {CheckboxComponent} from './fields/checkbox.component';
     MatCheckboxModule,
     MatSelectModule,
     MatProgressBarModule,
+    MatRadioModule,
   ],
   exports: [ DynamicFormComponent ],
   providers: [ FieldControlService ],

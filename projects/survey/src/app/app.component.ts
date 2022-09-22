@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FieldBase, InputField, SelectField, TextareaField, ButtonField, CheckboxField} from 'dynamic-form';
+import {FieldBase, InputField, SelectField, TextareaField, ButtonField, CheckboxField, RadioField} from 'dynamic-form';
 import {FormGroup} from '@angular/forms';
 import {of} from 'rxjs';
 
@@ -80,6 +80,16 @@ export class AppComponent implements OnInit {
       new CheckboxField({
         key: 'aaa',
         label: 'AAA',
+      }),
+      new RadioField({
+        key: 'radio',
+        label: 'Radio',
+        options: of([
+          { key: 'a', value: 'A' },
+          { key: 'b', value: 'B' },
+          { key: 'c', value: 'C' },
+        ]),
+        fxLayout: 'row',
       })
     ],
     [

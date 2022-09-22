@@ -10,3 +10,4 @@ export * from './lib/fields/select.component';
 export * from './lib/fields/textarea.component';
 export * from './lib/fields/button.component';
 export * from './lib/fields/checkbox.component';
+export * from './lib/fields/radio.component';
