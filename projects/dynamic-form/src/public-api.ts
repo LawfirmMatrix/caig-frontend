@@ -11,3 +11,6 @@ export * from './lib/fields/textarea.component';
 export * from './lib/fields/button.component';
 export * from './lib/fields/checkbox.component';
 export * from './lib/fields/radio.component';
+export * from './lib/fields/autocomplete.component';
+export * from './lib/fields/chips.component';
+export * from './lib/fields/currency.component';

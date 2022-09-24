@@ -26,16 +26,8 @@ export class DynamicFormComponent implements OnChanges {
     if (fields?.currentValue) {
       this.fcs.mergeControls(this.form, this.fields as FieldBase<any>[][]);
     }
-    // if (fields) {
-    //   const maxRows = max(Object.keys(countBy(this.fields, 'length')));
-    //   const maxRowsNum = maxRows ? Number(maxRows) : 0;
-    //   this.minRowLength = (maxRowsNum * 201) + (((maxRowsNum || 1) - 1) * 8);
-    //   if (fields.currentValue) {
-    //     this.fcs.mergeControls(this.form, this.fields as FieldBase<any>[][]);
-    //   }
-    // }
     if (model?.currentValue) {
-      this.form?.patchValue(this.model, {emitEvent: false});
+      this.form.patchValue(this.model, {emitEvent: false});
     }
   }
 }

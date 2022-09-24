@@ -22,6 +22,11 @@ import {ButtonComponent} from './fields/button.component';
 import {CheckboxComponent} from './fields/checkbox.component';
 import {RadioComponent} from './fields/radio.component';
 import {MatRadioModule} from '@angular/material/radio';
+import {AutocompleteComponent, AutocompleteInputComponent} from './fields/autocomplete.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {ChipsComponent, ChipsInputComponent} from './fields/chips.component';
+import {MatChipsModule} from '@angular/material/chips';
+import {CurrencyComponent, CurrencyInputComponent} from './fields/currency.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +38,12 @@ import {MatRadioModule} from '@angular/material/radio';
     ButtonComponent,
     CheckboxComponent,
     RadioComponent,
+    AutocompleteComponent,
+    AutocompleteInputComponent,
+    ChipsComponent,
+    ChipsInputComponent,
+    CurrencyComponent,
+    CurrencyInputComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +60,8 @@ import {MatRadioModule} from '@angular/material/radio';
     MatSelectModule,
     MatProgressBarModule,
     MatRadioModule,
+    MatAutocompleteModule,
+    MatChipsModule,
   ],
   exports: [ DynamicFormComponent ],
   providers: [ FieldControlService ],

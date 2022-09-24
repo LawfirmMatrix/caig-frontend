@@ -1,5 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {FieldBase, InputField, SelectField, TextareaField, ButtonField, CheckboxField, RadioField} from 'dynamic-form';
+import {
+  FieldBase,
+  InputField,
+  SelectField,
+  TextareaField,
+  ButtonField,
+  CheckboxField,
+  RadioField,
+  AutocompleteField,
+  ChipsField,
+  CurrencyField,
+} from 'dynamic-form';
 import {FormGroup} from '@angular/forms';
 import {of} from 'rxjs';
 
@@ -134,6 +145,36 @@ export class AppComponent implements OnInit {
         label: 'Check Me!',
         key: 'checkbox',
       })
+    ],
+    [
+      new AutocompleteField({
+        label: 'Employee',
+        key: 'employeeId',
+        options: of([
+          { id: 1, name: 'Employee 1' },
+          { id: 2, name: 'Employee 2' },
+          { id: 3, name: 'Employee 3' },
+        ]),
+        displayField: 'name',
+        itemKey: 'id',
+      }),
+    ],
+    [
+      new ChipsField({
+        label: 'Chips Freeform',
+        key: 'chips1',
+      }),
+      new ChipsField({
+        label: 'Chips Autocomplete',
+        key: 'chips2',
+        options: of(['ABC', '123', 'Blah']),
+      }),
+    ],
+    [
+      new CurrencyField({
+        label: 'MONEYS',
+        key: 'currency',
+      }),
     ]
   ];
   public form = new FormGroup({});

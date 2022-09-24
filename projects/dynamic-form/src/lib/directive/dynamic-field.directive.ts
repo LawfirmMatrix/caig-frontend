@@ -7,6 +7,9 @@ import {TextareaComponent} from '../fields/textarea.component';
 import {ButtonComponent} from '../fields/button.component';
 import {CheckboxComponent} from '../fields/checkbox.component';
 import {RadioComponent} from '../fields/radio.component';
+import {AutocompleteComponent} from '../fields/autocomplete.component';
+import {ChipsComponent} from '../fields/chips.component';
+import {CurrencyComponent} from '../fields/currency.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
@@ -15,9 +18,9 @@ const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Button ]: ButtonComponent,
   [ ControlType.Checkbox ]: CheckboxComponent,
   [ ControlType.Radio ]: RadioComponent,
-  [ ControlType.Autocomplete ]: InputComponent,
-  [ ControlType.Chips ]: InputComponent,
-  [ ControlType.Currency ]: InputComponent,
+  [ ControlType.Autocomplete ]: AutocompleteComponent,
+  [ ControlType.Chips ]: ChipsComponent,
+  [ ControlType.Currency ]: CurrencyComponent,
   [ ControlType.PhoneNumber ]: InputComponent,
   [ ControlType.Date ]: InputComponent,
   [ ControlType.DateRange ]: InputComponent,
