@@ -40,7 +40,7 @@ import {ThemePalette} from '@angular/material/core';
             [disabled]="button.disabled && button.disabled(control.value)">
       <mat-icon>{{button.icon}}</mat-icon>
     </button>
-    <button *ngIf="field.menu" mat-icon-button style="margin-bottom: 16px" [matMenuTriggerFor]="phoneMenu" [disabled]="field.menu.disabled && field.menu.disabled(control.value)">
+    <button *ngIf="field.menu" mat-icon-button type="button" [matMenuTriggerFor]="phoneMenu" [disabled]="field.menu.disabled && field.menu.disabled(control.value)">
       <mat-icon>{{field.menu.icon}}</mat-icon>
     </button>
     <mat-menu #phoneMenu="matMenu">
@@ -50,7 +50,7 @@ import {ThemePalette} from '@angular/material/core';
       </button>
     </mat-menu>
   `,
-  styles: ['.mat-icon-button { margin-top: 8px }'],
+  styles: ['.mat-icon-button { margin-top: 10px }'],
 })
 export class InputComponent extends FieldBaseComponent<InputField> { }
 

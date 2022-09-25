@@ -12,9 +12,11 @@ import {
 import {ControlValueAccessor, NgControl} from '@angular/forms';
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-base';
+import {formatCurrency} from '@angular/common';
+import {isNaN} from 'lodash-es';
 
 @Component({
   selector: 'dynamic-form-currency-input',
@@ -30,7 +32,7 @@ import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-b
              [value]="inputValue"
              [required]="required"
              [disabled]="disabled"
-             (keyup)="handleInput($event)"
+             (change)="formatValue()"
              [placeholder]="placeholder">
     </div>
   `,
@@ -169,8 +171,11 @@ export class CurrencyInputComponent implements OnChanges, ControlValueAccessor, 
   }
 
   public writeValue(value: any): void {
-    const val = String(value);
-    this.value = val ? formatAmount(parseValue(val)) : '';
+    if (!value && value !== 0) {
+      return;
+    }
+    const val = Number(value);
+    this.value = isNaN(val) ? '' : formatCurrency(val, 'en-US', '');
   }
 
   public registerOnChange(onChange: () => void): void {
@@ -185,29 +190,10 @@ export class CurrencyInputComponent implements OnChanges, ControlValueAccessor, 
     this.disabled = isDisabled;
   }
 
-  public handleInput(event?: KeyboardEvent): void {
-    // @FIXME -- many problems with this approach. find new one.
-
-    let currCaretPos = this.currencyInput.nativeElement.selectionStart || 0;
-    let prevValue = this.currencyInput.nativeElement.value;
-
-    // @FIXME -- delete when caret is at decimal point will increase input value, should just move caret over decimal point with no value change instead
-    // if (event.key === 'Delete' && currCaretPos === 0 && prevValue) {
-    //   prevValue = prevValue.substring(1);
-    // }
-
-    if (!this.allowNegative) {
-      prevValue = prevValue.replace('-', '');
-      currCaretPos = 0;
-    }
-
-    const numValue = parseValue(prevValue);
-
-    this.currencyInput.nativeElement.value = this.allowNegative && prevValue === '-' ? prevValue : formatAmount(numValue);
-
-    this.onChange(numValue || null);
-
-    setCaretPosition(this.currencyInput.nativeElement, calculateNewCaretPos(prevValue, this.currencyInput.nativeElement.value, currCaretPos));
+  public formatValue(): void {
+    const digitsOnly = this.currencyInput.nativeElement.value.replace(/[^0-9.-]+/g, '');
+    this.currencyInput.nativeElement.value = digitsOnly ?
+      formatCurrency(coerceNumberProperty(digitsOnly), 'en-US', '') : '';
   }
 }
 
@@ -246,43 +232,4 @@ export class CurrencyField extends FieldBase<string> {
 export interface CurrencyOptions extends BaseOptions<string> {
   placeholder?: string;
   allowNegative?: boolean;
-}
-
-function parseValue(value: string): string {
-  const valueArr = value.split('.');
-  value = valueArr[0];
-  if (valueArr[1]) {
-    value += '.' + valueArr[1].substring(0, 2);
-  }
-  const num = parseFloat(value.replace(/,/g, ''));
-  return !isNaN(num) ? num.toFixed(2) : '';
-}
-
-function formatAmount(value: string): string {
-  if (!value) {
-    return '';
-  }
-  const negative = value.startsWith('-');
-  return value.replace(/./g, (c, i, a) =>
-    (negative ? (i < 2 ? 0 : i) : i) && c !== '.' && ((a.length - i) % 3 === 0) ? ',' + c : c
-  );
-}
-
-function calculateNewCaretPos(prevValue: string, currValue: string, currPos: number): number {
-  return currPos + getNotDecimalsCount(currValue) - getNotDecimalsCount(prevValue);
-
-  function getNotDecimalsCount(str: string): number {
-    let count = 0;
-    for (let i = 0; i < currPos; i++) {
-      if (!/^\d+$/.test(str[i])) {
-        count++;
-      }
-    }
-    return count;
-  }
-}
-
-
-function setCaretPosition(ctrl: HTMLInputElement, pos: number | null): void {
-  ctrl.setSelectionRange(pos, pos);
 }
