@@ -15,7 +15,6 @@ import {Subject} from 'rxjs';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-base';
-import {formatCurrency} from '@angular/common';
 
 @Component({
   selector: 'dynamic-form-currency-input',

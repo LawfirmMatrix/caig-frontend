@@ -10,6 +10,7 @@ import {
   AutocompleteField,
   ChipsField,
   CurrencyField,
+  PhoneNumberField,
 } from 'dynamic-form';
 import {FormGroup} from '@angular/forms';
 import {of} from 'rxjs';
@@ -175,6 +176,11 @@ export class AppComponent implements OnInit {
         label: 'MONEYS',
         key: 'currency',
       }),
+      new PhoneNumberField({
+        label: 'Phone',
+        key: 'phone',
+        extension: true,
+      })
     ]
   ];
   public form = new FormGroup({});

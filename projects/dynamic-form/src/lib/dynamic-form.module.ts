@@ -27,6 +27,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {ChipsComponent, ChipsInputComponent} from './fields/chips.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {CurrencyComponent, CurrencyInputComponent} from './fields/currency.component';
+import {PhoneNumberComponent, PhoneNumberInputComponent} from './fields/phone-number.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,8 @@ import {CurrencyComponent, CurrencyInputComponent} from './fields/currency.compo
     ChipsInputComponent,
     CurrencyComponent,
     CurrencyInputComponent,
+    PhoneNumberComponent,
+    PhoneNumberInputComponent,
   ],
   imports: [
     CommonModule,

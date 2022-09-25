@@ -10,6 +10,7 @@ import {RadioComponent} from '../fields/radio.component';
 import {AutocompleteComponent} from '../fields/autocomplete.component';
 import {ChipsComponent} from '../fields/chips.component';
 import {CurrencyComponent} from '../fields/currency.component';
+import {PhoneNumberComponent} from '../fields/phone-number.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
@@ -21,7 +22,7 @@ const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Autocomplete ]: AutocompleteComponent,
   [ ControlType.Chips ]: ChipsComponent,
   [ ControlType.Currency ]: CurrencyComponent,
-  [ ControlType.PhoneNumber ]: InputComponent,
+  [ ControlType.PhoneNumber ]: PhoneNumberComponent,
   [ ControlType.Date ]: InputComponent,
   [ ControlType.DateRange ]: InputComponent,
 };
