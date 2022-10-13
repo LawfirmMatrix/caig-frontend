@@ -11,6 +11,8 @@ import {AutocompleteComponent} from '../fields/autocomplete.component';
 import {ChipsComponent} from '../fields/chips.component';
 import {CurrencyComponent} from '../fields/currency.component';
 import {PhoneNumberComponent} from '../fields/phone-number.component';
+import {DateComponent} from '../fields/date.component';
+import {DateRangeComponent} from '../fields/date-range.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
@@ -23,8 +25,8 @@ const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Chips ]: ChipsComponent,
   [ ControlType.Currency ]: CurrencyComponent,
   [ ControlType.PhoneNumber ]: PhoneNumberComponent,
-  [ ControlType.Date ]: InputComponent,
-  [ ControlType.DateRange ]: InputComponent,
+  [ ControlType.Date ]: DateComponent,
+  [ ControlType.DateRange ]: DateRangeComponent,
 };
 
 @Directive({ selector: '[dynamicField]' })

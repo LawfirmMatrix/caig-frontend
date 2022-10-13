@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {FieldBase} from 'dynamic-form';
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +39,8 @@ export interface SurveyStep {
 
 export interface SurveyQuestion {
   question: string;
-  fields: any;
-  handsetFields: any; // @TODO - type
-  // fields: BaseField<any>[][];
-  // handsetFields?: BaseField<any>[][];
+  fields: FieldBase<any>[][];
+  handsetFields?: FieldBase<any>[][];
   invalid?: (formValue: any) => boolean;
 }
 

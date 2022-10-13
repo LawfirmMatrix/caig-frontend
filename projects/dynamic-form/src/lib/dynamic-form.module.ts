@@ -28,6 +28,23 @@ import {ChipsComponent, ChipsInputComponent} from './fields/chips.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {CurrencyComponent, CurrencyInputComponent} from './fields/currency.component';
 import {PhoneNumberComponent, PhoneNumberInputComponent} from './fields/phone-number.component';
+import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS} from '@angular/material/core';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateComponent} from './fields/date.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {DateRangeComponent} from './fields/date-range.component';
+
+export const DYNAMIC_FORM_DATE_FORMATS = {
+  parse: {
+    dateInput: 'L',
+  },
+  display: {
+    dateInput: 'L',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'L',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -47,6 +64,8 @@ import {PhoneNumberComponent, PhoneNumberInputComponent} from './fields/phone-nu
     CurrencyInputComponent,
     PhoneNumberComponent,
     PhoneNumberInputComponent,
+    DateComponent,
+    DateRangeComponent,
   ],
   imports: [
     CommonModule,
@@ -65,8 +84,20 @@ import {PhoneNumberComponent, PhoneNumberInputComponent} from './fields/phone-nu
     MatRadioModule,
     MatAutocompleteModule,
     MatChipsModule,
+    MatDatepickerModule,
   ],
   exports: [ DynamicFormComponent ],
-  providers: [ FieldControlService ],
+  providers: [
+    FieldControlService,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [ MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS ],
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: DYNAMIC_FORM_DATE_FORMATS,
+    },
+  ],
 })
 export class DynamicFormModule { }

@@ -15,3 +15,5 @@ export * from './lib/fields/autocomplete.component';
 export * from './lib/fields/chips.component';
 export * from './lib/fields/currency.component';
 export * from './lib/fields/phone-number.component';
+export * from './lib/fields/date.component';
+export * from './lib/fields/date-range.component';

@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {takeUntil, ReplaySubject} from 'rxjs';
-import {Survey} from '../survey.service';
+import {Survey} from './survey.service';
 
 @Component({
   selector: 'app-survey',
