@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import {FieldBase} from 'dynamic-form';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class SurveyService {
-
-  constructor() { }
+  constructor(private http: HttpClient) { }
+  public get(): Observable<Survey[]> {
+    return this.http.get<Survey[]>('/api-mock/survey');
+  }
+  public getOne(id: number | string): Observable<Survey> {
+    return this.http.get<Survey>(`/api-mock/survey/${id}`);
+  }
 }
 
 export interface Survey {

@@ -30,7 +30,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/caig-admin/src/styles.scss"
+              "projects/caig-admin/src/styles.scss",
+              "projects/notifications/styles.scss"
             ],
             "scripts": [],
             "serviceWorker": true,
@@ -139,7 +140,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "projects/survey/src/styles.scss"
+              "projects/survey/src/styles.scss",
+              "projects/notifications/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -372,6 +374,37 @@
             "main": "projects/dynamic-form/src/test.ts",
             "tsConfig": "projects/dynamic-form/tsconfig.spec.json",
             "karmaConfig": "projects/dynamic-form/karma.conf.js"
+          }
+        }
+      }
+    },
+    "mock-api": {
+      "projectType": "library",
+      "root": "projects/mock-api",
+      "sourceRoot": "projects/mock-api/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/mock-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/mock-api/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/mock-api/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/mock-api/src/test.ts",
+            "tsConfig": "projects/mock-api/tsconfig.spec.json",
+            "karmaConfig": "projects/mock-api/karma.conf.js"
           }
         }
       }

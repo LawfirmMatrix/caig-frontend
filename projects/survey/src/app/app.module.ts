@@ -2,32 +2,33 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SurveyComponent } from './survey/survey.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import {FlexLayoutModule} from '@angular/flex-layout';
 import {AppMaterialModule} from './app-material.module';
-import {DynamicFormModule} from 'dynamic-form';
+import {NotificationsModule} from 'notifications';
+import {MockApiModule} from 'mock-api';
+import {mockApiServices} from './mock-api';
+import {HttpClientModule} from '@angular/common/http';
+import {SurveyModule} from './survey/survey.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SurveyComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppMaterialModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    FlexLayoutModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    DynamicFormModule,
+    NotificationsModule.forRoot(),
+    MockApiModule.forRoot(mockApiServices),
+    HttpClientModule,
+    SurveyModule,
   ],
   bootstrap: [AppComponent]
 })

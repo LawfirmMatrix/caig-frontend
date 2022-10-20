@@ -1,26 +1,54 @@
-<div fxFlexFill fxLayout="column" [ngStyle]="survey?.backgroundStyle || {}">
-  <mat-toolbar *ngIf="survey" class="mat-elevation-z10" [color]="!survey.toolbarStyle ? 'primary' : undefined" [ngStyle]="survey.toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">
-    <div class="toolbar-title" [ngClass]="isHandset ? 'small-title' : 'large-title'">{{survey.fullName}}</div>
-    <div class="toolbar-title" [ngClass]="isHandset ? 'small-subtitle' : 'large-subtitle'">{{survey.location}}</div>
-  </mat-toolbar>
-  <div fxFlex style="overflow: auto" [ngStyle]="survey?.surveyStyle || {}">
-    <div *ngIf="isSubmitting || !survey; else loaded" fxFlexFill fxLayoutAlign="center center">
-      <mat-spinner></mat-spinner>
+<div *ngIf="survey$ | async as survey" fxFlexFill fxLayout="column" [ngStyle]="survey.backgroundStyle || {}">
+  <mat-toolbar class="mat-elevation-z10"
+               [color]="!survey.toolbarStyle ? 'primary' : undefined"
+               [ngStyle]="survey.toolbarStyle || {}"
+               fxLayout="column"
+               fxLayoutAlign="center center">
+    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">
+      {{survey.fullName}}
     </div>
-    <ng-template #loaded>
-<!--      <div *ngIf="isCompleted; else showSteps" fxFlexFill fxLayoutAlign="center center" fxLayout="column" [ngStyle]="survey?.foregroundStyle || {}">-->
+    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-subtitle' : 'large-subtitle'">
+      {{survey.location}}
+    </div>
+  </mat-toolbar>
+  <div fxFlex style="overflow: auto" [ngStyle]="survey.surveyStyle || {}">
+    SURVEY CONTENT
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!--<div fxFlexFill fxLayout="column" [ngStyle]="questionnaire?.backgroundStyle || {}">-->
+<!--  <mat-toolbar *ngIf="questionnaire" class="mat-elevation-z10" [color]="!questionnaire.toolbarStyle ? 'primary' : undefined" [ngStyle]="questionnaire.toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">-->
+<!--    <div class="toolbar-title" [ngClass]="isHandset ? 'small-title' : 'large-title'">{{questionnaire.fullName}}</div>-->
+<!--    <div class="toolbar-title" [ngClass]="isHandset ? 'small-subtitle' : 'large-subtitle'">{{questionnaire.location}}</div>-->
+<!--  </mat-toolbar>-->
+<!--  <div fxFlex style="overflow: auto" [ngStyle]="questionnaire?.questionnaireStyle || {}">-->
+<!--    <div *ngIf="isSubmitting || !questionnaire; else loaded" fxFlexFill fxLayoutAlign="center center">-->
+<!--      <mat-spinner></mat-spinner>-->
+<!--    </div>-->
+<!--    <ng-template #loaded>-->
+<!--      <div *ngIf="isCompleted; else showSteps" fxFlexFill fxLayoutAlign="center center" fxLayout="column" [ngStyle]="questionnaire?.foregroundStyle || {}">-->
 <!--        <h1>Survey Completed!</h1>-->
 <!--        <p>Thank you for completing the survey, {{forms[0].value.firstName}} {{forms[0].value.lastName}}.</p>-->
 <!--        <h2 fxFlexOffset="30px" *ngIf="nextSurvey">You will now be redirected to participate in the follow up survey - {{nextSurvey.name}}</h2>-->
 <!--      </div>-->
 <!--      <ng-template #showSteps>-->
-<!--        <mat-card *ngIf="survey.headerTitle || survey.headerContent"-->
+<!--        <mat-card *ngIf="questionnaire.headerTitle || questionnaire.headerContent"-->
 <!--                  [ngClass]="{'full-body': !isHandset}"-->
 <!--                  class="mat-elevation-z7">-->
-<!--          <mat-card-title *ngIf="survey.headerTitle">{{survey.headerTitle}}</mat-card-title>-->
-<!--          <mat-card-content [ngStyle]="{minHeight: survey.logo?.height}">-->
-<!--            <img *ngIf="survey.logo as logo" alt="Union Logo" [src]="logo.url" />-->
-<!--            <p *ngFor="let p of survey.headerContent">{{p}}</p>-->
+<!--          <mat-card-title *ngIf="questionnaire.headerTitle">{{questionnaire.headerTitle}}</mat-card-title>-->
+<!--          <mat-card-content [ngStyle]="{minHeight: questionnaire.logo?.height}">-->
+<!--            <img *ngIf="questionnaire.logo as logo" alt="Union Logo" [src]="logo.url" />-->
+<!--            <p *ngFor="let p of questionnaire.headerContent">{{p}}</p>-->
 <!--          </mat-card-content>-->
 <!--        </mat-card>-->
 <!--        <mat-stepper #stepper-->
@@ -30,7 +58,7 @@
 <!--                     class="mat-elevation-z15"-->
 <!--                     [selectedIndex]="selectedIndex"-->
 <!--                     (animationDone)="scrollToTitle(stepper.selectedIndex)">-->
-<!--          <mat-step *ngFor="let step of survey.steps; let i = index; first as first"-->
+<!--          <mat-step *ngFor="let step of questionnaire.steps; let i = index; first as first"-->
 <!--                    [stepControl]="forms[i]"-->
 <!--                    [completed]="step.completed">-->
 <!--            <ng-template matStepLabel>-->
@@ -75,6 +103,6 @@
 <!--          </ng-template>-->
 <!--        </mat-stepper>-->
 <!--      </ng-template>-->
-    </ng-template>
-  </div>
-</div>
+<!--    </ng-template>-->
+<!--  </div>-->
+<!--</div>-->

@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start:survey": "ng serve survey --proxy-config proxy.conf.json",
+    "start:caig-admin": "ng serve caig-admin --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:libs": "ng build export-csv && ng build vs-table && ng build dynamic-form"
+    "build:survey": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build survey"
   },
   "private": true,
   "dependencies": {

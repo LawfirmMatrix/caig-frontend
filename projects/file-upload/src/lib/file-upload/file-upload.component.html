@@ -1,0 +1,37 @@
+<div fxFlex fxLayout="column" fxLayoutGap="8px">
+  <div *ngIf="!isLoading" fxFlex fxLayoutAlign="center center" dropZone (dropped)="chooseFile($event)">
+    <div>Drag & Drop</div>
+  </div>
+  <div *ngIf="!isLoading" fxLayoutAlign="end center">
+    <button mat-raised-button color="accent" (click)="fileInput.click()">Choose File(s)</button>
+  </div>
+  <input #fileInput type="file" (change)="chooseFile(fileInput.files)" multiple />
+  <h3 *ngIf="queuedFiles.length">{{isLoading ? 'Uploading' : 'Queued'}} File{{queuedFiles.length === 1 ? '' : 's'}} ({{queuedFiles.length}})</h3>
+  <mat-list>
+    <mat-list-item *ngFor="let file of queuedFiles; let i = index">
+      <mat-icon *ngIf="!isLoading"
+                mat-list-icon
+                color="warn"
+                (click)="queuedFiles.splice(i, 1)">
+        clear
+      </mat-icon>
+      <div mat-line>{{file.name}}</div>
+      <div mat-line> {{file.size | filesize}} </div>
+    </mat-list-item>
+  </mat-list>
+  <div *ngIf="queuedFiles.length" fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxFlex>
+      <button *ngIf="!isLoading" mat-button color="warn" (click)="queuedFiles = []">Clear All</button>
+    </div>
+    <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+      <button mat-raised-button
+              color="primary"
+              (click)="upload()"
+              [disabled]="isLoading">
+        Upload File{{queuedFiles.length === 1 ? '' : 's'}}
+      </button>
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div fxFlex></div>
+  </div>
+</div>

@@ -245,7 +245,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     const column = this.columns.find((c) => c.field === event.active);
     const calculate = column?.calculate;
     const sortBy = calculate ? (this.calcColumnPrefix + event.active) : event.active;
-    this.filteredData = orderBy(this.filteredData, sortBy, event.direction);
+    this.filteredData = orderBy(this.filteredData, (row: any) => typeof row[sortBy] === 'string' ? row[sortBy].toLowerCase() : row[sortBy], event.direction);
     this.saveCache(['sort']);
   }
 

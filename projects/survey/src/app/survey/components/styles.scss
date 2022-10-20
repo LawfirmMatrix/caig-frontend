@@ -1,0 +1,46 @@
+h1 {
+  margin-left: 16px;
+}
+
+mat-toolbar {
+  overflow: auto;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+.toolbar-title {
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+}
+.small-title {
+  font-size: 16px;
+  line-height: 18px;
+}
+.large-title {
+  line-height: 24px;
+  font-size: 22px;
+}
+
+.header-card {
+  margin: 10px;
+
+  mat-card-content {
+    text-indent: 2rem;
+    font-size: large;
+    p:not(:last-of-type) {
+      margin-bottom: 20px;
+    }
+    img {
+      float: left;
+      margin: 0 20px 5px 0;
+    }
+  }
+}
+
+.full-body {
+  margin: 10px auto;
+  width: 50%;
+  min-width: 700px;
+}

@@ -1,0 +1,22 @@
+.mat-snack-bar-container {
+  .detailed-snack-error-message {
+    color: rgb(255,82,82);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  &.warning-snack {
+    color: darkorange;
+  }
+
+  &.error-snack {
+    color: rgb(255,82,82);
+  }
+
+  &.detailed-snack {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
