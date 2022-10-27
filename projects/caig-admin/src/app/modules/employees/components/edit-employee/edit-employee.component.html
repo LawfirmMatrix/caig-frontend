@@ -1,0 +1,22 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="10px" style="padding: 16px">
+  <div fxLayout="row" style="overflow: auto">
+    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <h1>Edit Employee</h1>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="disableSave">Save</button>
+  </div>
+  <mat-divider></mat-divider>
+  <div fxFlex style="overflow: auto">
+    <mat-grid-list [cols]="gridColumns" rowHeight="10px">
+      <mat-grid-tile *ngFor="let section of sections" [rowspan]="section.rowspan" [colspan]="isHandset ? 1 : section.cols">
+        <mat-card class="mat-elevation-z2">
+          <mat-card-title>{{section.title}}</mat-card-title>
+          <mat-card-content>
+            <dynamic-form [form]="form" [fields]="section.fields" [model]="employee"></dynamic-form>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

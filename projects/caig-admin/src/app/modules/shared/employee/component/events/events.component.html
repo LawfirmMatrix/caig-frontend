@@ -1,0 +1,20 @@
+<div fxFlex fxLayout="column">
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end center">
+    <button mat-raised-button *ngFor="let shortcut of shortcuts" (click)="addEvent(employee, shortcut.code)">
+      {{shortcut.name}}
+    </button>
+    <button mat-icon-button color="primary" (click)="addEvent(employee)"><mat-icon>add_circle</mat-icon></button>
+  </div>
+  <div fxFlex>
+    <vs-table
+      id="employee-events"
+      [disableRowClick]="true"
+      [disableSelection]="true"
+      [disableSearch]="true"
+      [disableOptions]="true"
+      [rowMenuItems]="options"
+      [data]="employee.events"
+      [columns]="columns"
+    ></vs-table>
+  </div>
+</div>

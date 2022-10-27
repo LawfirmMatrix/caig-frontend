@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import {Observable, BehaviorSubject, delay, switchMap, of, startWith, distinctUntilChanged, debounceTime} from 'rxjs';
+import {Observable, BehaviorSubject, delay, switchMap, of, startWith, debounceTime} from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {
   TableColumn,

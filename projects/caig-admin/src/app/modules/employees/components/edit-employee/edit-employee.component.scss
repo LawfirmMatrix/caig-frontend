@@ -1,0 +1,10 @@
+.mat-grid-tile {
+  .mat-card {
+    height: calc(100% - 64px);
+    width: calc(100% - 64px);
+    overflow: auto hidden;
+  }
+  .mat-card-content {
+    padding-top: 10px;
+  }
+}

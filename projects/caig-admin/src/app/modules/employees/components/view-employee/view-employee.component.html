@@ -1,0 +1,107 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="10px" style="padding: 16px">
+  <div class="nav toolbar" fxLayout="row">
+    <div fxFlex *ngIf="employeeIndex as index">
+      <div fxFlex *ngIf="allEmployees$ | async as employees">
+        <div *ngIf="employees.length" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+          <button mat-raised-button [disabled]="employees.length < 2 || index === 1" (click)="cycleTo(employees, index - 2)">Previous</button>
+          <div style="text-align: center">Displaying record {{index}} of {{employees.length}} records shown in search page</div>
+          <button mat-raised-button [disabled]="employees.length < 2 || index === employees.length" (click)="cycleTo(employees, index)">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" style="overflow: auto">
+    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>
+  </div>
+  <h1>{{employee?.firstName}} {{employee?.lastName}}</h1>
+  <mat-divider></mat-divider>
+  <div fxFlex style="overflow: auto" *ngIf="employee; else loadingEmployee">
+    <mat-grid-list *ngIf="gridColumns$ | async as cols" [cols]="cols" rowHeight="75px">
+      <mat-grid-tile rowspan="12">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Contact Information</mat-card-title>
+          </mat-card-header>
+          <app-contact-info [employee]="employee"></app-contact-info>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="2">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Status</mat-card-title>
+          </mat-card-header>
+          <app-status [employee]="employee"></app-status>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="2">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Tags</mat-card-title>
+          </mat-card-header>
+          <app-tags [employee]="employee"></app-tags>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="5">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Contacts with Employee (recent first)</mat-card-title>
+          </mat-card-header>
+          <app-employee-contact fxFlex [employee]="employee"></app-employee-contact>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="4">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Surveys</mat-card-title>
+          </mat-card-header>
+          <app-survey-responses fxFlex [employee]="employee"></app-survey-responses>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="2">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Tax Exemptions</mat-card-title>
+          </mat-card-header>
+          <app-tax-exemptions [employee]="employee"></app-tax-exemptions>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="6">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Events</mat-card-title>
+          </mat-card-header>
+          <app-events fxFlex [employee]="employee"></app-events>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="5">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Documents</mat-card-title>
+          </mat-card-header>
+          <app-documents [employee]="employee" fxFlex></app-documents>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="3" [colspan]="cols">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Amounts Owed</mat-card-title>
+          </mat-card-header>
+          <app-amounts-owed [employee]="employee"></app-amounts-owed>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile rowspan="4" [colspan]="cols">
+        <mat-card class="mat-elevation-z2" fxLayout="column">
+          <mat-card-header>
+            <mat-card-title>Payments</mat-card-title>
+          </mat-card-header>
+          <app-payments [employee]="employee"></app-payments>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>
+<ng-template #loadingEmployee>
+  <div fxFlex fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

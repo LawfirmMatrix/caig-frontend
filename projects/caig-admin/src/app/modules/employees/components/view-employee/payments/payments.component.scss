@@ -1,0 +1,24 @@
+h1 {
+  margin-top: 40px;
+}
+
+mat-grid-list {
+  font-size: 16px;
+}
+.mat-grid-tile:nth-child(odd) {
+  background: rgba(150,150,150,0.2);
+}
+
+.processed {
+  background: forestgreen;
+  padding: 0 4px;
+  color: white;
+  border-radius: 4px;
+}
+
+.pending {
+  background: orange;
+  padding: 0 4px;
+  border-radius: 4px;
+  color: black;
+}

@@ -26,18 +26,53 @@
             "assets": [
               "projects/caig-admin/src/favicon.ico",
               "projects/caig-admin/src/assets",
-              "projects/caig-admin/src/manifest.webmanifest"
+              "projects/caig-admin/src/manifest.webmanifest",
+              "projects/caig-admin/src/web.config"
             ],
             "styles": [
+              "projects/notifications/styles.scss",
+              "./node_modules/quill/dist/quill.snow.css",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/caig-admin/src/styles.scss",
-              "projects/notifications/styles.scss"
+              {
+                "input": "projects/caig-admin/src/styles/styles.scss"
+              },
+              {
+                "input": "projects/caig-admin/src/styles/highlightjs/material-light.scss"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/pink-bluegrey.scss",
+                "bundleName": "pink-bluegrey"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/deeppurple-amber.scss",
+                "bundleName": "deeppurple-amber"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/indigo-pink.scss",
+                "bundleName": "indigo-pink"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/purple-green.scss",
+                "bundleName": "purple-green"
+              }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules",
+                "projects/caig-admin/src",
+                "projects/caig-admin/src/styles"
+              ]
+            },
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "projects/caig-admin/ngsw-config.json",
             "allowedCommonJsDependencies": [
-              "moment"
+              "moment",
+              "quill"
             ]
           },
           "configurations": {
@@ -102,7 +137,8 @@
             "assets": [
               "projects/caig-admin/src/favicon.ico",
               "projects/caig-admin/src/assets",
-              "projects/caig-admin/src/manifest.webmanifest"
+              "projects/caig-admin/src/manifest.webmanifest",
+              "projects/caig-admin/src/web.config"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
@@ -136,7 +172,8 @@
             "assets": [
               "projects/survey/src/favicon.ico",
               "projects/survey/src/assets",
-              "projects/survey/src/manifest.webmanifest"
+              "projects/survey/src/manifest.webmanifest",
+              "projects/survey/src/web.config"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
@@ -145,7 +182,8 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "moment"
+              "moment",
+              "quill"
             ],
             "serviceWorker": true,
             "ngswConfigPath": "projects/survey/ngsw-config.json"
@@ -212,7 +250,8 @@
             "assets": [
               "projects/survey/src/favicon.ico",
               "projects/survey/src/assets",
-              "projects/survey/src/manifest.webmanifest"
+              "projects/survey/src/manifest.webmanifest",
+              "projects/survey/src/web.config"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",

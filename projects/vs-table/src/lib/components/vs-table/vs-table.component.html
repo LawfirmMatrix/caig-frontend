@@ -32,7 +32,7 @@
       <button mat-menu-item (click)="exportData()" [disabled]="!data?.length">Export data to .csv</button>
     </mat-menu>
   </div>
-  <table fxFlex fxLayout="column" cdkVirtualScrollingElement>
+  <table fxFlex fxLayout="column" cdkVirtualScrollingElement (scroll)="onViewportScroll()">
     <tr class="sticky header mat-app-background mat-elevation-z4 border-bottom"
         fxLayout="row"
         [style.minWidth.px]="minRowWidth"
@@ -40,7 +40,6 @@
         cdkDropList
         cdkDropListOrientation="horizontal"
         cdkDropListLockAxis="x"
-        cdkDropListAutoScrollDisabled
         matSort
         [matSortActive]="sort.active"
         [matSortDirection]="sort.direction"
@@ -66,6 +65,8 @@
           [ngClass]="{'th-border': mouseoverColumn === column || columnFilter$.value[column.field].isActive}"
           (mouseenter)="mouseoverColumn = column"
           (mouseleave)="mouseoverColumn = null"
+          (cdkDragStarted)="toggleVerticalScrollLock()"
+          (cdkDragEnded)="toggleVerticalScrollLock()"
           class="mat-app-background"
           cdkDrag
           cdkDragBoundary=".header">
@@ -96,7 +97,7 @@
         </mat-icon>
         <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
         <mat-menu #columnFilterMenu="matMenu">
-          <div fxLayout="column" class="column-filter-viewport" (keydown.tab)="$event.stopPropagation()" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
+          <div fxLayout="column" class="column-filter-viewport mat-app-background" (keydown.tab)="$event.stopPropagation()" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
             <mat-form-field color="accent" [style.display]="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes ? 'initial' : 'none'">
               <input autocomplete="off"
                      matInput

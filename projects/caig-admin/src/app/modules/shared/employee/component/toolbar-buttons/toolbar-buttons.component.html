@@ -1,0 +1,27 @@
+<div fxFlex fxLayout="row" [fxLayoutAlign]="align" fxLayoutGap="8px">
+  <div *ngFor="let btn of buttons">
+    <a *ngIf="btn.routerLink; else callbackBtn"
+       mat-stroked-button
+       [color]="btn.color || 'primary'"
+       [disabled]="btn.disabled"
+       queryParamsHandling="preserve"
+       [routerLink]="btn.routerLink">
+      <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+        <mat-icon *ngIf="btn.icon">{{btn.icon}}</mat-icon>
+        <div>{{btn.label}}</div>
+      </div>
+    </a>
+    <ng-template #callbackBtn>
+      <button *ngIf="btn.callback"
+              mat-stroked-button
+              [color]="btn.color || 'primary'"
+              [disabled]="btn.disabled"
+              (click)="btn.callback()">
+        <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-icon *ngIf="btn.icon">{{btn.icon}}</mat-icon>
+          <div>{{btn.label}}</div>
+        </div>
+      </button>
+    </ng-template>
+  </div>
+</div>

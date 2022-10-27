@@ -21,7 +21,7 @@ import {
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
-import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
 import {
   auditTime,
   BehaviorSubject,
@@ -123,6 +123,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
   private resizeObserver = new ResizeObserver(() => this.viewport.checkViewportSize());
+  private verticalScrollPosition: number | null = null;
   private _data: any[] = [];
 
   constructor(
@@ -319,6 +320,16 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.clearCache();
     if (this.columns) {
       this.setVisibleColumns();
+    }
+  }
+
+  public toggleVerticalScrollLock(): void {
+    this.verticalScrollPosition = this.verticalScrollPosition === null ? this.viewport.scrollable.getElementRef().nativeElement.scrollTop : null;
+  }
+
+  public onViewportScroll(): void {
+    if (this.verticalScrollPosition !== null) {
+      this.viewport.scrollable.getElementRef().nativeElement.scrollTo({top: this.verticalScrollPosition});
     }
   }
 

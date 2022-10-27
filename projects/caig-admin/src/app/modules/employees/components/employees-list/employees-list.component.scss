@@ -1,0 +1,31 @@
+mat-card {
+  margin: 10px;
+}
+
+mat-button-toggle-group {
+  width: 100%;
+  min-height: 48px;
+}
+
+.filters-container {
+  width: 100%;
+  overflow: auto hidden;
+}
+
+mat-accordion {
+  margin: 16px 0;
+}
+
+mat-progress-bar {
+  position: absolute;
+  z-index: 2;
+}
+
+mat-panel-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+vs-table {
+  min-height: 400px;
+}

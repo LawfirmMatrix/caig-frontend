@@ -1,0 +1,14 @@
+<button mat-icon-button [matMenuTriggerFor]="themeMenu" matTooltip="Select a color theme" matTooltipPosition="left">
+  <mat-icon>palette</mat-icon>
+</button>
+<mat-menu #themeMenu="matMenu" xPosition="before" class="docs-theme-picker-menu">
+  <button mat-menu-item *ngFor="let theme of themeService.themes" (click)="themeService.selectTheme(theme.name)">
+    <mat-icon [ngClass]="{'docs-theme-selected-icon': (themeService.currentTheme$ | async) === theme}"
+              [color]="(themeService.currentTheme$ | async) === theme ? 'accent' : undefined">
+      {{(themeService.currentTheme$ | async) === theme ? 'radio_button_checked' : 'radio_button_unchecked'}}
+    </mat-icon>
+    <span>{{theme.displayName}}</span>
+    <mat-icon [class]="'theme-example-icon ' + theme.name" svgIcon="theme-example"></mat-icon>
+  </button>
+</mat-menu>
+

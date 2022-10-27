@@ -1,0 +1,9 @@
+.mat-list-item:nth-child(odd) {
+  background: rgba(150,150,150,0.2);
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+.prop-name {
+  width: 125px;
+}

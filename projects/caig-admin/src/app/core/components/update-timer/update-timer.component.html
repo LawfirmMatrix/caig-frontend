@@ -1,0 +1,11 @@
+<button [matBadge]="duration | time"
+        matBadgeColor="warn"
+        matBadgePosition="above before"
+        mat-icon-button
+        color="accent"
+        matTooltip="Install Update"
+        class="stretch-badge"
+        (click)="installUpdate.emit()"
+        [disabled]="disabled">
+  <mat-icon>download</mat-icon>
+</button>

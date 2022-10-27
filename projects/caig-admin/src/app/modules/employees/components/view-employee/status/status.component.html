@@ -1,0 +1,6 @@
+<mat-chip-list>
+  <div *ngFor="let status of statuses; last as last;" fxLayout="row" fxLayoutAlign="start center">
+    <mat-chip [selected]="last" color="primary">{{status}}</mat-chip>
+    <mat-icon *ngIf="!last">navigate_next</mat-icon>
+  </div>
+</mat-chip-list>

@@ -16,8 +16,8 @@ import {MatSelect} from '@angular/material/select';
           <mat-checkbox *ngIf="options$ | async as options"
                         class="select-all"
                         [disabled]="!options.length"
-                        [indeterminate]="select.value.length > 0 && select.value.length < options.length"
-                        [checked]="select.value.length === options.length"
+                        [indeterminate]="select.value?.length > 0 && select.value?.length < options.length"
+                        [checked]="select.value?.length === options.length"
                         (change)="selectAll($event.checked, select)">
             Select All
           </mat-checkbox>

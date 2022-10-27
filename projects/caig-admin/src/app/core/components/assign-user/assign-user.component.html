@@ -1,0 +1,9 @@
+<div fxLayout="column">
+  <h1>Assign User</h1>
+  <h3>{{data.length | number}} Employee{{data.length === 1 ? '' : 's'}} being assigned to...</h3>
+  <dynamic-form [fields]="fields"></dynamic-form>
+  <div fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" [disabled]="isProcessing || !changed" (click)="save()">Assign</button>
+  </div>
+  <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" color="primary"></mat-progress-bar>
+</div>
