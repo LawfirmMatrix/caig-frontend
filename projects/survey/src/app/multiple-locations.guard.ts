@@ -1,13 +1,20 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
+import {SurveyService} from './survey/survey.service';
+import {map, tap, Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class MultipleLocationsGuard implements CanActivate {
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    // @TODO:
-    // Return true if survey has multiple locations
-    // Otherwise redirect to only survey location at /survey/:id
-    console.log('Multiple Locations', route.paramMap);
-    return true;
+  constructor(private dataService: SurveyService, private router: Router) { }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.dataService.get()
+      .pipe(
+        tap((surveys) => {
+          if (surveys.length === 1) {
+            this.router.navigate(['/survey', surveys[0].id]);
+          }
+        }),
+        map((surveys) => surveys.length > 1),
+      );
   }
 }

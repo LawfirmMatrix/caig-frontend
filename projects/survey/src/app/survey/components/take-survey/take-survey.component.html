@@ -1,108 +1,94 @@
-<div *ngIf="survey$ | async as survey" fxFlexFill fxLayout="column" [ngStyle]="survey.backgroundStyle || {}">
+<div *ngIf="schema$ | async as schema" fxFlexFill fxLayout="column" [ngStyle]="schema.backgroundStyle || {}">
   <mat-toolbar class="mat-elevation-z10"
-               [color]="!survey.toolbarStyle ? 'primary' : undefined"
-               [ngStyle]="survey.toolbarStyle || {}"
+               [color]="!schema.toolbarStyle ? 'primary' : undefined"
+               [ngStyle]="schema.toolbarStyle || {}"
                fxLayout="column"
                fxLayoutAlign="center center">
     <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">
-      {{survey.fullName}}
+      {{schema.fullName}}
     </div>
     <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-subtitle' : 'large-subtitle'">
-      {{survey.location}}
+      {{schema.location}}
     </div>
   </mat-toolbar>
-  <div fxFlex style="overflow: auto" [ngStyle]="survey.surveyStyle || {}">
-    SURVEY CONTENT
+  <div fxFlex style="overflow: auto" [ngStyle]="schema.surveyStyle || {}">
+    <div *ngIf="isSubmitting; else surveyContent" fxFlexFill fxLayoutAlign="center center">
+      <div *ngIf="isError; else noError" fxLayout="column" fxLayoutAlign="center center">
+        <h1 class="mat-h1">Something went wrong while loading the survey</h1>
+        <button mat-raised-button color="primary" (click)="refresh()">RELOAD</button>
+      </div>
+      <ng-template #noError>
+        <mat-spinner></mat-spinner>
+      </ng-template>
+    </div>
+    <ng-template #surveyContent>
+      <div *ngIf="isCompleted; else showSteps" fxFlexFill fxLayoutAlign="center center" fxLayout="column" [ngStyle]="schema?.foregroundStyle || {}">
+        <h1>Survey Completed!</h1>
+        <p>Thank you for completing the survey<span *ngIf="forms[0] as nameForm">, {{nameForm.value['firstName']}} {{nameForm.value['lastName']}}</span>.</p>
+        <h2 fxFlexOffset="30px" *ngIf="nextSurvey">You will now be redirected to participate in the follow up survey - {{nextSurvey.name}}</h2>
+      </div>
+      <ng-template #showSteps>
+        <mat-card *ngIf="schema.headerTitle || schema.headerContent"
+                  [ngClass]="{'full-body': !(isHandset$ | async)}"
+                  class="mat-elevation-z7">
+          <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
+          <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
+            <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
+            <p *ngFor="let p of schema.headerContent">{{p}}</p>
+          </mat-card-content>
+        </mat-card>
+        <mat-stepper #stepper
+                     orientation="vertical"
+                     linear
+                     [ngClass]="{'full-body': !(isHandset$ | async)}"
+                     class="mat-elevation-z15"
+                     [selectedIndex]="selectedIndex"
+                     (animationDone)="scrollToTitle(stepper.selectedIndex)">
+          <mat-step *ngFor="let step of schema.steps; let i = index; first as first"
+                    [stepControl]="forms[i]"
+                    [completed]="step.completed">
+            <ng-template matStepLabel>
+              <span #title>{{step.title}}</span>
+            </ng-template>
+            <form [formGroup]="forms[i]" fxLayout="column" fxLayoutGap="30px">
+              <h3 *ngFor="let heading of step.headings" [ngStyle]="{fontWeight: heading.bold ? 'bold' : '', textDecoration: heading.underline ? 'underline' : '', fontStyle: heading.italic ? 'italic' : ''}">{{heading.text}}</h3>
+              <div *ngIf="step.questions | hideQuestions as questions; else noQuestions">
+                <div *ngFor="let question of questions" style="margin-top: 30px">
+                  <h2 [ngClass]="{'error-text': isTouched(question, forms[i].controls) && question.invalid && question.invalid(forms[i].value)}">
+                    {{question.question}}<span *ngIf="question.invalid">&nbsp;*</span>
+                  </h2>
+                  <dynamic-form *ngIf="isHandset$ | async; else notHandset" [form]="forms[i]" [fields]="question.handsetFields || []"></dynamic-form>
+                  <ng-template #notHandset>
+                    <dynamic-form [form]="forms[i]" [fields]="question.fields"></dynamic-form>
+                  </ng-template>
+                </div>
+              </div>
+              <ng-template #noQuestions>
+                <h2>No information required.</h2>
+              </ng-template>
+              <mat-divider></mat-divider>
+              <div fxLayout="row" fxLayoutGap="10px" style="margin-top: 30px">
+                <button *ngIf="!first" mat-stroked-button color="accent" (click)="back(stepper, schema)">Back</button>
+                <button mat-stroked-button color="accent" (click)="next(stepper, schema)">Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step state="review">
+            <ng-template matStepLabel>Review & Submit</ng-template>
+            <h2>Please submit to complete the survey.</h2>
+            <div fxLayout="column" fxLayoutGap="20px">
+              <div fxLayout="row" fxLayoutGap="10px">
+                <button mat-stroked-button color="accent" (click)="back(stepper, schema)">Back</button>
+                <button mat-stroked-button color="warn" (click)="reset(stepper)">Reset</button>
+              </div>
+              <button mat-raised-button color="primary" (click)="submit(schema)">Submit</button>
+            </div>
+          </mat-step>
+          <ng-template matStepperIcon="review">
+            <mat-icon>grading</mat-icon>
+          </ng-template>
+        </mat-stepper>
+      </ng-template>
+    </ng-template>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-<!--<div fxFlexFill fxLayout="column" [ngStyle]="questionnaire?.backgroundStyle || {}">-->
-<!--  <mat-toolbar *ngIf="questionnaire" class="mat-elevation-z10" [color]="!questionnaire.toolbarStyle ? 'primary' : undefined" [ngStyle]="questionnaire.toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">-->
-<!--    <div class="toolbar-title" [ngClass]="isHandset ? 'small-title' : 'large-title'">{{questionnaire.fullName}}</div>-->
-<!--    <div class="toolbar-title" [ngClass]="isHandset ? 'small-subtitle' : 'large-subtitle'">{{questionnaire.location}}</div>-->
-<!--  </mat-toolbar>-->
-<!--  <div fxFlex style="overflow: auto" [ngStyle]="questionnaire?.questionnaireStyle || {}">-->
-<!--    <div *ngIf="isSubmitting || !questionnaire; else loaded" fxFlexFill fxLayoutAlign="center center">-->
-<!--      <mat-spinner></mat-spinner>-->
-<!--    </div>-->
-<!--    <ng-template #loaded>-->
-<!--      <div *ngIf="isCompleted; else showSteps" fxFlexFill fxLayoutAlign="center center" fxLayout="column" [ngStyle]="questionnaire?.foregroundStyle || {}">-->
-<!--        <h1>Survey Completed!</h1>-->
-<!--        <p>Thank you for completing the survey, {{forms[0].value.firstName}} {{forms[0].value.lastName}}.</p>-->
-<!--        <h2 fxFlexOffset="30px" *ngIf="nextSurvey">You will now be redirected to participate in the follow up survey - {{nextSurvey.name}}</h2>-->
-<!--      </div>-->
-<!--      <ng-template #showSteps>-->
-<!--        <mat-card *ngIf="questionnaire.headerTitle || questionnaire.headerContent"-->
-<!--                  [ngClass]="{'full-body': !isHandset}"-->
-<!--                  class="mat-elevation-z7">-->
-<!--          <mat-card-title *ngIf="questionnaire.headerTitle">{{questionnaire.headerTitle}}</mat-card-title>-->
-<!--          <mat-card-content [ngStyle]="{minHeight: questionnaire.logo?.height}">-->
-<!--            <img *ngIf="questionnaire.logo as logo" alt="Union Logo" [src]="logo.url" />-->
-<!--            <p *ngFor="let p of questionnaire.headerContent">{{p}}</p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-stepper #stepper-->
-<!--                     orientation="vertical"-->
-<!--                     linear-->
-<!--                     [ngClass]="{'full-body': !isHandset}"-->
-<!--                     class="mat-elevation-z15"-->
-<!--                     [selectedIndex]="selectedIndex"-->
-<!--                     (animationDone)="scrollToTitle(stepper.selectedIndex)">-->
-<!--          <mat-step *ngFor="let step of questionnaire.steps; let i = index; first as first"-->
-<!--                    [stepControl]="forms[i]"-->
-<!--                    [completed]="step.completed">-->
-<!--            <ng-template matStepLabel>-->
-<!--              <span #title>{{step.title}}</span>-->
-<!--            </ng-template>-->
-<!--            <form [formGroup]="forms[i]" fxLayout="column" fxLayoutGap="30px">-->
-<!--              <h3 *ngFor="let heading of step.headings" [ngStyle]="{fontWeight: heading.bold ? 'bold' : '', textDecoration: heading.underline ? 'underline' : '', fontStyle: heading.italic ? 'italic' : ''}">{{heading.text}}</h3>-->
-<!--              <div *ngIf="step.questions | hideQuestions as questions; else noQuestions">-->
-<!--                <div *ngFor="let question of questions" style="margin-top: 30px">-->
-<!--                  <h2 [ngClass]="{'error-text': isTouched(question, forms[i].controls) && question.invalid && question.invalid(forms[i].value)}">-->
-<!--                    {{question.question}}<span *ngIf="question.invalid">&nbsp;*</span>-->
-<!--                  </h2>-->
-<!--                  <lib-dynamic-form *ngIf="isHandset; else notHandset" [form]="forms[i]" [fields]="question.handsetFields || []"></lib-dynamic-form>-->
-<!--                  <ng-template #notHandset>-->
-<!--                    <lib-dynamic-form [form]="forms[i]" [fields]="question.fields"></lib-dynamic-form>-->
-<!--                  </ng-template>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <ng-template #noQuestions>-->
-<!--                <h2>No information required.</h2>-->
-<!--              </ng-template>-->
-<!--              <mat-divider></mat-divider>-->
-<!--              <div fxLayout="row" fxLayoutGap="10px" style="margin-top: 30px">-->
-<!--                <button *ngIf="!first" mat-stroked-button color="accent" (click)="back(stepper)">Back</button>-->
-<!--                <button mat-stroked-button color="accent" (click)="next(stepper)">Next</button>-->
-<!--              </div>-->
-<!--            </form>-->
-<!--          </mat-step>-->
-<!--          <mat-step state="review">-->
-<!--            <ng-template matStepLabel>Review & Submit</ng-template>-->
-<!--            <h2>Please submit to complete the survey.</h2>-->
-<!--            <div fxLayout="column" fxLayoutGap="20px">-->
-<!--              <div fxLayout="row" fxLayoutGap="10px">-->
-<!--                <button mat-stroked-button color="accent" (click)="back(stepper)">Back</button>-->
-<!--                <button mat-stroked-button color="warn" (click)="reset(stepper)">Reset</button>-->
-<!--              </div>-->
-<!--              <button mat-raised-button color="primary" (click)="submit()">Submit</button>-->
-<!--            </div>-->
-<!--          </mat-step>-->
-<!--          <ng-template matStepperIcon="review">-->
-<!--            <mat-icon>grading</mat-icon>-->
-<!--          </ng-template>-->
-<!--        </mat-stepper>-->
-<!--      </ng-template>-->
-<!--    </ng-template>-->
-<!--  </div>-->
-<!--</div>-->

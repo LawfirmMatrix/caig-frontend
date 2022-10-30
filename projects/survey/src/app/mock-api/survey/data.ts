@@ -1,3 +1,10 @@
-import {Survey} from '../../survey/survey.service';
+import {SurveySchema} from '../../survey/survey.service';
+import {schema2} from './schemas/nageva-martinsburg';
+import {schema3} from './schemas/nageva-housekeeping';
+import {schema4} from './schemas/liunava-overtime';
 
-export const surveys: Survey[] = [];
+export const schemas: SurveySchema[] = [
+  schema2,
+  schema3,
+  schema4,
+];

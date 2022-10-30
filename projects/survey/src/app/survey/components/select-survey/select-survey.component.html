@@ -1,19 +1,17 @@
-<div *ngIf="surveys$ | async as surveys" fxFlexFill fxLayout="column" fxLayoutGap="8px" [ngStyle]="surveys[0].backgroundStyle || {}">
-  <mat-toolbar class="mat-elevation-z10" [color]="!surveys[0].toolbarStyle ? 'primary' : undefined" [ngStyle]="surveys[0].toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">
-    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">{{surveys[0].fullName}}</div>
+<div *ngIf="schema$ | async as schema" fxFlexFill fxLayout="column" fxLayoutGap="8px" [ngStyle]="schema.backgroundStyle || {}">
+  <mat-toolbar class="mat-elevation-z10" [color]="!schema.toolbarStyle ? 'primary' : undefined" [ngStyle]="schema.toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">
+    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">{{schema.fullName}}</div>
   </mat-toolbar>
-
-  <mat-card *ngIf="surveys[0].headerTitle || surveys[0].headerContent"
+  <mat-card *ngIf="schema.headerTitle || schema.headerContent"
             [ngClass]="{'full-body': !(isHandset$ | async)}"
-            class="header-card mat-elevation-z7">
-    <mat-card-title *ngIf="surveys[0].headerTitle">{{surveys[0].headerTitle}}</mat-card-title>
-    <mat-card-content [ngStyle]="{minHeight: surveys[0].logo?.height}">
-      <img *ngIf="surveys[0].logo as logo" alt="Union Logo" [src]="logo.url" />
-      <p *ngFor="let p of surveys[0].headerContent">{{p}}</p>
+            class="mat-elevation-z7">
+    <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
+    <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
+      <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
+      <p *ngFor="let p of schema.headerContent">{{p}}</p>
     </mat-card-content>
   </mat-card>
-
-  <mat-card class="header-card" [ngClass]="{'full-body': !(isHandset$ | async)}">
+  <mat-card [ngClass]="{'full-body': !(isHandset$ | async)}">
     <h1>Please select your facility location:</h1>
     <dynamic-form [fields]="[[locationField]]"></dynamic-form>
   </mat-card>

@@ -1,0 +1,21 @@
+.mat-stroked-button, .mat-raised-button {
+  height: 50px;
+  width: 150px;
+  font-size: 30px;
+}
+
+::ng-deep .mat-vertical-stepper-header {
+  pointer-events: none !important;
+}
+
+mat-stepper {
+  border-radius: 4px;
+}
+
+.error-text {
+  color: red;
+}
+
+mat-card-title {
+  margin-bottom: 20px;
+}

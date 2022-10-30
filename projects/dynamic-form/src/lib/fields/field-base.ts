@@ -21,6 +21,7 @@ export abstract class FieldBase<T> {
   public onChange: ((value: any, form: UntypedFormGroup) => void)|undefined;
   public validators: ValidatorFn[]|undefined;
   public focus: boolean;
+  public hide: boolean;
 
   public abstract controlType: ControlType;
   constructor(options: BaseOptions<T>) {
@@ -36,6 +37,7 @@ export abstract class FieldBase<T> {
     this.onChange = options.onChange;
     this.validators = options.validators;
     this.focus = !!options.focus;
+    this.hide = !!options.hide;
   }
 }
 

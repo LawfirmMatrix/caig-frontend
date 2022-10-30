@@ -11,6 +11,7 @@ import {MockApiModule} from 'mock-api';
 import {mockApiServices} from './mock-api';
 import {HttpClientModule} from '@angular/common/http';
 import {SurveyModule} from './survey/survey.module';
+import {CoreModule} from './core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,14 +22,13 @@ import {SurveyModule} from './survey/survey.module';
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerImmediately'
     }),
     NotificationsModule.forRoot(),
     MockApiModule.forRoot(mockApiServices),
     HttpClientModule,
     SurveyModule,
+    CoreModule,
   ],
   bootstrap: [AppComponent]
 })

@@ -13,6 +13,10 @@ export class FieldControlService {
         validators.unshift(Validators.required);
       }
       const control = new FormControl(value, validators);
+      const onChange = field.onChange;
+      if (onChange) {
+        control.valueChanges.subscribe((value) => onChange(value, form));
+      }
       form.setControl(field.key, control, {emitEvent: false});
     });
   }

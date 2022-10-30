@@ -5,6 +5,8 @@ import {SelectSurveyComponent} from './components/select-survey/select-survey.co
 import {TakeSurveyComponent} from './components/take-survey/take-survey.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DynamicFormModule} from 'dynamic-form';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HideQuestionsPipe} from './pipes/hide-questions.pipe';
 
 @NgModule({
   imports: [
@@ -12,10 +14,12 @@ import {DynamicFormModule} from 'dynamic-form';
     SurveyMaterialModule,
     FlexLayoutModule,
     DynamicFormModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     SelectSurveyComponent,
     TakeSurveyComponent,
+    HideQuestionsPipe,
   ],
 })
 export class SurveyModule { }
