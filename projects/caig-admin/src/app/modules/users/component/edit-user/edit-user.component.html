@@ -1,0 +1,29 @@
+<div style="margin: 10px">
+  <h1>{{route.snapshot.params['id'] ? 'Edit' : 'Create'}} User</h1>
+  <mat-card>
+    <mat-card-content>
+      <mat-spinner *ngIf="route.snapshot.params['id'] && !user; else showForm"></mat-spinner>
+      <ng-template #showForm>
+        <dynamic-form [fields]="fields" [form]="form" [model]="user"></dynamic-form>
+        <div *ngIf="showSettlements" style="height: 400px">
+          <vs-table
+            [data]="settlements$ | async"
+            [columns]="settlementColumns"
+            [preselect]="selectUserSettlements"
+            [disableSelection]="form.disabled"
+            [disableOptions]="true"
+            [disableRowClick]="true"
+            (selectionChange)="settlementSelection$.next($event.selection)"
+          ></vs-table>
+        </div>
+      </ng-template>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="space-between center">
+      <a fxFlexOffset="10px" mat-stroked-button color="warn" routerLink="../">Cancel</a>
+      <div>
+        <button *ngIf="route.snapshot.params['id']" mat-raised-button color="primary" (click)="changePassword()">Change Password</button>
+        <button fxFlexOffset="10px" mat-raised-button color="primary" [disabled]="disableSave$ | async" (click)="save()">Save</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -18,6 +18,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {TableComponent} from './table/table.component';
+import {FormComponent} from './form/form.component';
+import {DynamicFormModule} from 'dynamic-form';
 
 @NgModule({
   imports: [
@@ -25,6 +28,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     FormsModule,
     FlexLayoutModule,
     VsTableModule,
+    DynamicFormModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
@@ -41,6 +45,10 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatButtonToggleModule,
   ],
   exports: [ TestComponent ],
-  declarations: [ TestComponent ],
+  declarations: [
+    TestComponent,
+    TableComponent,
+    FormComponent
+  ],
 })
 export class TestModule { }

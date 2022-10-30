@@ -1,0 +1,84 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer
+               class="sidenav"
+               fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
+    <div fxFlex fxLayout="column">
+      <mat-toolbar class="mat-elevation-z2">
+        <app-user-menu></app-user-menu>
+      </mat-toolbar>
+      <div fxFlex fxLayout="column" fxLayoutGap="20px">
+        <div fxFlex style="overflow: auto">
+          <mat-nav-list>
+            <ng-container *ngFor="let item of userMenu$ | async; last as last;">
+              <a mat-list-item [routerLink]="[item.route]" [routerLinkActive]="'selected'">
+                <mat-icon color="accent">{{item.icon}}</mat-icon> {{item.name}}
+              </a>
+              <mat-divider *ngIf="!last"></mat-divider>
+            </ng-container>
+          </mat-nav-list>
+        </div>
+        <div fxLayout="column" *ngIf="isAdmin$ | async">
+          <div fxLayoutAlign="center center" style="font-size: 14px; text-decoration: underline;">Admin Menu</div>
+          <mat-nav-list>
+            <ng-container *ngFor="let item of adminMenu; last as last;">
+              <a mat-list-item [routerLink]="[item.route]" [routerLinkActive]="'selected'">
+                <mat-icon color="primary">{{item.icon}}</mat-icon> {{item.name}}
+              </a>
+              <mat-divider *ngIf="!last"></mat-divider>
+            </ng-container>
+          </mat-nav-list>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content fxLayout="column">
+    <mat-toolbar color="primary"
+                 fxLayout="row"
+                 fxLayoutGap="30px"
+                 fxLayoutAlign="space-between center"
+                 class="mat-elevation-z10">
+      <div fxFlex fxLayoutGap="10px" fxLayoutAlign="start center">
+        <button type="button"
+                aria-label="Toggle sidenav"
+                matTooltip="Toggle Sidenav"
+                mat-icon-button
+                (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+      </div>
+      <div fxFlex fxLayoutAlign="center center">
+        <div *ngIf="settlements$ | async as settlements">
+          <mat-form-field *ngIf="settlements.length > 1; else displaySettlementName" appearance="standard" color="accent">
+            <mat-label>Settlement</mat-label>
+            <mat-select [disabled]="!settlements.length" [value]="settlementId$ | async" (selectionChange)="changeSettlement$.next($event.value)">
+              <mat-option *ngFor="let settlement of settlements" [value]="settlement.id">
+                {{settlement.code}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ng-template #displaySettlementName>
+            {{settlements[0].code}}
+          </ng-template>
+        </div>
+      </div>
+      <div fxFlex fxLayoutAlign="end center" fxLayoutGap="5px">
+        <app-update-timer *ngIf="swService.isUpdateAvailable$ | async as update"
+                          [updateEvent]="update"
+                          [disabled]="swService.isUpdating"
+                          (installUpdate)="swService.installUpdate()">
+        </app-update-timer>
+        <app-theme-switcher></app-theme-switcher>
+      </div>
+    </mat-toolbar>
+    <mat-toolbar *ngIf="offlineService.isOffline$ | async" color="warn">
+      <mat-icon>error</mat-icon>
+      You are not connected to the internet
+    </mat-toolbar>
+    <div fxFlex class="outlet-container" [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

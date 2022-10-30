@@ -1,0 +1,31 @@
+<mat-tab-group mat-stretch-tabs [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event">
+  <mat-tab [disabled]="!files">
+    <ng-template mat-tab-label>
+      <mat-icon>list</mat-icon>Attachments
+    </ng-template>
+    <ng-template matTabContent>
+      <vs-table
+        fxFlex
+        id="documents-list"
+        [disableOptions]="true"
+        [disableSearch]="true"
+        [disableRowClick]="true"
+        [rowMenuItems]="rowMenuItems"
+        [tableMenuItems]="tableMenuItems"
+        [data]="files"
+        [columns]="columns"></vs-table>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>file_upload</mat-icon>Upload
+    </ng-template>
+    <ng-template matTabContent>
+      <lib-file-upload
+        fxFlex
+        endpoint="/api/attachedFile/forEmployee/{{employee.id}}"
+        (uploaded)="filesUploaded($event)">
+      </lib-file-upload>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

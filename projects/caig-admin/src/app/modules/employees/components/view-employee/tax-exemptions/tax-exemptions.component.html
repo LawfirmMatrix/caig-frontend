@@ -1,0 +1,6 @@
+<div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="5px">
+  <div *ngFor="let prop of props" fxLayout="column" fxLayoutAlign="center center">
+    <b>{{prop.value}}</b>
+    <mat-icon [color]="employee[prop.key] ? 'primary' : null">{{employee[prop.key] ? 'check_box' : 'check_box_outline_blank'}}</mat-icon>
+  </div>
+</div>

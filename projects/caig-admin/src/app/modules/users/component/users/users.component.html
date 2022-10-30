@@ -1,0 +1,14 @@
+<div fxFlexFill fxLayout="column">
+  <div style="padding: 10px">
+    <a mat-raised-button color="primary" routerLink="create">Create User</a>
+  </div>
+  <vs-table
+    fxFlex
+    id="users-list"
+    [rowMenuItems]="rowMenu"
+    [disableSelection]="true"
+    [data]="users$ | async"
+    (rowClick)="editUser($event.row)"
+    [columns]="columns">
+  </vs-table>
+</div>

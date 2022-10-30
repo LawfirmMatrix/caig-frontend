@@ -1,0 +1,11 @@
+<mat-card class="mat-elevation-z6">
+  <mat-card-title>New Employee</mat-card-title>
+  <mat-card-content>
+    <dynamic-form [showSubmit]="showSubmit"
+                      submitPosition="start"
+                      (submitted)="submit($event.value)"
+                      [form]="form"
+                      [fields]="fields"></dynamic-form>
+    <mat-spinner *ngIf="!showSubmit"></mat-spinner>
+  </mat-card-content>
+</mat-card>

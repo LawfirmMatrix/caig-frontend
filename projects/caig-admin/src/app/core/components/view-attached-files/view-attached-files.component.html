@@ -1,0 +1,18 @@
+<div fxLayout="column" fxLayoutGap="20px">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <h1 class="mat-h1">Files</h1>
+    <div>{{data.firstName}} {{data.middleName}} {{data.lastName}}</div>
+  </div>
+  <div class="container">
+    <vs-table
+      id="attached-files"
+      [disableOptions]="true"
+      [disableSearch]="true"
+      [disableRowClick]="true"
+      [data]="data.attachedFiles"
+      [columns]="columns"
+      [rowMenuItems]="rowMenuItems"
+      [tableMenuItems]="tableMenuItems"
+    ></vs-table>
+  </div>
+</div>

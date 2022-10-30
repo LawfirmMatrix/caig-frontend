@@ -1,0 +1,34 @@
+<mat-grid-list
+  *ngIf="payments?.length; else notPaid"
+  [cols]="props.length + 5"
+  rowHeight="40px"
+  [style.minWidth.px]="(props.length + 5) * 110">
+  <mat-grid-tile *ngFor="let prop of props"><b>{{prop.value}}</b></mat-grid-tile>
+  <mat-grid-tile><b>Paid Total</b></mat-grid-tile>
+  <mat-grid-tile><b>+/-</b></mat-grid-tile>
+  <mat-grid-tile><b>Status</b></mat-grid-tile>
+  <mat-grid-tile><b>Date</b></mat-grid-tile>
+  <mat-grid-tile><b>Actions</b></mat-grid-tile>
+  <div *ngFor="let payment of payments; let i = index;">
+    <mat-grid-tile *ngFor="let prop of props">{{payment[prop.key] | currency:'USD':'$'}}</mat-grid-tile>
+    <mat-grid-tile><i>{{payment.paidTotal | currency:'USD':'$'}}</i></mat-grid-tile>
+    <mat-grid-tile><i>{{payment.diff | currency:'USD':'$'}}</i></mat-grid-tile>
+    <mat-grid-tile><div [ngClass]="payment.status | lowercase">{{payment.status | uppercase}}</div></mat-grid-tile>
+    <mat-grid-tile>{{payment.date | date:'shortDate'}}</mat-grid-tile>
+    <mat-grid-tile>
+      <button disabled mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
+      <button disabled mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+    </mat-grid-tile>
+  </div>
+  <div>
+    <mat-grid-tile *ngFor="let prop of props"><b>{{summary[prop.key] | currency:'USD':'$'}}</b></mat-grid-tile>
+    <mat-grid-tile *ngFor="let prop of addlProps"><b>{{payments[payments.length - 1][prop.key] | currency:'USD':'$'}}</b></mat-grid-tile>
+    <mat-grid-tile><b></b></mat-grid-tile>
+    <mat-grid-tile><b></b></mat-grid-tile>
+    <mat-grid-tile><b></b></mat-grid-tile>
+    <mat-grid-tile><b></b></mat-grid-tile>
+  </div>
+</mat-grid-list>
+<ng-template #notPaid>
+  <h1>No payments</h1>
+</ng-template>

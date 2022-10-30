@@ -15,7 +15,6 @@ export class DateFilterComponent implements OnInit, OnChanges {
   @Input() public columnFilter$!: BehaviorSubject<{ [key: string]: ColumnFilter }>;
   public form!: FormGroup<{start: FormControl<Moment | null>, end: FormControl<Moment | null>}>;
   public ngOnInit() {
-    // const formatString = (value?: Moment | null) => value ? value.format('YYYY-MM-DD') : null;
     this.form = this.columnFilter$.value[this.field].range;
     this.form.valueChanges
       .pipe(debounceTime(100))

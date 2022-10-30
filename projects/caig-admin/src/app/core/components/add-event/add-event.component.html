@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutGap="20px" class="add-event">
+  <h1>Add Event</h1>
+  <mat-card *ngIf="data.employee.phone || data.employee.phoneWork || data.employee.phoneCell">
+    <div style="font-size: 20px">Phones for reference</div>
+    <mat-list>
+      <mat-list-item *ngIf="data.employee.phone"> Home: {{data.employee.phone}} </mat-list-item>
+      <mat-list-item *ngIf="data.employee.phoneWork"> Work: {{data.employee.phoneWork}} <span *ngIf="data.employee.phoneWorkExt">x {{data.employee.phoneWorkExt}}</span> </mat-list-item>
+      <mat-list-item *ngIf="data.employee.phoneCell"> Cell: {{data.employee.phoneCell}} </mat-list-item>
+    </mat-list>
+  </mat-card>
+  <dynamic-form
+    [form]="form"
+    [fields]="fields"
+    [model]="model"
+    [showSubmit]="!isProcessing"
+    submitPosition="center"
+    (submitted)="save()"></dynamic-form>
+  <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" color="primary"></mat-progress-bar>
+</div>

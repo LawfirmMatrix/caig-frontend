@@ -1,0 +1,44 @@
+<!--<div fxFlexFill fxLayout="column" fxLayoutGap="10px" style="padding: 16px">-->
+<!--  <div fxLayout="row" style="overflow: auto">-->
+<!--    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>-->
+<!--  </div>-->
+<!--  <mat-card fxFlex fxLayout="column" class="mat-elevation-z4">-->
+<!--    <div fxLayout="row" fxLayoutAlign="space-between center">-->
+<!--      <div fxFlex>-->
+<!--        <div fxLayout="column">-->
+<!--          <mat-card-title>Compose Email</mat-card-title>-->
+<!--          <mat-card-subtitle *ngIf="employee$ | async as e">{{e.firstName}} {{e.middleName}} {{e.lastName}}</mat-card-subtitle>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div fxFlex fxLayoutAlign="center center" fxLayoutGap="5px">-->
+<!--        <dynamic-form class="template-form" [fields]="[[templateSelection]]" [model]="route.snapshot.queryParams" [form]="templateForm"></dynamic-form>-->
+<!--        <div *ngIf="route.snapshot.queryParams.templateId as id">-->
+<!--          <a mat-icon-button color="accent" matTooltip="Edit Template" routerLink="template/{{id}}" queryParamsHandling="preserve">-->
+<!--            <mat-icon>edit</mat-icon>-->
+<!--          </a>-->
+<!--          <button mat-icon-button color="warn" matTooltip="Delete Template" (click)="deleteTemplate()">-->
+<!--            <mat-icon>delete</mat-icon>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div fxFlex fxLayoutAlign="end center" fxLayoutGap="10px" *ngIf="employee$ | async as e">-->
+<!--        <mat-spinner *ngIf="sendingEmail; else sendBtn" diameter="50"></mat-spinner>-->
+<!--        <ng-template #sendBtn>-->
+<!--          <mat-slide-toggle #toggle color="primary" labelPosition="before" (change)="togglePreview($event.checked)">Preview</mat-slide-toggle>-->
+<!--          <button mat-fab color="primary" (click)="sendEmail(e)" matTooltip="Send Email" [disabled]="!toggle.checked">-->
+<!--            <mat-icon>send</mat-icon>-->
+<!--          </button>-->
+<!--        </ng-template>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <dynamic-form [form]="emailForm" [fields]="emailFields" [model]="emailModel$ | async"></dynamic-form>-->
+<!--    <div fxFlex style="overflow: auto; background: blue;">-->
+<!--&lt;!&ndash;      <app-email-body-editor&ndash;&gt;-->
+<!--&lt;!&ndash;        [template]="selectedTemplate"&ndash;&gt;-->
+<!--&lt;!&ndash;        [field]="bodyField"&ndash;&gt;-->
+<!--&lt;!&ndash;        (placeholderClick)="insertPlaceholder($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;        [disableEditor]="isLoading"&ndash;&gt;-->
+<!--&lt;!&ndash;        [disablePlaceholders]="toggle.checked"></app-email-body-editor>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </mat-card>-->
+<!--</div>-->

@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>{{data.tts ? 'Place TTS Call' : 'Send Text'}} to {{data.firstName}} {{data.middleName}} {{data.lastName}}</h1>
+<div mat-dialog-content>
+  <h3>Select at least one available number</h3>
+  <dynamic-form
+    *ngIf="fields$ | async as fields; else spinner"
+    [form]="form"
+    [fields]="fields"
+  ></dynamic-form>
+  <ng-template #spinner>
+    <div fxLayoutAlign="center center" style="padding: 20px">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="form.disabled"></mat-progress-bar>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close [disabled]="form.disabled">Cancel</button>
+  <button mat-button
+          [disabled]="form.disabled || (invalidForm$ | async)"
+          (click)="send()">
+    {{data.tts ? 'Place TTS Call' : 'Send Text'}}
+  </button>
+</div>

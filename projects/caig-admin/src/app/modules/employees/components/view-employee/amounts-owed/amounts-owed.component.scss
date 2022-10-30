@@ -1,0 +1,7 @@
+mat-grid-list {
+  font-size: 16px;
+  margin-top: 16px;
+}
+.mat-grid-tile:nth-child(odd) {
+  background: rgba(150,150,150,0.2);
+}

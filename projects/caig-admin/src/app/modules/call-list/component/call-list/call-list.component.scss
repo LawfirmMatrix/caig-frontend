@@ -1,0 +1,41 @@
+.mat-card {
+  margin: 10px;
+  overflow: auto;
+
+  .mat-card-title {
+    margin-bottom: 15px;
+  }
+}
+
+.p-status {
+  width: calc(100% - 20px);
+  margin: 0 10px 10px 10px;
+
+  .mat-button-toggle-group {
+    width: 100%;
+    overflow: auto;
+    .mat-button-toggle {
+      width: 100%;
+    }
+  }
+}
+
+mat-accordion {
+  margin: 10px 10px 0 10px;
+
+  mat-panel-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+mat-card {
+  flex: 1 1 0;
+  box-sizing: border-box;
+  min-height: 450px;
+}
+
+.filters-container {
+  width: 100%;
+  overflow: auto hidden;
+}

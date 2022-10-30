@@ -1,0 +1,107 @@
+<mat-list role="list">
+  <mat-list-item role="listitem">
+    <div class="prop-name">ID</div>
+    <div fxFlex><b>{{employee.id}}</b></div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Settlement</div>
+    <div fxFlex><a><b>{{employee.settlementCode}}</b></a></div> <!-- @TODO link to view settlement -->
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Name</div>
+    <div fxFlex><b>{{employee.firstName}} {{employee.middleName}} {{employee.lastName}}</b></div>
+  </mat-list-item>
+  <mat-list-item role="listitem" style="height: 180px">
+    <div class="prop-name">BUE Details</div>
+    <div fxFlex fxLayout="column" fxLayoutGap="5px">
+      <div fxLayout="row">
+        <div fxFlex>ID: <b>{{employee.bueId}}</b></div>
+        <div fxFlex>City: <b>{{employee.bueLocation | location:'city'}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Region: <b>{{employee.bueRegion}}</b></div>
+        <div fxFlex>State: <b>{{employee.bueLocation | location:'state'}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Local: <b>{{employee.bueLocal}}</b></div>
+        <div fxFlex>Earliest Date: <b><span *ngIf="employee.bueStartQuarter">{{employee.bueStartQuarter}} of</span> {{employee.bueStartYear}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Current BUE: <b>{{employee.bueCurrent ? 'YES' : 'NO'}}</b></div>
+        <div fxFlex>Latest Date: <b><span *ngIf="employee.bueEndQuarter">{{employee.bueEndQuarter}} of</span> {{employee.bueEndYear}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Union Member: <b>{{employee.bueUnionMember ? 'YES' : 'NO'}}</b></div>
+        <div fxFlex>BUS Code: <b>{{employee.busCode | zeroPad:4}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Grade: <b>{{employee.grade | zeroPad:2}}</b></div>
+        <div fxFlex>Step: <b>{{employee.step | zeroPad:2}}</b></div>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex>Series: <b>{{employee.series | zeroPad:4}}</b></div>
+        <div fxFlex>Annual Rate: <b>{{employee.annualRate | currency:'USD':'$'}}</b></div>
+      </div>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Address</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.address1}} {{employee.address2}} {{employee.city}} {{employee.state}} {{employee.zip}}</b></div>
+      <div fxFlex><mat-icon [color]="employee.addressIsInvalid ? 'warn' : 'primary'">{{employee.addressIsInvalid ? 'highlight_off' : 'check_circle'}}</mat-icon></div>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Phone</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.phone}}</b></div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-icon [color]="employee.phoneIsInvalid ? 'warn' : 'primary'">{{employee.phoneIsInvalid ? 'highlight_off' : 'check_circle'}}</mat-icon>
+        <app-phone-menu [employee]="employee"></app-phone-menu>
+      </div>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Phone (work)</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.phoneWork}} <span *ngIf="employee.phoneWorkExt">x {{employee.phoneWorkExt}}</span></b></div>
+      <app-phone-menu [employee]="employee"></app-phone-menu>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Phone (cell)</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.phoneCell}}</b></div>
+      <app-phone-menu [employee]="employee"></app-phone-menu>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Email</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.email}}</b></div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-icon [color]="employee.emailIsInvalid ? 'warn' : 'primary'">{{employee.emailIsInvalid ? 'highlight_off' : 'check_circle'}}</mat-icon>
+        <app-email-menu [email]="employee.email"></app-email-menu>
+      </div>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Email (alt)</div>
+    <div fxFlex fxLayout="row">
+      <div fxFlex fxLayoutAlign="start center"><b>{{employee.emailAlt}}</b></div>
+      <app-email-menu [email]="employee.emailAlt" [alt]="true"></app-email-menu>
+    </div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Password</div>
+    <div fxFlex><app-decrypt-button [employee]="employee" prop="password"></app-decrypt-button></div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">SSN</div>
+    <div fxFlex><app-decrypt-button [employee]="employee" prop="ssn"></app-decrypt-button></div>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <div class="prop-name">Notes</div>
+    <div fxFlex></div>
+  </mat-list-item>
+</mat-list>

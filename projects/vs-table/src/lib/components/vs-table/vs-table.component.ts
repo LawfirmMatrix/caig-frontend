@@ -16,12 +16,12 @@ import {
   SelectionChange, TableCache,
   TableColumn,
   TableColumnDataType,
-  TableMenuItem
+  TableMenuItem, ButtonColumn
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
-import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
 import {
   auditTime,
   BehaviorSubject,
@@ -65,6 +65,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   @Input() public textPainter: ((row: T) => string) | undefined;
   @Input() public preselect: ((row: T) => boolean) | undefined;
   @Input() public filter = '';
+  @Input() public buttonColumns: ButtonColumn<T>[] | undefined;
 
   @Output() public rowClick = new EventEmitter<RowClick<T>>(true);
   @Output() public selectionChange = new EventEmitter<SelectionChange<T>>(true);
@@ -115,9 +116,15 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public filteredData: T[] = [];
   public visibleColumns: TableColumn<T>[] = [];
   public columnSummaries: {[key: string]: number} = {};
+  public buttonColumnsStart: ButtonColumn<T>[] | undefined;
+  public buttonColumnsEnd: ButtonColumn<T>[] | undefined;
+  public calcColumnPrefix = '_';
 
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
+  private resizeObserver = new ResizeObserver(() => this.viewport.checkViewportSize());
+  private verticalScrollPosition: number | null = null;
+  private _data: any[] = [];
 
   constructor(
     private csvService: NgxCsvService,
@@ -125,7 +132,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     private elementRef: ElementRef,
   ) { }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.applyCache();
 
     merge(this.filter$, this.columnFilter$)
@@ -148,35 +155,37 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       }));
   }
 
-  public ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     this.scrollingElement.elementScrolled()
       .pipe(
         filter(() => this.showFooter && !!this.data),
-        auditTime(50),
+        auditTime(25),
         map((event) => (event.target as HTMLElement).scrollLeft),
         distinctUntilChanged(),
       )
-      .subscribe((left) => this.footerRow.nativeElement.style.transform = `translateX(${-left}px)`);
+      .subscribe((left) => this.translateFooter(left));
 
     this.initializeScrollOffset();
 
-    const obs = new ResizeObserver(() => this.viewport.checkViewportSize());
-    obs.observe(this.scrollingElement.getElementRef().nativeElement);
+    this.resizeObserver.observe(this.scrollingElement.getElementRef().nativeElement);
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes['columns']?.currentValue) {
+  public ngOnChanges(changes: SimpleChanges): void {
+    const data = changes['data'];
+    const hasData = data?.currentValue;
+    const hasSort = changes['sort']?.currentValue;
+    const hasColumns = changes['columns']?.currentValue;
+    if (hasColumns || hasData) {
+      this.initializeData();
+    }
+    if (hasColumns) {
       this.applyCache('columns');
       this.setVisibleColumns();
       this.calculateColumnSummaries();
       this.removeOldColumnFilters();
       this.initializeColumnFilters();
     }
-
-    const data = changes['data'];
-    const hasData = data?.currentValue;
-    const sort = changes['sort']?.currentValue;
-    if (hasData || changes['filter']?.currentValue || sort) {
+    if (hasData || changes['filter']?.currentValue || hasSort) {
       this.filterData();
     }
     if (hasData) {
@@ -188,20 +197,21 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.filteredData = [];
     }
     const preselect = changes['preselect'];
-    if (preselect) {
-      if (preselect.currentValue) {
-        this.preselectRows();
-      } else {
-        this.selection.clear();
-      }
+    if (preselect?.currentValue) {
+      this.preselectRows();
+    }
+    if (changes['buttonColumns']) {
+      this.buttonColumnsStart = this.buttonColumns?.filter((b) => b.position === 'start');
+      this.buttonColumnsEnd = this.buttonColumns?.filter((b) => b.position === 'end');
     }
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.saveCache(['scrollOffset']);
+    this.resizeObserver.disconnect();
   }
 
-  public selectAllToggle() {
+  public selectAllToggle(): void {
     this.isAllSelected() ? this.selection.clear() : this.selection.select(...this.filteredData);
   }
 
@@ -233,7 +243,10 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       this.filteredData = this.unsortedFilteredData.slice();
       return;
     }
-    this.filteredData = orderBy(this.filteredData, event.active, event.direction);
+    const column = this.columns.find((c) => c.field === event.active);
+    const calculate = column?.calculate;
+    const sortBy = calculate ? (this.calcColumnPrefix + event.active) : event.active;
+    this.filteredData = orderBy(this.filteredData, (row: any) => typeof row[sortBy] === 'string' ? row[sortBy].toLowerCase() : row[sortBy], event.direction);
     this.saveCache(['sort']);
   }
 
@@ -277,6 +290,11 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.saveCache(['columns']);
   }
 
+  public buttonColumnClick(event: MouseEvent, column: ButtonColumn<T>, row: T): void {
+    event.stopPropagation();
+    column.callback(row);
+  }
+
   public clearAllFilters(): void {
     const columnFilters = this.columnFilter$.value;
     for (let columnFiltersKey in columnFilters) {
@@ -302,6 +320,16 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.clearCache();
     if (this.columns) {
       this.setVisibleColumns();
+    }
+  }
+
+  public toggleVerticalScrollLock(): void {
+    this.verticalScrollPosition = this.verticalScrollPosition === null ? this.viewport.scrollable.getElementRef().nativeElement.scrollTop : null;
+  }
+
+  public onViewportScroll(): void {
+    if (this.verticalScrollPosition !== null) {
+      this.viewport.scrollable.getElementRef().nativeElement.scrollTo({top: this.verticalScrollPosition});
     }
   }
 
@@ -335,14 +363,21 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.minRowWidth = (this.visibleColumns.length * this.columnWidth) +
       (this.disableSelection ? 0 : this.rowHeight) +
       (this.rowMenuItems || this.tableMenuItems ? this.rowHeight : 0);
+
+    if (this.showFooter) {
+      setTimeout(() => {
+        if (this.scrollingElement) {
+          this.translateFooter(this.scrollingElement.measureScrollOffset('left'));
+        }
+      });
+    }
   }
 
   private filterData(): void {
-    const data = this.data || [];
     const columnFilters = this.columnFilter$.value;
 
     this.filteredData = this.filter$.value ?
-      data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : data;
+      this._data.filter((row) => JSON.stringify(row).toLowerCase().includes(this.filter$.value.toLowerCase())) : this._data;
 
     for (let columnFiltersKey in columnFilters) {
       if (columnFilters[columnFiltersKey].isActive) {
@@ -516,7 +551,24 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private preselectRows(): void {
     if (this.data && this.preselect) {
       this.selection.clear();
-      this.selection.select(...this.data.filter(this.preselect));
+      this.selection.select(...this._data.filter(this.preselect));
+    }
+  }
+
+  private translateFooter(leftOffset: number): void {
+    if (this.footerRow) {
+      this.footerRow.nativeElement.style.transform = `translateX(${-leftOffset}px)`
+    }
+  }
+
+  private initializeData(): void {
+    if (this.data && this.columns) {
+      const calcColumns = this.columns.filter((c) => !!c.calculate) as CalculateColumn<T>[];
+      this._data = this.data.map((row) => {
+        const calculatedValues: any = { };
+        calcColumns.forEach((col) => calculatedValues[this.calcColumnPrefix + col.field] = col.calculate(row));
+        return { ...row, ...calculatedValues };
+      });
     }
   }
 }

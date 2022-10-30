@@ -1,0 +1,35 @@
+mat-icon {
+  padding-left: 8px;
+}
+
+input {
+  display: none;
+}
+
+mat-list {
+  min-width: 133px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+h3 {
+  padding: 0;
+}
+
+.drop-zone {
+  min-height: 100px;
+  min-width: 133px;
+  font-size: 30px;
+}
+
+.mat-list-icon {
+  cursor: pointer;
+}
+
+mat-progress-bar {
+  width: 110px;
+}
+
+mat-list-item:not(:last-of-type) {
+  border-bottom: 1px solid #cccccc;
+}

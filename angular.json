@@ -26,17 +26,53 @@
             "assets": [
               "projects/caig-admin/src/favicon.ico",
               "projects/caig-admin/src/assets",
-              "projects/caig-admin/src/manifest.webmanifest"
+              "projects/caig-admin/src/manifest.webmanifest",
+              "projects/caig-admin/src/web.config"
             ],
             "styles": [
+              "projects/notifications/styles.scss",
+              "./node_modules/quill/dist/quill.snow.css",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/caig-admin/src/styles.scss"
+              {
+                "input": "projects/caig-admin/src/styles/styles.scss"
+              },
+              {
+                "input": "projects/caig-admin/src/styles/highlightjs/material-light.scss"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/pink-bluegrey.scss",
+                "bundleName": "pink-bluegrey"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/deeppurple-amber.scss",
+                "bundleName": "deeppurple-amber"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/indigo-pink.scss",
+                "bundleName": "indigo-pink"
+              },
+              {
+                "inject": false,
+                "input": "projects/caig-admin/src/styles/custom-themes/purple-green.scss",
+                "bundleName": "purple-green"
+              }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules",
+                "projects/caig-admin/src",
+                "projects/caig-admin/src/styles"
+              ]
+            },
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "projects/caig-admin/ngsw-config.json",
             "allowedCommonJsDependencies": [
-              "moment"
+              "moment",
+              "quill"
             ]
           },
           "configurations": {
@@ -101,7 +137,8 @@
             "assets": [
               "projects/caig-admin/src/favicon.ico",
               "projects/caig-admin/src/assets",
-              "projects/caig-admin/src/manifest.webmanifest"
+              "projects/caig-admin/src/manifest.webmanifest",
+              "projects/caig-admin/src/web.config"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
@@ -134,15 +171,22 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/survey/src/favicon.ico",
-              "projects/survey/src/assets"
+              "projects/survey/src/assets",
+              "projects/survey/src/manifest.webmanifest",
+              "projects/survey/src/web.config"
             ],
             "styles": [
-              "projects/survey/src/styles.scss"
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "projects/survey/src/styles.scss",
+              "projects/notifications/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "moment"
-            ]
+              "moment",
+              "quill"
+            ],
+            "serviceWorker": true,
+            "ngswConfigPath": "projects/survey/ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -205,9 +249,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/survey/src/favicon.ico",
-              "projects/survey/src/assets"
+              "projects/survey/src/assets",
+              "projects/survey/src/manifest.webmanifest",
+              "projects/survey/src/web.config"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "projects/survey/src/styles.scss"
             ],
             "scripts": []
@@ -308,6 +355,37 @@
         }
       }
     },
+    "vs-table": {
+      "projectType": "library",
+      "root": "projects/vs-table",
+      "sourceRoot": "projects/vs-table/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/vs-table/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/vs-table/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/vs-table/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/vs-table/src/test.ts",
+            "tsConfig": "projects/vs-table/tsconfig.spec.json",
+            "karmaConfig": "projects/vs-table/karma.conf.js"
+          }
+        }
+      }
+    },
     "dynamic-form": {
       "projectType": "library",
       "root": "projects/dynamic-form",
@@ -339,23 +417,23 @@
         }
       }
     },
-    "vs-table": {
+    "mock-api": {
       "projectType": "library",
-      "root": "projects/vs-table",
-      "sourceRoot": "projects/vs-table/src",
+      "root": "projects/mock-api",
+      "sourceRoot": "projects/mock-api/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/vs-table/ng-package.json"
+            "project": "projects/mock-api/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/vs-table/tsconfig.lib.prod.json"
+              "tsConfig": "projects/mock-api/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/vs-table/tsconfig.lib.json"
+              "tsConfig": "projects/mock-api/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -363,9 +441,9 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/vs-table/src/test.ts",
-            "tsConfig": "projects/vs-table/tsconfig.spec.json",
-            "karmaConfig": "projects/vs-table/karma.conf.js"
+            "main": "projects/mock-api/src/test.ts",
+            "tsConfig": "projects/mock-api/tsconfig.spec.json",
+            "karmaConfig": "projects/mock-api/karma.conf.js"
           }
         }
       }

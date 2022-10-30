@@ -1,0 +1,16 @@
+<form fxLayout="column"
+      (ngSubmit)="submitted.emit({value: form.value, rawValue: form.getRawValue()})"
+      [formGroup]="form">
+  <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="8px" *ngFor="let row of fields">
+    <div *ngIf="!row.length" class="divider"></div>
+    <div *ngFor="let field of row" [fxFlex]="field.fxFlex">
+      <ng-container dynamicField [field]="field" [form]="form"></ng-container>
+    </div>
+  </div>
+  <div *ngIf="showSubmit" fxLayoutAlign="{{submitPosition}} center">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">
+      {{submitLabel}}
+    </button>
+  </div>
+</form>
+

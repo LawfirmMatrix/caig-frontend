@@ -25,6 +25,9 @@
       "file-upload": [
         "dist/file-upload"
       ],
+      "mock-api": [
+        "dist/mock-api"
+      ],
       "notifications": [
         "dist/notifications"
       ],

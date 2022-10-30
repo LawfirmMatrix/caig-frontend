@@ -1,0 +1,16 @@
+<div fxFlexFill fxLayout="column">
+  <mat-card class="mat-elevation-z4">
+    <mat-card-title>Filters</mat-card-title>
+    <mat-card-content>
+      <dynamic-form *ngIf="fields$ | async as fields" [fields]="fields" [form]="form"></dynamic-form>
+    </mat-card-content>
+  </mat-card>
+  <vs-table
+    fxFlex
+    id="events-list"
+    [data]="events$ | async"
+    [disableSelection]="true"
+    [columns]="columns"
+    (rowClick)="viewEmployee($event.row.employeeId)">
+  </vs-table>
+</div>

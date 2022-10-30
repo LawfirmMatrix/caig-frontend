@@ -1,0 +1,44 @@
+<div fxFlexFill fxLayout="column">
+  <div style="margin: 10px 10px 0 10px" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <h1>Employees</h1>
+    <dynamic-form style="max-height: 55px;" [fields]="[[removedField]]" [model]="{removed: removed$.value}"></dynamic-form>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="expandFilters">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Filters</mat-panel-title>
+        <mat-panel-description>Find specific employee records</mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="filters-container" fxLayout="column">
+          <div class="p-status">
+            <mat-button-toggle-group aria-label="Participation Status" [value]="currentStatuses$.value" multiple>
+              <mat-button-toggle *ngFor="let status of statuses" [value]="status.name" (change)="statusChange($event.value)" [style.color]="status.color">{{status.name}}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="margin: 0 8px 24px 0">
+            <button mat-raised-button color="primary" (click)="applyFilters()">Apply Filters</button>
+            <button mat-mini-fab color="warn" (click)="resetFilters()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <dynamic-form *ngIf="isHandset$ | async; else fullFilterView" [form]="form" [fields]="handsetFields" [model]="model$ | async"></dynamic-form>
+          <ng-template #fullFilterView>
+            <dynamic-form [form]="form" [fields]="fields" [model]="model$ | async"></dynamic-form>
+          </ng-template>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-card>
+    <vs-table
+      id="call-list"
+      (rowClick)="viewEmployee($event.row)"
+      [data]="employees$ | async"
+      [columns]="columns"
+      [rowMenuItems]="rowMenuItems$ | async"
+      [tableMenuItems]="tableMenuItems$ | async"
+      [rowPainter]="rowPainter">
+    </vs-table>
+  </mat-card>
+</div>

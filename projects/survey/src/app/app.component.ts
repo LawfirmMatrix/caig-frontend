@@ -1,10 +1,29 @@
-import { Component } from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Observable, map, filter} from 'rxjs';
+import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  title = 'survey';
+  public isLoading$: Observable<boolean> = this.router.events
+    .pipe(
+      map((event) => {
+        switch (true) {
+          case event instanceof NavigationStart:
+            return true;
+          case event instanceof NavigationEnd:
+          case event instanceof NavigationCancel:
+          case event instanceof NavigationError:
+            return false;
+          default:
+            return null;
+        }
+      }),
+      filter((loading): loading is boolean => typeof loading === 'boolean'),
+    )
+  constructor(private router: Router) { }
 }

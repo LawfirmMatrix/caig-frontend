@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutGap="8px">
+  <button matTooltip="SMS" mat-icon-button color="primary" (click)="sms(false)">
+    <mat-icon>sms</mat-icon>
+  </button>
+  <button matTooltip="Text-to-Speech Call" mat-icon-button color="primary" (click)="sms(true)">
+    <mat-icon>perm_phone_msg</mat-icon>
+  </button>
+  <button disabled matTooltip="Phone Call" mat-icon-button color="primary" (click)="call()">
+    <mat-icon>phone</mat-icon>
+  </button>
+</div>

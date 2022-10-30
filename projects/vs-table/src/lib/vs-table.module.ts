@@ -16,13 +16,12 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDividerModule} from '@angular/material/divider';
-import {CalculatePipe} from './pipes/calculate.pipe';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {NumberFilterComponent} from './components/column-filter/number-filter/number-filter.component';
 import {DateFilterComponent} from './components/column-filter/date-filter/date-filter.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule} from '@angular/material-moment-adapter';
-import {MAT_DATE_LOCALE, MatRippleModule} from '@angular/material/core';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {DefaultFilterComponent} from './components/column-filter/default-filter/default-filter.component';
 import {IconFilterComponent} from './components/column-filter/icon-filter/icon-filter.component';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -42,7 +41,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     ChangesFilterComponent,
     ExportDataComponent,
     AccountingPipe,
-    CalculatePipe,
   ],
   imports: [
     CommonModule,
@@ -66,7 +64,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatDatepickerModule,
     MatMomentDateModule,
     MatGridListModule,
-    MatRippleModule,
     MatSlideToggleModule,
     MatDialogModule,
   ],

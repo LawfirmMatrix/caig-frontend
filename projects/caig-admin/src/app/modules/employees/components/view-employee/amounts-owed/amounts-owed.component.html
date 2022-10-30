@@ -1,0 +1,9 @@
+<mat-grid-list [cols]="props.length" rowHeight="40px" [style.minWidth.px]="props.length * 110">
+  <mat-grid-tile *ngFor="let prop of props">
+    <b>{{prop.value}}</b>
+  </mat-grid-tile>
+  <mat-grid-tile *ngFor="let prop of props; last as last;">
+    <b *ngIf="last; else np">{{employee[prop.key] | transformNum | currency:'USD':'$'}}</b>
+    <ng-template #np>{{employee[prop.key] | transformNum | currency:'USD':'$'}}</ng-template>
+  </mat-grid-tile>
+</mat-grid-list>

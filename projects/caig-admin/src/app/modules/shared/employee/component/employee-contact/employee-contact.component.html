@@ -1,0 +1,23 @@
+<div fxFlex fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" style="font-size: 16px">
+    <b>Currently assigned to:</b>
+    <div *ngIf="employee.userId; else notAssigned" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>{{employee.username}}</div>
+      <div>(as of {{employee.assignedDate | date:'shortDate'}})</div>
+    </div>
+    <ng-template #notAssigned>
+      <div>N/A</div>
+    </ng-template>
+  </div>
+  <div fxFlex>
+    <vs-table
+      id="employee-contact"
+      [data]="employee.contacts"
+      [columns]="columns"
+      [disableRowClick]="true"
+      [disableSelection]="true"
+      [disableSearch]="true"
+      [disableOptions]="true">
+    </vs-table>
+  </div>
+</div>

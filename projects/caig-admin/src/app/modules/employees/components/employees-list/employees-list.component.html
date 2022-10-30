@@ -1,0 +1,43 @@
+<div fxFlexFill fxLayout="column">
+  <div fxFlexOffset="16px" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" style="padding: 0 16px 8px 16px">
+    <h1>Employees</h1>
+    <div fxFlex style="overflow: auto">
+      <app-toolbar-buttons align="end center" [buttons]="toolbarButtons"></app-toolbar-buttons>
+    </div>
+  </div>
+  <mat-button-toggle-group name="viewMode" aria-label="View Mode" [value]="viewMode" (change)="viewModeChange($event.value)">
+    <mat-button-toggle fxFlex *ngFor="let mode of viewModes" [value]="mode.name">{{mode.displayName}}</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="expandFilters">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Filters</mat-panel-title>
+        <mat-panel-description>Find specific employee records</mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="filters-container" fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="margin: 0 8px 8px 0">
+            <button mat-raised-button color="primary" (click)="applyFilters()">Apply Filters</button>
+            <button mat-mini-fab color="warn" (click)="resetFilters()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <dynamic-form *ngIf="isHandset$ | async; else fullFilterView" [form]="form" [fields]="handsetFields" [model]="model$ | async"></dynamic-form>
+          <ng-template #fullFilterView>
+            <dynamic-form [form]="form" [fields]="fields" [model]="model$ | async"></dynamic-form>
+          </ng-template>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <vs-table fxFlex
+            [data]="employees$ | async"
+            [columns]="tableColumns"
+            [rowMenuItems]="rowMenuItems"
+            [tableMenuItems]="tableMenuItems"
+            [textPainter]="settlementIdPainter"
+            [rowTooltip]="rowTooltip"
+            (rowClick)="viewEmployee($event.row)"
+            id="employees-list">
+  </vs-table>
+</div>
