@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:survey": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build mock-api",
-    "build:caig-admin": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build survey && ng build file-upload"
+    "build:caig-admin": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload"
   },
   "private": true,
   "dependencies": {
