@@ -32,17 +32,20 @@ export class DateRangeComponent extends FieldBaseComponent<DateRangeField> imple
 
   // @FIXME - see DateComponent
   public ngOnInit() {
-    const format = 'YYYY-MM-DD';
-    this.range.valueChanges.subscribe((value) => {
-      const dates = {
-        start: isMoment(value.start) ? value.start.format(format) : value.start,
-        end: isMoment(value.end) ? value.end.format(format) : value.end,
-      };
-      this.control.setValue(dates);
-    });
-    this.control.valueChanges
-      .pipe(distinctUntilChanged(isEqual))
-      .subscribe((value) => this.range.setValue(value));
+    const ctrl = this.control;
+    if (ctrl) {
+      const format = 'YYYY-MM-DD';
+      this.range.valueChanges.subscribe((value) => {
+        const dates = {
+          start: isMoment(value.start) ? value.start.format(format) : value.start,
+          end: isMoment(value.end) ? value.end.format(format) : value.end,
+        };
+        ctrl.setValue(dates);
+      });
+      ctrl.valueChanges
+        .pipe(distinctUntilChanged(isEqual))
+        .subscribe((value) => this.range.setValue(value));
+    }
   }
 }
 

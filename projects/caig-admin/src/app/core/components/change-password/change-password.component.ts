@@ -8,7 +8,7 @@ import {map, startWith} from 'rxjs/operators';
 import {UserDataService} from '../../../modules/users/services/user-data.service';
 import {generatePassword} from '../../util/functions';
 import {AuthService} from '../../../auth/services/auth.service';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-change-password',
@@ -28,7 +28,7 @@ import {FormGroup} from '@angular/forms';
   `,
 })
 export class ChangePasswordComponent implements OnInit {
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public validPassword$ = new BehaviorSubject<boolean>(false);
   public fields!: FieldBase<any>[][];
   public disableSave$!: Observable<boolean>;
@@ -109,7 +109,7 @@ export const visibilityButton = (field: InputField): InputButton => {
   return button;
 };
 
-export const generatePasswordButton = (form: FormGroup, passwordLength = 16): InputButton => {
+export const generatePasswordButton = (form: UntypedFormGroup, passwordLength = 16): InputButton => {
   return {
     icon: 'refresh',
     callback: () => {

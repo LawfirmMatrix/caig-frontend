@@ -1,5 +1,5 @@
 import {Component, HostListener} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../services/auth.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store/reducers';
@@ -19,7 +19,7 @@ export class LoginComponent {
       this.login();
     }
   }
-  public signInForm = new FormGroup({
+  public signInForm = new UntypedFormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });

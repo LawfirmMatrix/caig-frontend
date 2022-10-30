@@ -16,7 +16,7 @@ import {EmployeesActions} from '../../store/actions/action-types';
 import {ConfirmDialogComponent} from '../../../../../core/components/confirm-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'notifications';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-compose-email',
@@ -44,8 +44,8 @@ export class ComposeEmailComponent {
     }
   ];
   public fromEmail = 'demo@caig.co';
-  public emailForm = new FormGroup({});
-  public templateForm = new FormGroup({});
+  public emailForm = new UntypedFormGroup({});
+  public templateForm = new UntypedFormGroup({});
   public emailFields = [
     [
       new SelectField({

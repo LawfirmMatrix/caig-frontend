@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, SelectField} from 'dynamic-form';
 import {combineLatest, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -25,7 +25,7 @@ import {UserActions} from '../../../users/store/actions/action-types';
   styleUrls: ['./events.component.scss']
 })
 export class EventsComponent implements OnInit {
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields$: Observable<FieldBase<any>[][]> = this.store.select(isAdmin)
     .pipe(
       map((isAdmin) => {

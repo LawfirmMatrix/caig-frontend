@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FieldBase, InputField} from 'dynamic-form';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
@@ -41,7 +41,7 @@ export class CreateEmployeeComponent {
       })
     ]
   ];
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public showSubmit = true;
   constructor(
     private route: ActivatedRoute,

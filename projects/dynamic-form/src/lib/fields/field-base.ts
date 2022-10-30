@@ -1,10 +1,10 @@
 import {ThemePalette} from '@angular/material/core';
 import {MatFormFieldAppearance} from '@angular/material/form-field';
-import {FormGroup, ValidatorFn} from '@angular/forms';
+import {UntypedFormGroup, ValidatorFn} from '@angular/forms';
 
 export abstract class FieldBaseComponent<T extends FieldBase<any>> {
   public field!: T;
-  public form!: FormGroup;
+  public form!: UntypedFormGroup;
   public get control() { return this.form.controls[this.field.key] };
 }
 
@@ -18,7 +18,7 @@ export abstract class FieldBase<T> {
   public hint: FormFieldHint|undefined;
   public appearance: MatFormFieldAppearance;
   public disabled: boolean;
-  public onChange: ((value: any, form: FormGroup) => void)|undefined;
+  public onChange: ((value: any, form: UntypedFormGroup) => void)|undefined;
   public validators: ValidatorFn[]|undefined;
   public focus: boolean;
 
@@ -50,7 +50,7 @@ export interface BaseOptions<T> {
   appearance?: MatFormFieldAppearance;
   hint?: FormFieldHint;
   disabled?: boolean;
-  onChange?: (value: any, form: FormGroup) => void;
+  onChange?: (value: any, form: UntypedFormGroup) => void;
   validators?: ValidatorFn[];
   focus?: boolean;
 }

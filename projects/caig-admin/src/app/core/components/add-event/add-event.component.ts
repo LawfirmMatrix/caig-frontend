@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FieldBase, CheckboxField, DateField, InputField, SelectField, TextareaField} from 'dynamic-form';
-import {FormGroup, Validators} from '@angular/forms';
+import {UntypedFormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 import {EventService} from '../../services/event.service';
 import {Employee, EmployeeEvent} from '../../../models/employee.model';
@@ -19,7 +19,7 @@ import {interval, Subject} from 'rxjs';
   styleUrls: ['./add-event.component.scss']
 })
 export class AddEventComponent implements OnInit, OnDestroy {
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public isProcessing = false;
   public model: {code?: number, message?: string, date?: moment.Moment, time?: string, now?: boolean} | undefined;
   public fields!: FieldBase<any>[][];

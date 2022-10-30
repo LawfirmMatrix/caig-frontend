@@ -277,7 +277,7 @@ export class AutocompleteInputComponent<T> implements OnChanges, ControlValueAcc
       </button>
       <mat-progress-bar *ngIf="!input.options" mode="indeterminate" [color]="field.color"></mat-progress-bar>
       <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control.hasError('required')">
+      <mat-error *ngIf="control?.hasError('required')">
         {{field.label}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>

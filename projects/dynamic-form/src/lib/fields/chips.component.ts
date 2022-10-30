@@ -284,7 +284,7 @@ export class ChipsInputComponent implements OnChanges, ControlValueAccessor, Mat
       </dynamic-form-chips-input>
       <mat-progress-bar *ngIf="field.options !== undefined && !input.options" mode="indeterminate" [color]="field.color"></mat-progress-bar>
       <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control.hasError('required')">
+      <mat-error *ngIf="control?.hasError('required')">
         {{field.label}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>

@@ -22,7 +22,7 @@ import {
 import {QueryParams} from '@ngrx/data';
 import {bueLocations} from '../../../../enums/store/selectors/enums.selectors';
 import {usersForSettlement} from '../../../users/store/selectors/user.selectors';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-call-list',
@@ -114,7 +114,7 @@ export class CallListComponent implements OnInit, OnDestroy {
   public expandFilters = !!Object.keys(omit(this.route.snapshot.queryParams, clientSideFilters)).length;
   public isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(map(({matches}) => matches));
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
       new InputField({

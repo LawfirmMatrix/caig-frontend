@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {
   FieldBase,
   CheckboxField,
@@ -42,7 +42,7 @@ export class EditEmployeeComponent {
   public employee: EditEmployee | undefined;
   public isHandset!: boolean;
   public gridColumns!: number;
-  public form = new FormGroup<{settlementId?: FormControl<string>}>({});
+  public form = new UntypedFormGroup({});
   public disableSave = true;
   public sections: EditSection[] = [
     {

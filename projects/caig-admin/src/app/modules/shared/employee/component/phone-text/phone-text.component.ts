@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormGroup, Validators} from '@angular/forms';
+import {UntypedFormGroup, Validators} from '@angular/forms';
 import {AutocompleteField, FieldBase, SelectField, TextareaField} from 'dynamic-form';
 import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'notifications';
@@ -15,7 +15,7 @@ import {Employee} from '../../../../../models/employee.model';
   styleUrls: ['./phone-text.component.scss'],
 })
 export class PhoneTextComponent implements OnInit {
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields$!: Observable<FieldBase<any>[][]>;
   public invalidForm$ = this.form.statusChanges
     .pipe(

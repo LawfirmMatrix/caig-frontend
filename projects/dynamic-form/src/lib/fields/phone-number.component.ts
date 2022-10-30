@@ -20,7 +20,7 @@ import {
   Validators,
   FormControl
 } from '@angular/forms';
-import {Subject, distinctUntilChanged, skip, merge, map} from 'rxjs';
+import {Subject, distinctUntilChanged, skip, merge, map, debounceTime} from 'rxjs';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {FieldBaseComponent, FieldBase, ControlType, FieldPosition, FieldMenu, BaseOptions} from './field-base';
@@ -37,14 +37,14 @@ import {FieldBaseComponent, FieldBase, ControlType, FieldPosition, FieldMenu, Ba
       <input class="dynamic-form-phone-number-input-element"
              formControlName="area"
              size="3"
-             maxLength="3"
+             maxlength="3"
              aria-label="Area code"
              (keyup)="_handleInput($event, parts.controls.area, exchange)"
              #area>
       <span class="dynamic-form-phone-number-input-spacer">&ndash;</span>
       <input class="dynamic-form-phone-number-input-element"
              formControlName="exchange"
-             maxLength="3"
+             maxlength="3"
              size="3"
              aria-label="Exchange code"
              (keyup)="_handleInput($event, parts.controls.exchange, subscriber)"
@@ -53,16 +53,17 @@ import {FieldBaseComponent, FieldBase, ControlType, FieldPosition, FieldMenu, Ba
       <span class="dynamic-form-phone-number-input-spacer">&ndash;</span>
       <input class="dynamic-form-phone-number-input-element"
              formControlName="subscriber"
-             maxLength="4"
+             maxlength="4"
              size="4"
              aria-label="Subscriber number"
-             (keyup)="_handleInput($event, parts.controls.subscriber, ext)"
+             (keyup)="_handleInput($event, parts.controls.subscriber, extension ? ext : undefined)"
              (keyup.backspace)="autoFocusPrev(subscriber, exchange)"
              #subscriber>
       <span *ngIf="extension" class="dynamic-form-phone-number-input-spacer">Ext.</span>
       <input class="dynamic-form-phone-number-input-element"
+             [style.display]="extension ? 'initial' : 'none'"
              formControlName="ext"
-             maxLength="5"
+             maxlength="5"
              size="5"
              aria-label="Extension number"
              (keyup)="_handleInput($event, parts.controls.subscriber)"
@@ -179,7 +180,7 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
     const area = validNumber ? digits.slice(0, 3) : '';
     const exchange = validNumber ? digits.slice(3, 6) : '';
     const subscriber = validNumber ? digits.slice(6, 10) : '';
-    const ext = digits.length > 10 ? digits.slice(10, digits.length) : '';
+    const ext = digits.length > 10 ? digits.slice(10, 15) : '';
     this.parts.setValue(new PhoneNumber(area, exchange, subscriber, ext));
     this.stateChanges.next();
   }
@@ -222,6 +223,7 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
 
     merge(statusChanges$, valueChanges$)
       .pipe(
+        debounceTime(100),
         map(() => this.value),
         distinctUntilChanged(),
         skip(1),
@@ -326,7 +328,7 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
 @Component({
   selector: 'dynamic-form-phone-number',
   template: `
-    <div fxFlex [fxLayoutAlign]="field.position + ' center'" [formGroup]="form">
+    <div *ngIf="control as ctrl" fxFlex [fxLayoutAlign]="field.position + ' center'" [formGroup]="form">
       <mat-form-field [ngStyle]="{width: (field.extension ? 265 : 195) - (field.showIcon ? 0 : 30) + 'px'}" [appearance]="field.appearance" [color]="field.color">
         <mat-label>{{field.label}}</mat-label>
         <dynamic-form-phone-number-input [extension]="field.extension"
@@ -334,11 +336,11 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
                                 [required]="field.required"></dynamic-form-phone-number-input>
         <mat-icon *ngIf="field.showIcon" matSuffix>phone</mat-icon>
         <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-        <mat-error *ngIf="control.hasError('required')">
+        <mat-error *ngIf="ctrl.hasError('required')">
           {{field.label}} is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <button *ngIf="field.menu" mat-icon-button style="margin-bottom: 16px" [matMenuTriggerFor]="phoneMenu" [disabled]="field.menu.disabled && field.menu.disabled(control.value)">
+      <button *ngIf="field.menu" mat-icon-button style="margin-bottom: 16px" [matMenuTriggerFor]="phoneMenu" [disabled]="field.menu.disabled && field.menu.disabled(ctrl.value)">
         <mat-icon>{{field.menu.icon}}</mat-icon>
       </button>
       <mat-menu #phoneMenu="matMenu">

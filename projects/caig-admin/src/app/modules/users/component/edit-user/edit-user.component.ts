@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, tap} from 'rxjs/operators';
-import {Validators, FormGroup} from '@angular/forms';
+import {Validators, UntypedFormGroup} from '@angular/forms';
 import {FieldBase, InputField, SelectField} from 'dynamic-form';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {NotificationsService} from 'notifications';
@@ -31,7 +31,7 @@ import {UserActions} from '../../store/actions/action-types';
   styleUrls: ['./edit-user.component.scss']
 })
 export class EditUserComponent implements OnInit {
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
       new InputField({

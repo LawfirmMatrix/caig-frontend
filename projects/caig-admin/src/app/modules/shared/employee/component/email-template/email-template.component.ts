@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {EmailService, EmailTemplate, EmployeeEmailTemplate} from '../../../../../core/services/email.service';
 import {filter, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {InputField} from 'dynamic-form';
-import {FormGroup, FormControl} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {isEqual} from 'lodash-es';
 import {NotificationsService} from 'notifications';
 import {Store} from '@ngrx/store';
@@ -44,7 +44,7 @@ export class EmailTemplateComponent implements OnInit {
       })
     ]
   ];
-  public form = new FormGroup<{subject?: FormControl<string>}>({});
+  public form = new UntypedFormGroup({});
   public invalidForm$ = this.form.statusChanges
     .pipe(
       map((status) => status !== 'VALID'),
@@ -97,10 +97,10 @@ export class EmailTemplateComponent implements OnInit {
       const subject = this.form.value.subject || '';
       const body = template[this.bodyField] || '';
       const afterRender = () => {
-        this.form.controls.subject?.enable();
+        (this.form.controls as any).subject?.enable();
         this.toggleFields(render);
       };
-      this.form.controls.subject?.disable();
+      (this.form.controls as any).subject?.disable();
       this.isLoading = true;
       this.dataService.renderEmail((this.route.snapshot.params as any).id, subject, body)
         .subscribe((renderedEmail) => {

@@ -5,12 +5,13 @@ import {FieldBaseComponent, FieldBase, BaseOptions, ControlType, FieldPosition, 
   selector: 'dynamic-form-checkbox',
   template: `
     <div fxFlex [fxLayoutAlign]="field.position + ' center'" [formGroup]="form">
-      <mat-checkbox [formControlName]="field.key"
+      <mat-checkbox *ngIf="control as ctrl"
+                    [formControlName]="field.key"
                     [required]="field.required"
                     [labelPosition]="field.labelPosition"
-                    [indeterminate]="control.value === null"
+                    [indeterminate]="ctrl.value === null"
                     [color]="field.color">
-        <span>{{field.label}}<strong *ngIf="field.required && !control.disabled" class="mat-error">&nbsp;*</strong></span>
+        <span>{{field.label}}<strong *ngIf="field.required && !ctrl.disabled" class="mat-error">&nbsp;*</strong></span>
       </mat-checkbox>
     </div>
   `,

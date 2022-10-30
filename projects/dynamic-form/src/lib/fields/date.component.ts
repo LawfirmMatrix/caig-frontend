@@ -21,7 +21,7 @@ import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-b
       <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
       <mat-datepicker #dp [startView]="field.startView" (monthSelected)="field.monthSelected($event, dp)"></mat-datepicker>
       <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control.hasError('required')">
+      <mat-error *ngIf="control?.hasError('required')">
         {{field.label}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>
@@ -30,9 +30,12 @@ import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-b
 export class DateComponent extends FieldBaseComponent<DateField> implements OnInit {
   // @FIXME - use custom date adapter to handle ISO date string format as form control value
   public ngOnInit() {
-    this.control.valueChanges
-      .pipe(filter((value) => !!(value && value.format)))
-      .subscribe((value) => this.control.setValue(value.format('YYYY-MM-DD'), {emitEvent: false}));
+    const ctrl = this.control;
+    if (ctrl) {
+      ctrl.valueChanges
+        .pipe(filter((value) => !!(value && value.format)))
+        .subscribe((value) => ctrl.setValue(value.format('YYYY-MM-DD'), {emitEvent: false}));
+    }
   }
 }
 

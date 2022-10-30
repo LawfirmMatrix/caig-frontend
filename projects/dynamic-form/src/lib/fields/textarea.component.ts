@@ -4,7 +4,7 @@ import {FieldBase, FieldBaseComponent, BaseOptions, ControlType} from './field-b
 @Component({
   selector: 'dynamic-form-textarea',
   template: `
-    <mat-form-field fxFlex [formGroup]="form" [appearance]="field.appearance" [color]="field.color">
+    <mat-form-field *ngIf="control as ctrl" fxFlex [formGroup]="form" [appearance]="field.appearance" [color]="field.color">
       <mat-label>{{field.label}}</mat-label>
       <textarea
         #input="matInput"
@@ -15,13 +15,13 @@ import {FieldBase, FieldBaseComponent, BaseOptions, ControlType} from './field-b
         [placeholder]="field.placeholder"
       ></textarea>
       <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control.getError('required')">
+      <mat-error *ngIf="ctrl.getError('required')">
         {{field.label}} is <strong>required</strong>
       </mat-error>
-      <mat-error *ngIf="control.getError('maxLength') as err">
+      <mat-error *ngIf="ctrl.getError('maxlength') as err">
         {{field.label}} must be at most <strong>{{err.requiredLength}}</strong> characters
       </mat-error>
-      <mat-error *ngIf="control.getError('minLength') as err">
+      <mat-error *ngIf="ctrl.getError('minlength') as err">
         {{field.label}} must be at least <strong>{{err.requiredLength}}</strong> characters
       </mat-error>
     </mat-form-field>

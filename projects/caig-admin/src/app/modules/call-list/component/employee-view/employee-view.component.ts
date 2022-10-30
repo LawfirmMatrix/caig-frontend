@@ -14,7 +14,7 @@ import {
 } from 'rxjs/operators';
 import {Observable, of, ReplaySubject} from 'rxjs';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {FormGroup, Validators} from '@angular/forms';
+import {UntypedFormGroup, Validators} from '@angular/forms';
 import {
   FieldBase,
   CheckboxField,
@@ -90,7 +90,7 @@ export class EmployeeViewComponent implements OnInit, OnDestroy {
     tooltip: 'Send Email',
     disabled: (value: string) => !value,
   }];
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
       new CheckboxField({

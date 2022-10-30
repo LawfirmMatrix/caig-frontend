@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {EmployeesTableConfigService, IEmployeeViewMode, EmployeeViewMode} from './employees-table-config.service';
 import {combineLatest, noop, Observable, of, Subject} from 'rxjs';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, ChipsField, InputField, SelectField} from 'dynamic-form';
 import {
   filter,
@@ -90,7 +90,7 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
       disabled: true,
     },
   ];
-  public form = new FormGroup({});
+  public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
       new InputField({

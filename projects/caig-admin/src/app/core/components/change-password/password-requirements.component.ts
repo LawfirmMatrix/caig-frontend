@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {every} from 'lodash-es';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-password-requirements',
@@ -45,7 +45,7 @@ import {FormGroup} from '@angular/forms';
   `],
 })
 export class PasswordRequirementsComponent implements OnInit {
-  @Input() public form!: FormGroup;
+  @Input() public form!: UntypedFormGroup;
   @Output() public isValid = new EventEmitter<boolean>(true);
   private subCheckRequirements: PasswordRequirement[] = [
     {

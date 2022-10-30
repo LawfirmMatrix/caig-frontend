@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FieldBase, FieldBaseComponent, BaseOptions, ControlType, FieldPosition} from './field-base';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'dynamic-form-button',
@@ -67,4 +67,4 @@ export interface ButtonOptions extends BaseOptions<void> {
 
 export type ButtonType = 'icon' | 'raised' | 'standard';
 
-export type ButtonCallback = (form: FormGroup, field: ButtonField) => void;
+export type ButtonCallback = (form: UntypedFormGroup, field: ButtonField) => void;

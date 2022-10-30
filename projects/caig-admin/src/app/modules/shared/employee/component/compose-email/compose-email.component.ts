@@ -5,7 +5,7 @@ import {AutocompleteField, FieldBase, InputField, SelectField} from 'dynamic-for
 import {filter, first, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'notifications';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {isEqual} from 'lodash-es';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, combineLatest, of} from 'rxjs';
@@ -72,8 +72,8 @@ export class ComposeEmailComponent implements OnInit {
       })
     ],
   ];
-  public emailForm = new FormGroup({});
-  public templateForm = new FormGroup({});
+  public emailForm = new UntypedFormGroup({});
+  public templateForm = new UntypedFormGroup({});
   public disableSend$ = this.emailForm.statusChanges
     .pipe(
       map((status) => status !== 'VALID'),

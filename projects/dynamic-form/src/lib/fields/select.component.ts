@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FieldBase, ControlType, BaseOptions, FieldBaseComponent} from './field-base';
 import {Observable, map, shareReplay, BehaviorSubject, combineLatest} from 'rxjs';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
 
 @Component({
@@ -36,7 +36,7 @@ import {MatSelect} from '@angular/material/select';
         </mat-select>
         <mat-progress-bar *ngIf="!(options$ | async)" mode="indeterminate" [color]="field.color"></mat-progress-bar>
         <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-        <mat-error *ngIf="control.hasError('required')">
+        <mat-error *ngIf="control?.hasError('required')">
           {{field.label}} is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -65,7 +65,7 @@ export class SelectComponent<T> extends FieldBaseComponent<SelectField<T>> imple
       );
   }
   public selectAll(checked: boolean, select: MatSelect): void {
-    this.control.patchValue(checked ? select.options.map((o) => o.value) : []);
+    this.control?.patchValue(checked ? select.options.map((o) => o.value) : []);
   }
 }
 
@@ -76,8 +76,8 @@ export class SelectField<T> extends FieldBase<string | string[]> {
   public deselect: boolean;
   public displayField: keyof T;
   public itemKey: keyof T;
-  public optionDisabled: ((option: T, form: FormGroup) => boolean) | undefined;
-  public optionColor: ((option: T, form: FormGroup) => string) | undefined;
+  public optionDisabled: ((option: T, form: UntypedFormGroup) => boolean) | undefined;
+  public optionColor: ((option: T, form: UntypedFormGroup) => string) | undefined;
   public optionFilter: SelectOptionsFilter<T> | undefined;
   constructor(options: SelectOptions<T>) {
     super(options);
@@ -98,8 +98,8 @@ export interface SelectOptions<T> extends BaseOptions<string | string[]> {
   options: Observable<T[] | null>;
   multiple?: boolean;
   deselect?: boolean;
-  optionDisabled?: (option: T, form: FormGroup) => boolean;
-  optionColor?: (option: T, form: FormGroup) => string;
+  optionDisabled?: (option: T, form: UntypedFormGroup) => boolean;
+  optionColor?: (option: T, form: UntypedFormGroup) => string;
   optionFilter?: SelectOptionsFilter<T>;
 }
 

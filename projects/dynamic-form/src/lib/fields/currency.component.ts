@@ -210,7 +210,7 @@ export class CurrencyInputComponent implements OnChanges, ControlValueAccessor, 
       </dynamic-form-currency-input>
       <mat-icon matPrefix>attach_money</mat-icon>
       <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control.hasError('required')">
+      <mat-error *ngIf="control?.hasError('required')">
         {{field.label}} is <strong>required</strong>
       </mat-error>
     </mat-form-field>
