@@ -83,7 +83,11 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
       .pipe(
         filter((survey): survey is Survey => !!survey),
         switchMap((survey) => this.dataService.getOneSchema(survey.schemaId)),
-        tap((schema) => this.forms = schema.steps.map(() => new UntypedFormGroup({}))),
+        tap((schema) => {
+          this.forms = schema.steps.map(() => new UntypedFormGroup({}));
+          this.isError = false;
+          this.isSubmitting = false;
+        }),
         catchError((err) => {
           this.isError = true;
           return throwError(err);

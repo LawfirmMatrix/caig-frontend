@@ -7,6 +7,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {DynamicFormModule} from 'dynamic-form';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HideQuestionsPipe} from './pipes/hide-questions.pipe';
+import {BackdropComponent} from './components/backdrop/backdrop.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -15,8 +17,10 @@ import {HideQuestionsPipe} from './pipes/hide-questions.pipe';
     FlexLayoutModule,
     DynamicFormModule,
     ReactiveFormsModule,
+    RouterModule,
   ],
   declarations: [
+    BackdropComponent,
     SelectSurveyComponent,
     TakeSurveyComponent,
     HideQuestionsPipe,

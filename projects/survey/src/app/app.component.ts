@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {Observable, map, filter} from 'rxjs';
 import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
 
@@ -6,7 +6,6 @@ import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationErro
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   public isLoading$: Observable<boolean> = this.router.events

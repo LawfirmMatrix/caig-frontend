@@ -1,18 +1,4 @@
-<div *ngIf="schema$ | async as schema" fxFlexFill fxLayout="column" fxLayoutGap="8px" [ngStyle]="schema.backgroundStyle || {}">
-  <mat-toolbar class="mat-elevation-z10" [color]="!schema.toolbarStyle ? 'primary' : undefined" [ngStyle]="schema.toolbarStyle || {}" fxLayout="column" fxLayoutAlign="center center">
-    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">{{schema.fullName}}</div>
-  </mat-toolbar>
-  <mat-card *ngIf="schema.headerTitle || schema.headerContent"
-            [ngClass]="{'full-body': !(isHandset$ | async)}"
-            class="mat-elevation-z7">
-    <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
-    <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
-      <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
-      <p *ngFor="let p of schema.headerContent">{{p}}</p>
-    </mat-card-content>
-  </mat-card>
-  <mat-card [ngClass]="{'full-body': !(isHandset$ | async)}">
-    <h1>Please select your facility location:</h1>
-    <dynamic-form [fields]="[[locationField]]"></dynamic-form>
-  </mat-card>
-</div>
+<mat-card [ngClass]="{'full-body': !(isHandset$ | async)}">
+  <h1>Please select your facility location:</h1>
+  <dynamic-form [fields]="[[locationField]]"></dynamic-form>
+</mat-card>
