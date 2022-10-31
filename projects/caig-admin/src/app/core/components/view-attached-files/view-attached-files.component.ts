@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {filter, switchMap} from 'rxjs/operators';
-import {ConfirmDialogComponent} from '../confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {RowMenuItem, TableColumn, TableMenuItem, TextColumn} from 'vs-table';
 import {concatName} from '../../util/functions';
 import {EmployeeEntityService} from '../../../modules/employees/services/employee-entity.service';

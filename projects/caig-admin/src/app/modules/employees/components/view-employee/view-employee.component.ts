@@ -10,7 +10,7 @@ import {ToolbarButton} from '../../../shared/employee/component/toolbar-buttons/
 import {EmployeeEntityService} from '../../services/employee-entity.service';
 import {Employee} from '../../../../models/employee.model';
 import {concatName, isNotUndefined} from '../../../../core/util/functions';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {settlementId} from '../../../../core/store/selectors/core.selectors';

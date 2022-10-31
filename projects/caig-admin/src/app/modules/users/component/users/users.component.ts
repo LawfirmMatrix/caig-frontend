@@ -4,7 +4,7 @@ import {NotificationsService} from 'notifications';
 import {filter, switchMap} from 'rxjs/operators';
 import {TableColumn, RowMenuItem, TextColumn} from 'vs-table';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmDialogComponent} from '../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {User} from '../../../../models/session.model';
 import {UserEntityService} from '../../services/user-entity.service';
 import {UserActions} from '../../store/actions/action-types';

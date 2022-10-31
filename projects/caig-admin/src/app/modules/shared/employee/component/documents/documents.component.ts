@@ -9,7 +9,7 @@ import {
   AttachedFile,
   ViewAttachedFilesComponent
 } from '../../../../../core/components/view-attached-files/view-attached-files.component';
-import {ConfirmDialogComponent} from '../../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {concatName} from '../../../../../core/util/functions';
 import {EmployeeEntityService} from '../../../../employees/services/employee-entity.service';
 

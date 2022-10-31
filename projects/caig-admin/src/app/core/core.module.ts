@@ -2,7 +2,6 @@ import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {SettlementIdInterceptor} from './services/settlement-id.interceptor';
 import {DecryptionInterceptor} from './services/decryption.interceptor';
-import {ConfirmDialogComponent} from './components/confirm-dialog.component';
 import {AssignUserComponent} from './components/assign-user/assign-user.component';
 import {DynamicFormModule} from 'dynamic-form';
 import {HttpUrlGenerator} from '@ngrx/data';
@@ -35,6 +34,7 @@ import {EmployeesEffects} from '../modules/shared/employee/store/effects/employe
 import {TimePipe} from './pipes/time.pipe';
 import {WhatsNewComponent} from './components/whats-new/whats-new.component';
 import {UpdateTimerComponent} from './components/update-timer/update-timer.component';
+import {SharedComponentsModule} from 'shared-components';
 
 @NgModule({
   imports: [
@@ -51,9 +51,9 @@ import {UpdateTimerComponent} from './components/update-timer/update-timer.compo
     EffectsModule.forFeature([UserEffects]),
     StoreModule.forFeature('employees', employeesReducer),
     EffectsModule.forFeature([EmployeesEffects]),
+    SharedComponentsModule,
   ],
   declarations: [
-    ConfirmDialogComponent,
     AssignUserComponent,
     ThemeSwitcherComponent,
     NavigationComponent,

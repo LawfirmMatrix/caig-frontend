@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {filter, switchMap} from 'rxjs/operators';
 import {Employee, EmployeeEvent} from '../../../../../models/employee.model';
 import {AddEventComponent, AddEventData} from '../../../../../core/components/add-event/add-event.component';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {EventService} from '../../../../../core/services/event.service';
 import {EmployeeEntityService} from '../../../../employees/services/employee-entity.service';
 

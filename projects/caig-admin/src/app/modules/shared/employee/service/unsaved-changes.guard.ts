@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree} fro
 import {Observable} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {map, tap} from 'rxjs/operators';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 
 @Injectable()
 export class UnsavedChangesGuard<T extends {disableSave: boolean}> implements CanDeactivate<T> {

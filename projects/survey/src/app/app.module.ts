@@ -11,7 +11,7 @@ import {MockApiModule} from 'mock-api';
 import {mockApiServices} from './mock-api';
 import {HttpClientModule} from '@angular/common/http';
 import {SurveyModule} from './survey/survey.module';
-import {CoreModule} from './core/core.module';
+import {SharedComponentsModule} from 'shared-components';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +28,7 @@ import {CoreModule} from './core/core.module';
     MockApiModule.forRoot(mockApiServices),
     HttpClientModule,
     SurveyModule,
-    CoreModule,
+    SharedComponentsModule,
   ],
   bootstrap: [AppComponent]
 })

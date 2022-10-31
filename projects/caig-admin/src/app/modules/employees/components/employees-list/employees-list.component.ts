@@ -15,7 +15,7 @@ import {
 import {chunk, flatten, isArray, omitBy} from 'lodash-es';
 import {Employee} from '../../../../models/employee.model';
 import {concatName, isNotUndefined} from '../../../../core/util/functions';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';

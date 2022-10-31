@@ -29,7 +29,7 @@ import {UntypedFormGroup, AbstractControl} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
 import {some, flatten} from 'lodash-es';
 import {MatDialog} from '@angular/material/dialog';
-import {ConfirmDialogComponent} from '../../../core/confirm-dialog/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {NotificationsService} from 'notifications';
 import * as moment from 'moment';
 

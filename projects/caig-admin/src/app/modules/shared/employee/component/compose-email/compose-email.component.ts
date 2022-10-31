@@ -13,7 +13,7 @@ import {Employee} from '../../../../../models/employee.model';
 import {EmployeeEntityService} from '../../../../employees/services/employee-entity.service';
 import {EventService} from '../../../../../core/services/event.service';
 import {concatName, isNotUndefined} from '../../../../../core/util/functions';
-import {ConfirmDialogComponent} from '../../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../store/reducers';
 import {eventTypes} from '../../../../../enums/store/selectors/enums.selectors';

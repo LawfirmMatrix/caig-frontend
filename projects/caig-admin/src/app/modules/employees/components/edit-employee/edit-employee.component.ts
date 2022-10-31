@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {ToolbarButton} from '../../../shared/employee/component/toolbar-buttons/toolbar-buttons.component';
 import {isNotUndefined, participationRowPainter} from '../../../../core/util/functions';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {
   bueLocals,
   bueLocations,

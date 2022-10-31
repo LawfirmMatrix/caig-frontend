@@ -13,7 +13,7 @@ import {AppState} from '../../../../../store/reducers';
 import {emailTemplates} from '../../store/selectors/employees.selectors';
 import {concatName, isNotUndefined} from '../../../../../core/util/functions';
 import {EmployeesActions} from '../../store/actions/action-types';
-import {ConfirmDialogComponent} from '../../../../../core/components/confirm-dialog.component';
+import {ConfirmDialogComponent} from 'shared-components';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'notifications';
 import {UntypedFormGroup} from '@angular/forms';

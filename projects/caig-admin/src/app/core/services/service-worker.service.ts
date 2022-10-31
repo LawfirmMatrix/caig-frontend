@@ -4,7 +4,7 @@ import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
-import {ConfirmDialogComponent, ConfirmDialogData} from '../components/confirm-dialog.component';
+import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {AppData} from '../../models/app-data.model';
 import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
 
