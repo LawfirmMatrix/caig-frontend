@@ -17,7 +17,6 @@
       <div *ngIf="isCompleted; else showSteps" fxLayoutAlign="center center" fxLayout="column" [ngStyle]="schema?.foregroundStyle || {}">
         <h1>Survey Completed!</h1>
         <p>Thank you for completing the survey<span *ngIf="forms[0] as nameForm">, {{nameForm.value['firstName']}} {{nameForm.value['lastName']}}</span>.</p>
-        <h2 fxFlexOffset="30px" *ngIf="nextSurvey">You will now be redirected to participate in the follow up survey - {{nextSurvey.name}}</h2>
         <div style="position: relative" *ngIf="reloadTimerValue">
           <mat-spinner mode="determinate"
                        [color]="reloadTimerValue > 67 ? 'warn' : reloadTimerValue > 33 ? 'accent' : 'primary'"

@@ -11,11 +11,10 @@ import {
   Observable,
   map,
   filter,
-  catchError,
-  throwError,
   takeUntil,
   ReplaySubject,
-  tap, interval, take, noop
+  interval, take, noop, of,
+  debounceTime, first, forkJoin, tap, skip, distinctUntilChanged,
 } from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {SurveySchema, Survey, SurveyService, SurveyQuestion} from '../../survey.service';
@@ -24,11 +23,12 @@ import {HandsetComponent} from '../handset-component';
 import {switchMap} from 'rxjs/operators';
 import {UntypedFormGroup, AbstractControl} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
-import {some, flatten} from 'lodash-es';
+import {some, flatten, isEqual, omitBy} from 'lodash-es';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from 'shared-components';
 import {NotificationsService} from 'notifications';
 import * as moment from 'moment';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-take-survey',
@@ -45,7 +45,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   public isSubmitting = false;
   public isCompleted = false;
   public isError = false;
-  public nextSurvey: SurveySchema | undefined;
   public reloadTimerValue: number | undefined;
   public readonly reloadTimerMax = 9;
 
@@ -58,39 +57,73 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     private router: Router,
     private dialog: MatDialog,
     private notifications: NotificationsService,
+    private titleService: Title
   ) {
     super(breakpointObserver);
   }
 
   public ngOnInit(): void {
     if (this.route.parent) {
+      const sessionId = this.route.snapshot.queryParams['sessionId'];
+      const progress$ = sessionId ? this.dataService.getProgress(sessionId) : of(null);
       this.survey$ = this.route.parent.data.pipe(map((data) => data['survey']));
       this.schema$ = this.survey$
         .pipe(
           filter((survey): survey is Survey => !!survey),
           switchMap((survey) => this.dataService.getSchema(survey.schemaId)),
-          tap((schema) => {
-            this.forms = schema.steps.map(() => new UntypedFormGroup({}));
-            this.isError = false;
-            this.isSubmitting = false;
-          }),
-          catchError((err) => {
-            this.isError = true;
-            return throwError(err);
-          }),
+          first(),
         );
-
-      // @TODO - handle respondentId and schemaId queryparams for nextSurvey
-
-
-      // @TODO - handle handset fields
-
-      // @TODO - handle responsive questions
-
+      forkJoin([this.schema$, progress$])
+        .subscribe(([schema, progress]) => {
+          this.isError = false;
+          this.isSubmitting = false;
+          this.forms = schema.steps.map(() => new UntypedFormGroup({}));
+          if (this.forms[0]) {
+            this.forms[0].valueChanges.subscribe((value) => {
+              const title = value.firstName && value.lastName ? `${concatName(value)} - Survey` : 'Survey';
+              this.titleService.setTitle(title);
+            });
+          }
+          this.forms.forEach((form, index) => {
+            if (progress) {
+              setTimeout(() => {
+                const initialValue = {...form.value};
+                form.patchValue(progress, {emitEvent: true});
+                if (!isEqual(form.value, initialValue)) {
+                  setTimeout(() => this.goToIndex(index, false, schema), 100);
+                }
+              });
+            }
+            const onChange = schema.steps[index].onChange;
+            form.valueChanges
+              .pipe(
+                map(() => this.getAllFormValues()),
+                tap((formValues) => {
+                  if (onChange) {
+                    const response = onChange(formValues);
+                    if (response.modifyQuestions !== undefined) {
+                      response.modifyQuestions.forEach((mod) => {
+                        schema.steps[mod.stepIndex].questions[mod.questionIndex].question = mod.modifiedQuestion;
+                        schema.steps[mod.stepIndex].questions = [...schema.steps[mod.stepIndex].questions];
+                      });
+                      setTimeout(() => form.patchValue({...progress, ...omitBy(form.value, (v) => v === undefined)}, {emitEvent: false}));
+                    }
+                  }
+                }),
+                skip(progress ? 1 : 0),
+                debounceTime(3000),
+                distinctUntilChanged(isEqual),
+                switchMap((formValues) => this.dataService.saveProgress(formValues, this.route.snapshot.queryParams['sessionId'])),
+                filter((res) => !!res),
+              )
+              .subscribe((res) => this.router.navigate([], {queryParams: {sessionId: res.sessionId}, replaceUrl: true}));
+          });
+        }, () => this.isError = true);
     }
   }
 
   public ngOnDestroy() {
+    this.titleService.setTitle('Survey');
     this.onDestroy$.next(void 0);
   }
 
@@ -191,8 +224,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     delete payload.time2;
     delete payload.time3;
 
-    this.nextSurvey = schema.nextSurvey ? schema.nextSurvey(payload) : undefined;
-
     this.isSubmitting = true;
     this.dataService.submit(
       payload,
@@ -214,17 +245,15 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
           )
             .subscribe((value) => this.reloadTimerValue = value, noop, () => {
               if (this.reloadTimerValue === 100) {
-                this.reload(res.id);
+                this.reload();
               }
             });
         }
       }, () => this.isSubmitting = false);
   }
 
-  public reload(id?: string): void {
-    const respondentId = this.nextSurvey ? id : null;
-    const schemaId = this.nextSurvey ? this.nextSurvey.id : null;
-    this.router.navigate([], {queryParams: {sessionId: null, respondentId, schemaId}, queryParamsHandling: 'merge'})
+  public reload(): void {
+    this.router.navigate([], {queryParams: {sessionId: null}, replaceUrl: true})
       .then(() => window.location.reload());
   }
 
@@ -239,4 +268,8 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   private getAllFormValues(): any {
     return this.forms.reduce((prev, curr) => ({...prev, ...curr.value}), {});
   }
+}
+
+function concatName(entity: {firstName: string, middleName?: string, lastName: string}): string {
+  return `${entity.firstName} ${entity.middleName ? entity.middleName + ' ' : ''}${entity.lastName}`;
 }

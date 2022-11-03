@@ -10,7 +10,7 @@ export class SurveyService {
   public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
   constructor(private http: HttpClient) { }
   public initialize(): Observable<Survey> {
-    return this.http.get<Survey>('/api/survey/initialize');
+    return this.http.get<Survey>('api/survey/initialize');
   }
   public getAllSchemas(): Observable<SurveySchema[]> {
     return this.http.get<SurveySchema[]>(`api-mock/survey/schema`);
@@ -25,7 +25,14 @@ export class SurveyService {
       locationId,
       respondentId,
     };
-    return this.http.post<any>('/api/survey/submit', payload, { params });
+    return this.http.post<any>('api/survey/submit', payload, { params });
+  }
+  public getProgress(sessionId: string): Observable<any> {
+    return this.http.get<any>(`api/survey/${sessionId}/progress`);
+  }
+  public saveProgress(payload: any, sessionId?: string): Observable<any> {
+    const route = `api/survey/${sessionId ? `${sessionId}/` : ''}progress`;
+    return this.http.post<any>(route, payload);
   }
 }
 
@@ -53,7 +60,6 @@ export interface SurveySchema {
   headerContent?: string[];
   steps: SurveyStep[];
   estCompletionTime: string;
-  nextSurvey?: (payload: any) => SurveySchema | undefined;
   logo?: { url: string, width: string, height: string };
   toolbarStyle?: { [style: string]: any };
   backgroundStyle?: { [style: string]: any };

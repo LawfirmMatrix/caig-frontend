@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash-es';
+import {cloneDeep, chunk, flatten} from 'lodash-es';
 import { MockApiService } from 'mock-api';
 import {SurveySchema} from '../../survey/survey.service';
 import {schemas} from './data';
@@ -20,6 +20,9 @@ export class SurveyMockApi {
         const id = Number(request.urlParams['id']);
         const schema = this._schemas.find((q) => q.id === id);
         if (schema) {
+          schema.steps.forEach((step) =>
+            step.questions.forEach((question) =>
+              question.handsetFields = chunk(flatten(question.fields), 1)));
           return [200, cloneDeep(schema)];
         }
         return [400, 'INVALID ID'];
