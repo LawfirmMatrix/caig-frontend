@@ -19,3 +19,19 @@ mat-stepper {
 mat-card-title {
   margin-bottom: 20px;
 }
+
+.btn-card {
+  cursor: pointer;
+  transition: transform 150ms ease-in-out;
+
+  .mat-icon {
+    height: 34px;
+    width: 34px;
+    font-size: 34px;
+  }
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.3);
+  }
+}

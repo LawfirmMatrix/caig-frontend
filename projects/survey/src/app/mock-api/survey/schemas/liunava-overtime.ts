@@ -258,7 +258,8 @@ export const schema4: SurveySchema = {
                   } else {
                     form.enable({emitEvent: false});
                   }
-                }
+                },
+                value: false,
               }),
               new CheckboxField({
                 hide: true,

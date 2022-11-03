@@ -13,7 +13,6 @@ import {
   filter,
   catchError,
   throwError,
-  timer,
   takeUntil,
   ReplaySubject,
   tap, interval, take, noop

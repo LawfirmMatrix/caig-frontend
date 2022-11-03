@@ -38,6 +38,7 @@ export const contactStep: SurveyStep = {
             key: 'sms',
             label: 'I can receive text messages',
             position: 'start',
+            value: false,
           }),
         ],
         [
@@ -83,6 +84,7 @@ export const contactStep: SurveyStep = {
             key: 'currentBue',
             label: 'I am currently a Bargaining Unit Employee',
             position: 'start',
+            value: false,
           }),
         ],
         [
@@ -90,6 +92,7 @@ export const contactStep: SurveyStep = {
             key: 'retired',
             label: 'I am retired',
             position: 'start',
+            value: false,
           })
         ]
       ],

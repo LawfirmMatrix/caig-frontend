@@ -271,6 +271,7 @@ export const schema3: SurveySchema = {
                 key: 'bagLeak',
                 label: 'I have handled a medical waste bag with a hole or leak',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -278,6 +279,7 @@ export const schema3: SurveySchema = {
                 key: 'bagOverflow',
                 label: 'I have handled an overflowing medical waste bag',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -285,6 +287,7 @@ export const schema3: SurveySchema = {
                 key: 'bagPoke',
                 label: 'I have seen sharp objects poking out of medical waste bags',
                 position: 'start',
+                value: false,
               }),
             ],
           ],
@@ -322,6 +325,7 @@ export const schema3: SurveySchema = {
                 key: 'laundryBlood',
                 label: 'I have handled dirty laundry with blood.',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -329,6 +333,7 @@ export const schema3: SurveySchema = {
                 key: 'laundryFeces',
                 label: 'I have handled dirty laundry with feces or urine.',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -336,6 +341,7 @@ export const schema3: SurveySchema = {
                 key: 'laundryOther',
                 label: 'I have handled dirty laundry with other bodily fluids.',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -343,6 +349,7 @@ export const schema3: SurveySchema = {
                 key: 'laundryMedicalWaste',
                 label: 'I have handled medical waste (such as syringes, dirty bandages, etc.) that was wrapped up in dirty laundry.',
                 position: 'start',
+                value: false,
               }),
             ],
           ]
@@ -395,6 +402,7 @@ export const schema3: SurveySchema = {
                 key: 'gloves',
                 label: 'Gloves',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -402,6 +410,7 @@ export const schema3: SurveySchema = {
                 key: 'masks',
                 label: 'Masks',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -409,6 +418,7 @@ export const schema3: SurveySchema = {
                 key: 'faceShields',
                 label: 'Face Shields',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -416,6 +426,7 @@ export const schema3: SurveySchema = {
                 key: 'bodySuits',
                 label: 'Body Suits',
                 position: 'start',
+                value: false,
               }),
             ],
           ]

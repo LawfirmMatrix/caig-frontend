@@ -60,6 +60,7 @@ export const schema1: SurveySchema = {
                 key: 'scheduleA',
                 label: 'A schedule consisting of fixed start and stop times on 8, 9 or 10 days over the course of a two week pay period',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -67,6 +68,7 @@ export const schema1: SurveySchema = {
                 key: 'scheduleB',
                 label: 'A shift schedule consisting of shifts longer than 10 hours over the course of fewer than 8 days over a two week pay period',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -74,6 +76,7 @@ export const schema1: SurveySchema = {
                 key: 'scheduleC',
                 label: 'A flexible schedule that allows me to select my start and stop times on a daily basis, and use credit hours to shift hours from one day to another',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -81,6 +84,7 @@ export const schema1: SurveySchema = {
                 key: 'scheduleD',
                 label: 'I have only been a part time employee',
                 position: 'start',
+                value: false,
               }),
             ],
           ],
@@ -153,6 +157,7 @@ export const schema1: SurveySchema = {
                 key: 'early',
                 label: 'Early',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -160,6 +165,7 @@ export const schema1: SurveySchema = {
                 key: 'late',
                 label: 'Late',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -167,6 +173,7 @@ export const schema1: SurveySchema = {
                 key: 'lunch',
                 label: 'Lunch',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -174,6 +181,7 @@ export const schema1: SurveySchema = {
                 key: 'weekends',
                 label: 'Weekends',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -181,6 +189,7 @@ export const schema1: SurveySchema = {
                 key: 'holidays',
                 label: 'Holidays',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -188,6 +197,7 @@ export const schema1: SurveySchema = {
                 key: 'offDays',
                 label: 'Off days',
                 position: 'start',
+                value: false,
               }),
             ],
           ]

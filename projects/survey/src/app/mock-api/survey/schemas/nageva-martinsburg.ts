@@ -112,6 +112,7 @@ export const schema2: SurveySchema = {
                 key: 'scheduleC',
                 label: 'A flexible schedule that allows you to alter your start and/or stop times and use credit hours to shift work time from one day to another.',
                 position: 'start',
+                value: false,
               }),
             ],
             [
@@ -119,6 +120,7 @@ export const schema2: SurveySchema = {
                 key: 'scheduleE',
                 label: 'Any other schedule, such as a fixed schedule, shift schedule or compressed schedule.',
                 position: 'start',
+                value: false,
               }),
             ],
           ],
@@ -284,7 +286,8 @@ export const schema2: SurveySchema = {
                   } else {
                     form.enable({emitEvent: false});
                   }
-                }
+                },
+                value: false,
               }),
               new CheckboxField({
                 hide: true,
