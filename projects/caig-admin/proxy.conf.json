@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://testadmin.caig.co",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

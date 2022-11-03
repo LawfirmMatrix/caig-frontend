@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://caigtest.azurewebsites.net",
+    "target": "https://testsurvey.caig.co",
     "secure": true,
     "changeOrigin": true
   }

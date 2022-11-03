@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import {FieldBase} from 'dynamic-form';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, catchError, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {shareReplay} from 'rxjs/operators';
+import {NotificationsService} from 'notifications';
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
   public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private notifications: NotificationsService) { }
   public initialize(): Observable<Survey> {
-    return this.http.get<Survey>('api/survey/initialize');
+    return this.errorHandler(this.http.get<Survey>('api/survey/initialize'));
   }
   public getAllSchemas(): Observable<SurveySchema[]> {
-    return this.http.get<SurveySchema[]>(`api-mock/survey/schema`);
+    return this.errorHandler(this.http.get<SurveySchema[]>(`api-mock/survey/schema`));
   }
   public getSchema(id: number | string): Observable<SurveySchema> {
-    return this.http.get<SurveySchema>(`api-mock/survey/schema/${id}`);
+    return this.errorHandler(this.http.get<SurveySchema>(`api-mock/survey/schema/${id}`));
   }
   public submit(payload: any, surveyId: string, locationId?: string, nomail?: boolean): Observable<any> {
     const params: any = {
@@ -24,14 +25,20 @@ export class SurveyService {
       surveyId,
       locationId,
     };
-    return this.http.post<any>('api/survey/submit', payload, { params });
+    return this.errorHandler(this.http.post<any>('api/survey/submit', payload, { params }));
   }
   public getProgress(sessionId: string): Observable<any> {
-    return this.http.get<any>(`api/survey/${sessionId}/progress`);
+    return this.errorHandler(this.http.get<any>(`api/survey/${sessionId}/progress`));
   }
   public saveProgress(payload: any, sessionId?: string): Observable<any> {
     const route = `api/survey/${sessionId ? `${sessionId}/` : ''}progress`;
-    return this.http.post<any>(route, payload);
+    return this.errorHandler(this.http.post<any>(route, payload));
+  }
+  private errorHandler(request$: Observable<any>): Observable<any> {
+    return request$.pipe(catchError((err) => {
+      this.notifications.showDetailedMessage('An error has occurred', err);
+      return throwError(err);
+    }));
   }
 }
 
