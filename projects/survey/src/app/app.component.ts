@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, map, filter} from 'rxjs';
 import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
+import {SurveyService} from './survey/survey.service';
 
 @Component({
   selector: 'app-root',
@@ -24,5 +25,8 @@ export class AppComponent {
       }),
       filter((loading): loading is boolean => typeof loading === 'boolean'),
     )
-  constructor(private router: Router) { }
+  constructor(private router: Router, public surveyService: SurveyService) { }
+  public reload(): void {
+    window.location.reload();
+  }
 }

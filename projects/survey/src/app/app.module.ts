@@ -12,6 +12,7 @@ import {mockApiServices} from './mock-api';
 import {HttpClientModule} from '@angular/common/http';
 import {SurveyModule} from './survey/survey.module';
 import {SharedComponentsModule} from 'shared-components';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import {SharedComponentsModule} from 'shared-components';
     HttpClientModule,
     SurveyModule,
     SharedComponentsModule,
+    FlexLayoutModule,
   ],
   bootstrap: [AppComponent]
 })

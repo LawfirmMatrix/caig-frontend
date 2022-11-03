@@ -8,10 +8,16 @@ import {NotificationsService} from 'notifications';
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
+  public initializeError = false;
   public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
   constructor(private http: HttpClient, private notifications: NotificationsService) { }
   public initialize(): Observable<Survey> {
-    return this.errorHandler(this.http.get<Survey>('api/survey/initialize'));
+    return this.errorHandler(this.http.get<Survey>('api/survey/initialize')).pipe(
+      catchError((err) => {
+        this.initializeError = true;
+        return throwError(err);
+      })
+    );
   }
   public getAllSchemas(): Observable<SurveySchema[]> {
     return this.errorHandler(this.http.get<SurveySchema[]>(`api-mock/survey/schema`));
