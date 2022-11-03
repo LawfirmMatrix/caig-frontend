@@ -32,6 +32,7 @@ import {
 } from '../../../../enums/store/selectors/enums.selectors';
 import {settlements} from '../../../../core/store/selectors/core.selectors';
 import {usersForSettlement} from '../../../users/store/selectors/user.selectors';
+import {NotificationsService} from 'notifications';
 
 @Component({
   selector: 'app-edit-employee',
@@ -514,6 +515,7 @@ export class EditEmployeeComponent {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private store: Store<AppState>,
+    private notifications: NotificationsService,
   ) { }
   public ngOnInit() {
     this.route.params.pipe(switchMap(({id}) => this.dataService.getByKey(id)))
@@ -544,7 +546,10 @@ export class EditEmployeeComponent {
   private updateEmployee(): void {
     this.disableSave = true;
     const payload: any = omitBy({...this.employee, ...this.form.value}, (v) => v === undefined);
-    this.dataService.update(payload).subscribe(() => this.employee = payload, () => this.disableSave = false);
+    this.dataService.update(payload).subscribe(() => {
+      this.employee = payload;
+      this.notifications.showSimpleInfoMessage('Successfully updated employee record');
+    }, () => this.disableSave = false);
   }
 }
 

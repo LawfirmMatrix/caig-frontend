@@ -7,12 +7,11 @@ import {flatten} from 'lodash-es';
 export class FieldControlService {
   public addControls(form: UntypedFormGroup, fields: FieldBase<any>[][]): void {
     flatten(fields).forEach((field) => {
-      const value = field.value || '';
       const validators = field.validators || [];
       if (field.required) {
         validators.unshift(Validators.required);
       }
-      const control = new FormControl(value, validators);
+      const control = new FormControl(field.value, validators);
       const onChange = field.onChange;
       if (onChange) {
         control.valueChanges.subscribe((value) => onChange(value, form));
