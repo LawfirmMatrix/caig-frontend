@@ -1,0 +1,6 @@
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar>Surveys</mat-toolbar>
+  <div fxFlex>
+    <vs-table [data]="data$ | async" [columns]="columns" [buttonColumns]="buttonColumns" (rowClick)="viewRespondents($event.row)"></vs-table>
+  </div>
+</div>

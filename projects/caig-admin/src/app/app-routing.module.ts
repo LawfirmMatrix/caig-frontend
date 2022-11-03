@@ -55,6 +55,11 @@ const routes: Routes = [
             data: { animation: 'users' },
             canLoad: [ AdminGuard ],
           },
+          {
+            path: 'surveys',
+            loadChildren: () => import('./modules/surveys/surveys.module').then(m => m.SurveysModule),
+            data: { animation: 'surveys' },
+          }
         ],
       },
       {

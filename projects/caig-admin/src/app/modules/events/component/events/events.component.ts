@@ -144,7 +144,7 @@ export class EventsComponent implements OnInit {
           dates: undefined,
         })),
       )
-      .subscribe((queryParams) => this.router.navigate([], {queryParams}));
+      .subscribe((queryParams) => this.router.navigate([], {queryParams, replaceUrl: true}));
   }
   public viewEmployee(id: number): void {
     this.router.navigate(['/employees', id, 'view']);

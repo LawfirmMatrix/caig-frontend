@@ -42,4 +42,5 @@ export enum Role {
 export enum Portal {
   CallCenter = 'Call Center',
   CAIG = 'CAIG',
+  Survey = 'Survey',
 }

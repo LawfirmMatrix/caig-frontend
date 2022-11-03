@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   public portalSelection = new SelectField({
     key: 'portal',
     label: 'Portal',
-    options: of([{name: Portal.CAIG}, {name: Portal.CallCenter}]),
+    options: of([{name: Portal.CAIG}, {name: Portal.CallCenter}, {name: Portal.Survey}]),
     itemKey: 'name',
     displayField: 'name',
     onChange: (portal) => this.store.dispatch(CoreActions.portalChange({ portal }))

@@ -33,6 +33,10 @@ export class NavMenuService {
           // },
           // surveys,
         ];
+      case Portal.Survey:
+        return [
+          surveys,
+        ];
       default:
         return [];
     }

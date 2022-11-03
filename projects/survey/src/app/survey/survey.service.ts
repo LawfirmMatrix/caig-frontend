@@ -35,13 +35,10 @@ export class SurveyService {
   }
 }
 
-export interface Survey {
-  id: string;
+export interface Survey extends SurveyLocation {
   schemaId: number;
-  title: string;
   estTime: string;
   locations: SurveyLocation[];
-  shortcut?: string;
 }
 
 export interface SurveyLocation {

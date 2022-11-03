@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
-import {RespondentDataService} from '../../../respondents/services/respondent-data.service';
+import {RespondentDataService} from '../../../surveys/services/respondent-data.service';
 
 @Component({
   selector: 'app-create-employee',
