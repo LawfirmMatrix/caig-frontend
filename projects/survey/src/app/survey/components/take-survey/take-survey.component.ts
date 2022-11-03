@@ -229,7 +229,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
       payload,
       this.route.snapshot.params['surveyId'],
       this.route.snapshot.params['locationId'],
-      this.route.snapshot.queryParams['respondentId'],
       this.route.snapshot.queryParams['nomail'] === 'true'
     )
       .subscribe((res) => {

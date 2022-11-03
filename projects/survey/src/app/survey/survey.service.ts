@@ -18,12 +18,11 @@ export class SurveyService {
   public getSchema(id: number | string): Observable<SurveySchema> {
     return this.http.get<SurveySchema>(`api-mock/survey/schema/${id}`);
   }
-  public submit(payload: any, surveyId: string, locationId?: string, respondentId?: string, nomail?: boolean): Observable<any> {
+  public submit(payload: any, surveyId: string, locationId?: string, nomail?: boolean): Observable<any> {
     const params: any = {
       nomail: typeof nomail === 'boolean' ? nomail : !environment.production,
       surveyId,
       locationId,
-      respondentId,
     };
     return this.http.post<any>('api/survey/submit', payload, { params });
   }
