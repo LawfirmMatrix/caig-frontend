@@ -30,6 +30,7 @@ mat-toolbar {
 
   mat-card-content {
     text-indent: 2rem;
+    line-height: 1.5rem;
     font-size: large;
     p:not(:last-of-type) {
       margin-bottom: 20px;

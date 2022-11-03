@@ -8,8 +8,7 @@ const logo = {
 
 export const nageVa: Partial<SurveySchema> = {
   toolbarStyle: { background: '#efca23', color: 'black' },
-  surveyStyle: { background: 'linear-gradient(#4640ba, #16108a 40%)' },
-  backgroundStyle: { background: '#4640ba' },
+  backgroundStyle: { background: 'linear-gradient(#4640ba, #16108a 40%)' },
   foregroundStyle: { color: 'white' },
   logo,
 };

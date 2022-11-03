@@ -11,20 +11,18 @@ import {
   Observable,
   map,
   filter,
-  BehaviorSubject,
-  combineLatest,
   catchError,
   throwError,
   timer,
   takeUntil,
   ReplaySubject,
-  Subject, tap
+  tap, interval, take, noop
 } from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {SurveySchema, Survey, SurveyService, SurveyQuestion} from '../../survey.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HandsetComponent} from '../handset-component';
-import {switchMap, shareReplay, startWith} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {UntypedFormGroup, AbstractControl} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
 import {some, flatten} from 'lodash-es';
@@ -42,17 +40,16 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   @ViewChild(MatStepper) public stepperRef!: MatStepper;
   @ViewChildren('title') public titles!: QueryList<ElementRef>;
 
-  public survey$!: Observable<Survey | null>;
-  public schema$!: Observable<SurveySchema | null>;
+  public survey$!: Observable<Survey>;
+  public schema$!: Observable<SurveySchema>;
   public forms!: UntypedFormGroup[];
   public isSubmitting = false;
   public isCompleted = false;
   public isError = false;
-  public selectedIndex = 0;
   public nextSurvey: SurveySchema | undefined;
+  public reloadTimerValue: number | undefined;
+  public readonly reloadTimerMax = 9;
 
-  private refresh$ = new BehaviorSubject<void>(void 0);
-  private submitted$ = new Subject<void>();
   private onDestroy$ = new ReplaySubject<void>(1);
 
   constructor(
@@ -67,32 +64,31 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   }
 
   public ngOnInit(): void {
-    const surveyId$ = this.route.paramMap
-      .pipe(
-        map((paramMap) => paramMap.get('id')),
-        filter((surveyId): surveyId is string => !!surveyId),
-      );
+    if (this.route.parent) {
+      this.survey$ = this.route.parent.data.pipe(map((data) => data['survey']));
+      this.schema$ = this.survey$
+        .pipe(
+          filter((survey): survey is Survey => !!survey),
+          switchMap((survey) => this.dataService.getSchema(survey.schemaId)),
+          tap((schema) => {
+            this.forms = schema.steps.map(() => new UntypedFormGroup({}));
+            this.isError = false;
+            this.isSubmitting = false;
+          }),
+          catchError((err) => {
+            this.isError = true;
+            return throwError(err);
+          }),
+        );
 
-    this.survey$ = combineLatest([surveyId$, this.refresh$])
-      .pipe(
-        switchMap(([surveyId, ]) => this.dataService.getOne(surveyId).pipe(startWith(null))),
-        shareReplay(),
-      );
+      // @TODO - handle respondentId and schemaId queryparams for nextSurvey
 
-    this.schema$ = this.survey$
-      .pipe(
-        filter((survey): survey is Survey => !!survey),
-        switchMap((survey) => this.dataService.getOneSchema(survey.schemaId)),
-        tap((schema) => {
-          this.forms = schema.steps.map(() => new UntypedFormGroup({}));
-          this.isError = false;
-          this.isSubmitting = false;
-        }),
-        catchError((err) => {
-          this.isError = true;
-          return throwError(err);
-        }),
-      );
+
+      // @TODO - handle handset fields
+
+      // @TODO - handle responsive questions
+
+    }
   }
 
   public ngOnDestroy() {
@@ -107,11 +103,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
 
   public isTouched(question: SurveyQuestion, controls: {[key: string]: AbstractControl}): boolean {
     return some(flatten(question.fields), (field) => controls[field.key]?.touched);
-  }
-
-  public refresh(): void {
-    this.isError = false;
-    this.refresh$.next(void 0);
   }
 
   public back(stepper: MatStepper, schema: SurveySchema): void {
@@ -207,24 +198,34 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     this.dataService.submit(
       payload,
       this.route.snapshot.params['surveyId'],
-      this.route.snapshot.queryParams['sessionId'],
+      this.route.snapshot.params['locationId'],
       this.route.snapshot.queryParams['respondentId'],
       this.route.snapshot.queryParams['nomail'] === 'true'
     )
       .subscribe((res) => {
-        this.submitted$.next(void 0);
         this.isSubmitting = false;
         this.isCompleted = true;
-        timer(5000)
-          .pipe(takeUntil(this.onDestroy$))
-          .subscribe(() => this.reload(res.id));
+        if (this.route.snapshot.queryParams['reload'] === 'true') {
+          const intv = 200;
+          const count = (this.reloadTimerMax * 1000) / intv;
+          interval(intv).pipe(
+            map((i => (i + 1) * (100 / count))),
+            take(count),
+            takeUntil(this.onDestroy$),
+          )
+            .subscribe((value) => this.reloadTimerValue = value, noop, () => {
+              if (this.reloadTimerValue === 100) {
+                this.reload(res.id);
+              }
+            });
+        }
       }, () => this.isSubmitting = false);
   }
 
-  private reload(id?: string): void {
-    const route = this.nextSurvey ? [`../${this.nextSurvey.id}`] : [];
+  public reload(id?: string): void {
     const respondentId = this.nextSurvey ? id : null;
-    this.router.navigate(route, {queryParams: {sessionId: null, respondentId}, queryParamsHandling: 'merge', relativeTo: this.route})
+    const schemaId = this.nextSurvey ? this.nextSurvey.id : null;
+    this.router.navigate([], {queryParams: {sessionId: null, respondentId, schemaId}, queryParamsHandling: 'merge'})
       .then(() => window.location.reload());
   }
 

@@ -1,8 +1,8 @@
-<div *ngIf="schema$ | async as schema" [ngStyle]="schema.surveyStyle || {}">
+<div *ngIf="schema$ | async as schema">
   <div *ngIf="isSubmitting; else surveyContent" fxLayoutAlign="center center">
     <div *ngIf="isError; else noError" fxLayout="column" fxLayoutAlign="center center">
       <h1 class="mat-h1">Something went wrong while loading the survey</h1>
-      <button mat-raised-button color="primary" (click)="refresh()">RELOAD</button>
+      <button mat-raised-button color="primary" (click)="reload()">RELOAD</button>
     </div>
     <ng-template #noError>
       <mat-spinner></mat-spinner>
@@ -13,6 +13,14 @@
       <h1>Survey Completed!</h1>
       <p>Thank you for completing the survey<span *ngIf="forms[0] as nameForm">, {{nameForm.value['firstName']}} {{nameForm.value['lastName']}}</span>.</p>
       <h2 fxFlexOffset="30px" *ngIf="nextSurvey">You will now be redirected to participate in the follow up survey - {{nextSurvey.name}}</h2>
+      <div style="position: relative" *ngIf="reloadTimerValue">
+        <mat-spinner mode="determinate"
+                     [color]="reloadTimerValue > 67 ? 'warn' : reloadTimerValue > 33 ? 'accent' : 'primary'"
+                     [value]="reloadTimerValue"></mat-spinner>
+        <h1 style="width: 100px; position: absolute; margin: auto; height: 100px; top: 0;" fxLayoutAlign="center center">
+          {{ (reloadTimerMax - (reloadTimerValue / 100) * reloadTimerMax) | number:'1.0-0'  }}
+        </h1>
+      </div>
     </div>
     <ng-template #showSteps>
       <mat-stepper #stepper
@@ -20,7 +28,7 @@
                    linear
                    [ngClass]="{'full-body': !(isHandset$ | async)}"
                    class="mat-elevation-z15"
-                   [selectedIndex]="selectedIndex"
+                   [selectedIndex]="0"
                    (animationDone)="scrollToTitle(stepper.selectedIndex)">
         <mat-step *ngFor="let step of schema.steps; let i = index; first as first"
                   [stepControl]="forms[i]"

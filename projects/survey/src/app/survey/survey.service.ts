@@ -1,33 +1,31 @@
 import { Injectable } from '@angular/core';
 import {FieldBase} from 'dynamic-form';
 import {HttpClient} from '@angular/common/http';
-import {Observable, map} from 'rxjs';
+import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
+import {shareReplay} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
+  public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
   constructor(private http: HttpClient) { }
-  public get(params?: any): Observable<Survey[]> {
-    return this.http.get<Survey[]>('assets/surveys.json');
-    // return this.http.get<Survey[]>(SurveyService.BASE_URL, { params });
+  public initialize(): Observable<Survey> {
+    return this.http.get<Survey>('/api/survey/initialize');
   }
-  public getOne(id: number | string): Observable<Survey> {
-    return this.get().pipe(map((data) => data.find((d) => d.id === id) as Survey));
-    // return this.http.get<Survey>(`/api/survey/${id}`);
-  }
-  public getSchemas(): Observable<SurveySchema[]> {
+  public getAllSchemas(): Observable<SurveySchema[]> {
     return this.http.get<SurveySchema[]>(`api-mock/survey/schema`);
   }
-  public getOneSchema(id: number | string): Observable<SurveySchema> {
+  public getSchema(id: number | string): Observable<SurveySchema> {
     return this.http.get<SurveySchema>(`api-mock/survey/schema/${id}`);
   }
-  public submit(payload: any, surveyId: string, sessionId?: string, respondentId?: string, nomail?: boolean): Observable<any> {
-    const route = `api/survey/${sessionId ? `${sessionId}/` : ''}submit`;
-    const params: any = { nomail: nomail || !environment.production, surveyId };
-    if (respondentId) {
-      params.respondentId = respondentId;
-    }
-    return this.http.post<any>(route, payload, { params });
+  public submit(payload: any, surveyId: string, locationId?: string, respondentId?: string, nomail?: boolean): Observable<any> {
+    const params: any = {
+      nomail: typeof nomail === 'boolean' ? nomail : !environment.production,
+      surveyId,
+      locationId,
+      respondentId,
+    };
+    return this.http.post<any>('/api/survey/submit', payload, { params });
   }
 }
 
@@ -36,7 +34,14 @@ export interface Survey {
   schemaId: number;
   title: string;
   estTime: string;
-  locations: string[]; // @TODO - api
+  locations: SurveyLocation[];
+  shortcut?: string;
+}
+
+export interface SurveyLocation {
+  id: string;
+  name: string;
+  shortcut?: string;
 }
 
 export interface SurveySchema {
@@ -51,7 +56,6 @@ export interface SurveySchema {
   nextSurvey?: (payload: any) => SurveySchema | undefined;
   logo?: { url: string, width: string, height: string };
   toolbarStyle?: { [style: string]: any };
-  surveyStyle?: { [style: string]: any };
   backgroundStyle?: { [style: string]: any };
   foregroundStyle?: { [style: string]: any };
 }

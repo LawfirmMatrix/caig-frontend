@@ -1,29 +1,36 @@
-<div *ngIf="schema$ | async as schema"
-     fxFlexFill
-     fxLayout="column"
-     fxLayoutGap="8px"
-     style="overflow: auto"
-     [ngStyle]="schema.backgroundStyle || {}">
-  <mat-toolbar class="mat-elevation-z10"
-               [color]="!schema.toolbarStyle ? 'primary' : undefined"
-               [ngStyle]="schema.toolbarStyle || {}"
-               fxLayout="column"
-               fxLayoutAlign="center center">
-    <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">
-      {{schema.fullName}}
-    </div>
-    <div *ngIf="showLocation" class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-subtitle' : 'large-subtitle'">
-      {{schema.location}}
-    </div>
-  </mat-toolbar>
-  <mat-card *ngIf="schema.headerTitle || schema.headerContent"
-            [ngClass]="{'full-body': !(isHandset$ | async)}"
-            class="mat-elevation-z7">
-    <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
-    <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
-      <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
-      <p *ngFor="let p of schema.headerContent">{{p}}</p>
-    </mat-card-content>
-  </mat-card>
-  <router-outlet (activate)="onActivate($event)"></router-outlet>
+<div *ngIf="survey$ | async; else noSurvey" fxFlexFill>
+  <div *ngIf="schema$ | async as schema"
+       fxFlex
+       fxLayout="column"
+       fxLayoutGap="8px"
+       style="overflow: auto"
+       [ngStyle]="schema.backgroundStyle || {}">
+    <mat-toolbar class="mat-elevation-z10"
+                 [color]="!schema.toolbarStyle ? 'primary' : undefined"
+                 [ngStyle]="schema.toolbarStyle || {}"
+                 fxLayout="column"
+                 fxLayoutAlign="center center">
+      <div class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-title' : 'large-title'">
+        {{schema.fullName}}
+      </div>
+      <div *ngIf="location$ | async as location" class="toolbar-title" [ngClass]="(isHandset$ | async) ? 'small-subtitle' : 'large-subtitle'">
+        {{location.name}}
+      </div>
+    </mat-toolbar>
+    <mat-card *ngIf="schema.headerTitle || schema.headerContent"
+              [ngClass]="{'full-body': !(isHandset$ | async)}"
+              class="mat-elevation-z7">
+      <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
+      <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
+        <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
+        <p *ngFor="let p of schema.headerContent">{{p}}</p>
+      </mat-card-content>
+    </mat-card>
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
 </div>
+<ng-template #noSurvey>
+  <div fxFlexFill fxLayoutAlign="center center">
+    <h1>No survey available</h1>
+  </div>
+</ng-template>

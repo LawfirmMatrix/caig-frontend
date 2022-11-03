@@ -2,29 +2,39 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {TakeSurveyComponent} from './survey/components/take-survey/take-survey.component';
 import {SelectSurveyComponent} from './survey/components/select-survey/select-survey.component';
-import {MultipleLocationsGuard} from './multiple-locations.guard';
-import {LocationParserGuard} from './location-parser.guard';
 import {BackdropComponent} from './survey/components/backdrop/backdrop.component';
+import {InitializeResolver} from './survey/initialize-resolver';
+import {MultipleLocationsGuard} from './survey/guards/multiple-locations.guard';
+import {ShortcutRedirectGuard} from './survey/guards/shortcut-redirect.guard';
+import {ValidSurveyGuard} from './survey/guards/valid-survey.guard';
+import {ValidLocationGuard} from './survey/guards/valid-location.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: BackdropComponent,
+    resolve: { survey: InitializeResolver },
     children: [
       {
         path: '',
+        pathMatch: 'full',
         component: SelectSurveyComponent,
         canActivate: [ MultipleLocationsGuard ],
       },
       {
-        path: ':location',
+        path: ':shortcut',
         component: SelectSurveyComponent,
-        canActivate: [ LocationParserGuard ],
+        canActivate: [ ShortcutRedirectGuard ],
       },
       {
-        path: 'survey/:id',
+        path: 'survey/:surveyId',
         component: TakeSurveyComponent,
-        data: { showLocation: true }
+        canActivate: [ ValidSurveyGuard ],
+      },
+      {
+        path: 'survey/:surveyId/:locationId',
+        component: TakeSurveyComponent,
+        canActivate: [ ValidLocationGuard ],
       },
     ],
   },
