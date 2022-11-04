@@ -38,9 +38,16 @@ export class SurveysListComponent {
     {
       title: '',
       position: 'end',
-      label: (row) => 'Survey',
+      label: (row) => 'Test',
       callback: (row) => window.open(`https://testsurvey.caig.co/survey/${row.surveyId}${row.locationId ? `/${row.locationId}` : ''}`, '_blank'),
-      color: (row) => 'primary',
+      color: (row) => 'warn',
+    },
+    {
+      title: '',
+      position: 'end',
+      label: (row) => 'Live',
+      callback: (row) => {},
+      disabled: (row) => true,
     }
   ];
   constructor(

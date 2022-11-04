@@ -6,11 +6,16 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers';
 import {OfflineStatusService} from '../../services/offline-status.service';
 import {RouterOutlet} from '@angular/router';
-import {isAdmin, portal, settlementId, settlements} from '../../store/selectors/core.selectors';
+import {
+  isAdmin,
+  portal,
+  selectCoreState
+} from '../../store/selectors/core.selectors';
 import {CoreActions} from '../../store/actions/action-types';
 import {fader} from './animations';
 import {NavMenuService} from './nav-menu.service';
 import {ServiceWorkerService} from '../../services/service-worker.service';
+import {CoreState} from '../../store/reducers';
 
 @Component({
   selector: 'app-navigation',
@@ -34,22 +39,20 @@ export class NavigationComponent implements OnInit {
     },
   ];
   public isAdmin$ = this.store.select(isAdmin);
-  public settlements$ = this.store.select(settlements);
-  public settlementId$ = this.store.select(settlementId);
+  public coreState$: Observable<CoreState> = this.store.select(selectCoreState);
   public changeSettlement$ = new Subject<number>();
   constructor(
     private breakpointObserver: BreakpointObserver,
     private store: Store<AppState>,
     private navService: NavMenuService,
     public offlineService: OfflineStatusService,
-    public swService: ServiceWorkerService
+    public swService: ServiceWorkerService,
   ) { }
   public ngOnInit() {
     this.changeSettlement$
       .pipe(debounceTime(200))
       .subscribe((settlementId) => this.store.dispatch(CoreActions.settlementChange({settlementId})));
   }
-
   public prepareRoute(outlet: RouterOutlet): string {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }

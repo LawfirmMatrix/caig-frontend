@@ -35,6 +35,7 @@ import {TimePipe} from './pipes/time.pipe';
 import {WhatsNewComponent} from './components/whats-new/whats-new.component';
 import {UpdateTimerComponent} from './components/update-timer/update-timer.component';
 import {SharedComponentsModule} from 'shared-components';
+import {PortalSelectionComponent} from './components/portal-selection/portal-selection.component';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {SharedComponentsModule} from 'shared-components';
     TimePipe,
     WhatsNewComponent,
     UpdateTimerComponent,
+    PortalSelectionComponent,
   ],
   providers: [ NavMenuService ],
 })

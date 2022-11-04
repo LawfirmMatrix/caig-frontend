@@ -7,8 +7,11 @@ import {LoginComponent} from './auth/login/login.component';
 import {NoAuthGuard} from './auth/services/guards/no-auth.guard';
 import {CheckForUpdatesResolver} from './check-for-updates.resolver';
 import {SessionResolver} from './session.resolver';
-import {CaigPortalGuard} from './caig-portal.guard';
-import {AdminGuard} from './admin-guard';
+import {CaigPortalGuard} from './core/guards/caig-portal.guard';
+import {AdminGuard} from './core/guards/admin-guard';
+import {CaigCallCenterPortalGuard} from './core/guards/caig-call-center-portal.guard';
+import {CallCenterPortalGuard} from './core/guards/call-center-portal.guard';
+import {SurveyPortalGuard} from './core/guards/survey-portal.guard';
 
 export const loginRoute = 'login';
 
@@ -43,11 +46,13 @@ const routes: Routes = [
             path: 'call-list',
             loadChildren: () => import('./modules/call-list/call-list.module').then(m => m.CallListModule),
             data: { animation: 'call-list' },
+            canActivate: [ CallCenterPortalGuard ],
           },
           {
             path: 'events',
             loadChildren: () => import('./modules/events/events.module').then(m => m.EventsModule),
             data: { animation: 'events' },
+            canActivate: [ CaigCallCenterPortalGuard ],
           },
           {
             path: 'users',
@@ -59,6 +64,7 @@ const routes: Routes = [
             path: 'surveys',
             loadChildren: () => import('./modules/surveys/surveys.module').then(m => m.SurveysModule),
             data: { animation: 'surveys' },
+            canActivate: [ SurveyPortalGuard ],
           }
         ],
       },

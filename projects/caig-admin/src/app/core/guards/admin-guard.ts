@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {CanLoad, Route, Router, UrlSegment} from '@angular/router';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {AppState} from './store/reducers';
-import {isAdmin} from './core/store/selectors/core.selectors';
+import {AppState} from '../../store/reducers';
+import {isAdmin} from '../store/selectors/core.selectors';
 import {filter, first, tap} from 'rxjs/operators';
-import {isNotUndefined} from './core/util/functions';
+import {isNotUndefined} from '../util/functions';
 
 @Injectable({providedIn: 'root'})
 export class AdminGuard implements CanLoad {

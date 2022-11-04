@@ -37,7 +37,7 @@
   <mat-sidenav-content fxLayout="column">
     <mat-toolbar color="primary"
                  fxLayout="row"
-                 fxLayoutGap="30px"
+                 fxLayoutGap="10px"
                  fxLayoutAlign="space-between center"
                  class="mat-elevation-z10">
       <div fxFlex fxLayoutGap="10px" fxLayoutAlign="start center">
@@ -49,20 +49,21 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       </div>
-      <div fxFlex fxLayoutAlign="center center">
-        <div *ngIf="settlements$ | async as settlements">
-          <mat-form-field *ngIf="settlements.length > 1; else displaySettlementName" appearance="standard" color="accent">
+      <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+        <div *ngIf="(coreState$ | async) as state">
+          <mat-form-field *ngIf="state.settlements && state.settlements.length > 1; else displaySettlementName" appearance="standard" color="accent">
             <mat-label>Settlement</mat-label>
-            <mat-select [disabled]="!settlements.length" [value]="settlementId$ | async" (selectionChange)="changeSettlement$.next($event.value)">
-              <mat-option *ngFor="let settlement of settlements" [value]="settlement.id">
+            <mat-select [disabled]="!state.settlements.length" [value]="state.settlementId" (selectionChange)="changeSettlement$.next($event.value)">
+              <mat-option *ngFor="let settlement of state.settlements" [value]="settlement.id">
                 {{settlement.code}}
               </mat-option>
             </mat-select>
           </mat-form-field>
           <ng-template #displaySettlementName>
-            {{settlements[0].code}}
+            <div *ngIf="state.settlements">{{state.settlements[0].code}}</div>
           </ng-template>
         </div>
+        <app-portal-selection></app-portal-selection>
       </div>
       <div fxFlex fxLayoutAlign="end center" fxLayoutGap="5px">
         <app-update-timer *ngIf="swService.isUpdateAvailable$ | async as update"

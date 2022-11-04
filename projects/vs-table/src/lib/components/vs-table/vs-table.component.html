@@ -211,7 +211,7 @@
         <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
         </td>
-        <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center">
+        <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <button mat-raised-button
                   [color]="column.color && column.color(row)"
                   (click)="buttonColumnClick($event, column, row)"
@@ -249,7 +249,7 @@
             </div>
           </div>
         </td>
-        <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center">
+        <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
           <button mat-raised-button
                   [color]="column.color && column.color(row)"
                   (click)="buttonColumnClick($event, column, row)"

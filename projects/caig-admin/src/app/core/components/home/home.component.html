@@ -1,11 +1,8 @@
-<div *ngIf="isSuperAdmin$ | async" fxLayoutAlign="start center" style="margin: 16px 0 -20px 16px">
-  <dynamic-form [fields]="[[portalSelection]]" [model]="state"></dynamic-form>
-</div>
-<mat-card>
+<mat-card *ngIf="user$ | async as user">
   <mat-card-title>My Profile</mat-card-title>
   <mat-card-content>
     <mat-list role="list">
-      <mat-list-item role="listitem" *ngFor="let prop of state?.user | keyvalue:compare; last as last">
+      <mat-list-item role="listitem" *ngFor="let prop of user | keyvalue:compare; last as last">
         <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
           <div style="font-weight: bold">{{prop.key | startCase}}</div>
           <div>{{prop.value}}</div>
@@ -15,6 +12,6 @@
     </mat-list>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="changePassword(state.user)" [disabled]="!state?.user">Change Password</button>
+    <button mat-raised-button color="primary" (click)="changePassword(user)">Change Password</button>
   </mat-card-actions>
 </mat-card>
