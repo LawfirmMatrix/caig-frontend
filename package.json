@@ -8,10 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:caig-admin": "npm run build:caig-admin-libs && ng build caig-admin",
-    "build:survey": "npm run build:survey-libs && ng build survey",
-    "build:survey-libs": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build mock-api && ng build shared-components",
-    "build:caig-admin-libs": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build shared-components",
+    "build:survey": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build mock-api && ng build shared-components && ng build survey",
+    "build:caig-admin": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build shared-components && ng build caig-admin",
     "build:libs": "ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build mock-api && ng build shared-components"
   },
   "private": true,
