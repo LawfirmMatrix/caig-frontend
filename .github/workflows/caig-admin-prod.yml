@@ -1,0 +1,33 @@
+# This workflow will build and push a node.js application to an Azure Web App when manually triggered.
+#
+on: workflow_dispatch
+
+env:
+  AZURE_WEBAPP_NAME: caigcallcenter
+  AZURE_WEBAPP_PACKAGE_PATH: './dist/caig-admin'
+  NODE_VERSION: '14.x'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install, build
+        run: |
+          # Build the project, then
+          # deploy to Azure Web App.
+          npm install
+          npm run build:caig-admin-libs
+          ng build caig-admin
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.CAIGCALLCENTER_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
