@@ -26,5 +26,12 @@
         ]
       }
     }
-  ]
+  ],
+  "appData": {
+    "changes": {
+      
+    },
+    "forceReloadDuration": 0,
+    "clearLocalStorage": false
+  }
 }
