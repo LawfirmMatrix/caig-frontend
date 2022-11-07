@@ -7,6 +7,7 @@ import {of} from 'rxjs';
 import {Portal} from '../../../models/session.model';
 import {CoreActions} from '../../store/actions/action-types';
 import {Router} from '@angular/router';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-portal-selection',
@@ -23,6 +24,7 @@ import {Router} from '@angular/router';
   `]
 })
 export class PortalSelectionComponent {
+  private static readonly PORTAL_KEY = 'PORTAL';
   public isSuperAdmin$ = this.store.select(isSuperAdmin);
   public portalSelection = new SelectField({
     key: 'portal',
@@ -33,8 +35,11 @@ export class PortalSelectionComponent {
     onChange: (portal) => {
       this.store.dispatch(CoreActions.portalChange({portal}));
       this.router.navigateByUrl('/');
+      localStorage.setItem(PortalSelectionComponent.PORTAL_KEY, portal);
     }
   });
-  public coreState$ = this.store.select(selectCoreState);
+  public coreState$ = this.store.select(selectCoreState).pipe(
+    map((state) => localStorage.getItem(PortalSelectionComponent.PORTAL_KEY) || state.portal)
+  );
   constructor(private store: Store<AppState>, private router: Router) { }
 }
