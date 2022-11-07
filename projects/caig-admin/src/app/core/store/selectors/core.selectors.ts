@@ -1,6 +1,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {CoreState} from '../reducers';
-import {Role} from '../../../models/session.model';
+import {Role, Portal} from '../../../models/session.model';
+import {PortalSelectionComponent} from '../../components/portal-selection/portal-selection.component';
 
 export const selectCoreState = createFeatureSelector<CoreState>('core');
 

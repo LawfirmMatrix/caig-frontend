@@ -9,6 +9,8 @@ import {EmployeeEntityService} from '../../../modules/employees/services/employe
 
 @Injectable()
 export class CoreEffects {
+  public static readonly PORTAL_KEY = 'PORTAL';
+
   public initialized$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CoreActions.sessionInitialized),
@@ -36,6 +38,14 @@ export class CoreEffects {
       ]),
     )
   );
+
+  public portalChange$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CoreActions.portalChange),
+      tap((action) => localStorage.setItem(CoreEffects.PORTAL_KEY, action.portal)),
+    ), {dispatch: false}
+  );
+
 
   constructor(private actions$: Actions, private employeeService: EmployeeEntityService) { }
 }
