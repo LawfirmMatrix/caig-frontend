@@ -13,7 +13,6 @@ export class NavMenuService {
         ];
       case Portal.CAIG:
         return [
-          callList,
           employees,
           events,
           // {
