@@ -17,8 +17,10 @@ export class ServiceWorkerService {
     .pipe(
       filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY'),
       tap((event) => {
-        const appData = event.latestVersion.appData as AppData;
-        localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
+        const appData = event.latestVersion.appData as AppData | undefined;
+        if (appData) {
+          localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
+        }
       }),
       shareReplay(1),
     );
@@ -88,11 +90,13 @@ export class ServiceWorkerService {
     if (cachedData) {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
       const appData: AppData = JSON.parse(cachedData);
-      if (appData.clearLocalStorage) {
-        localStorage.clear();
-      }
-      if (appData.changes && Object.keys(appData.changes).length) {
-        this.dialog.open(WhatsNewComponent, {data: appData.changes});
+      if (appData) {
+        if (appData.clearLocalStorage) {
+          localStorage.clear();
+        }
+        if (appData.changes && Object.keys(appData.changes).length) {
+          this.dialog.open(WhatsNewComponent, {data: appData.changes});
+        }
       }
     }
   }

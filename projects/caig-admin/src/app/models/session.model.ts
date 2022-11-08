@@ -3,7 +3,7 @@ export interface User {
   email: string;
   username: string;
   avatar?: string;
-  roleId: number;
+  roleId: Role;
   roleName: string;
   id: number;
   settlements?: UserSettlement[];

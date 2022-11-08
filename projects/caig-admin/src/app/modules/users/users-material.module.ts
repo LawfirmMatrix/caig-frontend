@@ -6,6 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatCardModule} from '@angular/material/card';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   exports: [
@@ -16,6 +17,7 @@ import {MatCardModule} from '@angular/material/card';
     MatMenuModule,
     DragDropModule,
     MatCardModule,
+    MatSlideToggleModule,
   ],
 })
 export class UsersMaterialModule { }

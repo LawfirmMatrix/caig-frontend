@@ -1,6 +1,7 @@
 <div fxFlexFill fxLayout="column">
-  <div style="padding: 10px">
+  <div fxLayout="row" fxLayoutAlign="space-between center" style="padding: 10px">
     <a mat-raised-button color="primary" routerLink="create">Create User</a>
+    <mat-slide-toggle (change)="inactive$.next($event.checked)">Show Inactive</mat-slide-toggle>
   </div>
   <vs-table
     fxFlex

@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationsService} from 'notifications';
-import {filter, switchMap} from 'rxjs/operators';
+import {filter, switchMap, map} from 'rxjs/operators';
+import {combineLatest, BehaviorSubject} from 'rxjs';
 import {TableColumn, RowMenuItem, TextColumn} from 'vs-table';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmDialogComponent} from 'shared-components';
-import {User} from '../../../../models/session.model';
+import {User, Role} from '../../../../models/session.model';
 import {UserEntityService} from '../../services/user-entity.service';
 import {UserActions} from '../../store/actions/action-types';
 import {Store} from '@ngrx/store';
@@ -17,7 +18,11 @@ import {AppState} from '../../../../store/reducers';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent {
-  public users$ = this.dataService.entities$;
+  public inactive$ = new BehaviorSubject<boolean>(false);
+  public users$ = combineLatest([this.inactive$, this.dataService.entities$])
+    .pipe(
+      map(([inactive, users]) => inactive ? users : users.filter((u) => u.roleId !== Role.INACTIVE))
+    );
   public columns: TableColumn<User>[] = [
     new TextColumn({
       title: 'Name',
