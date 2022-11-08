@@ -7,6 +7,8 @@ on:
     paths-ignore:
       - 'projects/caig-admin/**'
       - 'projects/file-upload/**'
+      - 'projects/vs-table'
+      - 'projects/export-csv'
 
 env:
   AZURE_WEBAPP_NAME: caigsurveytest
