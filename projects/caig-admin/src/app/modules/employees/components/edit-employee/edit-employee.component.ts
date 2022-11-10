@@ -546,6 +546,8 @@ export class EditEmployeeComponent {
   private updateEmployee(): void {
     this.disableSave = true;
     const payload: any = omitBy({...this.employee, ...this.form.value}, (v) => v === undefined);
+    payload.tags = payload._tags;
+    delete payload._tags;
     this.dataService.update(payload).subscribe(() => {
       this.employee = payload;
       this.notifications.showSimpleInfoMessage('Successfully updated employee record');

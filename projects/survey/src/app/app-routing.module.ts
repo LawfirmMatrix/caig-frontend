@@ -6,8 +6,6 @@ import {BackdropComponent} from './survey/components/backdrop/backdrop.component
 import {InitializeResolver} from './survey/initialize-resolver';
 import {MultipleLocationsGuard} from './survey/guards/multiple-locations.guard';
 import {ShortcutRedirectGuard} from './survey/guards/shortcut-redirect.guard';
-import {ValidSurveyGuard} from './survey/guards/valid-survey.guard';
-import {ValidLocationGuard} from './survey/guards/valid-location.guard';
 
 const routes: Routes = [
   {
@@ -29,12 +27,10 @@ const routes: Routes = [
       {
         path: 'survey/:surveyId',
         component: TakeSurveyComponent,
-        canActivate: [ ValidSurveyGuard ],
       },
       {
         path: 'survey/:surveyId/:locationId',
         component: TakeSurveyComponent,
-        canActivate: [ ValidLocationGuard ],
       },
     ],
   },
