@@ -6,12 +6,16 @@ import {BackdropComponent} from './survey/components/backdrop/backdrop.component
 import {InitializeResolver} from './survey/initialize-resolver';
 import {MultipleLocationsGuard} from './survey/guards/multiple-locations.guard';
 import {ShortcutRedirectGuard} from './survey/guards/shortcut-redirect.guard';
+import {CheckForUpdateResolver} from "./check-for-update.resolver";
 
 const routes: Routes = [
   {
     path: '',
     component: BackdropComponent,
-    resolve: { survey: InitializeResolver },
+    resolve: {
+      update: CheckForUpdateResolver,
+      survey: InitializeResolver,
+    },
     children: [
       {
         path: '',
