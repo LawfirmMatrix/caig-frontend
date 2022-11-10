@@ -2,8 +2,9 @@ import {of} from 'rxjs';
 import * as moment from 'moment';
 import {uncertain} from './common';
 
-export const current = moment();
-export const currentYear = current.year();
+export const currentDay = moment();
+export const nextDay = moment().add(1, 'day');
+export const currentYear = currentDay.year();
 
 export const months$ = of([
   uncertain,

@@ -1,20 +1,8 @@
 import {DateField, SelectField} from 'dynamic-form';
 import {of} from 'rxjs';
-import * as moment from 'moment';
-import {FormGroup} from '@angular/forms';
-import {current} from './date';
+import {currentDay, nextDay} from './date';
 import {SurveyQuestion} from '../../../../survey/survey.service';
 import {Moment} from 'moment';
-
-const disabledDays = [0, 5, 6];
-
-export const disableDay = (formField: string) => (option: {key: string, value: string}, form: FormGroup) => {
-  if (form.value[formField]) {
-    const date = moment(`${form.value[formField]}-${option.key}`);
-    return date.isValid() && (date.diff(moment()) < 0 || (disabledDays.indexOf(date.day()) > -1));
-  }
-  return false;
-};
 
 export const times$ = of([
   { key: '08:30', value: '8:30 AM' },
@@ -59,7 +47,7 @@ export const times$ = of([
 ]);
 
 export const apptMonths$ = of(Array.from({length: 3}).map((v, i) => {
-  const date = current.clone().add(i, 'month');
+  const date = currentDay.clone().add(i, 'month');
   return {
     key: date.format('YYYY-MM'),
     value: date.format('MMMM, YYYY'),
@@ -67,12 +55,11 @@ export const apptMonths$ = of(Array.from({length: 3}).map((v, i) => {
 }));
 
 export const filterDate = (d?: Moment | null) => {
-  const day = (d || current).day();
+  const day = (d || currentDay).day();
   return day !== 0 && day !== 5 && day !== 6;
 };
 
-export const maxDate = current.clone().add(3, 'months').endOf('month');
-
+export const maxDate = currentDay.clone().add(3, 'months').endOf('month');
 
 export const followUpTimes: SurveyQuestion = {
   question: '',
@@ -83,7 +70,7 @@ export const followUpTimes: SurveyQuestion = {
         label: 'Date #1',
         required: true,
         dateFilter: filterDate,
-        min: current,
+        min: nextDay,
         max: maxDate,
         openButton: true,
       }),
@@ -104,7 +91,7 @@ export const followUpTimes: SurveyQuestion = {
         label: 'Date #2',
         required: true,
         dateFilter: filterDate,
-        min: current,
+        min: nextDay,
         max: maxDate,
         openButton: true,
       }),
