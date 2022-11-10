@@ -20,8 +20,8 @@ import {BreakpointObserver} from '@angular/cdk/layout';
 import {SurveySchema, Survey, SurveyService, SurveyQuestion} from '../../survey.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HandsetComponent} from '../handset-component';
-import {switchMap} from 'rxjs/operators';
-import {UntypedFormGroup, AbstractControl} from '@angular/forms';
+import {shareReplay, switchMap} from 'rxjs/operators';
+import {AbstractControl} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
 import {some, flatten, isEqual, omitBy} from 'lodash-es';
 import {MatDialog} from '@angular/material/dialog';
@@ -52,11 +52,11 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   constructor(
     protected override breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
-    private dataService: SurveyService,
     private router: Router,
     private dialog: MatDialog,
     private notifications: NotificationsService,
     private titleService: Title,
+    private dataService: SurveyService,
   ) {
     super(breakpointObserver);
   }
@@ -65,7 +65,10 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     if (this.route.parent) {
       const sessionId = this.route.snapshot.queryParams['sessionId'];
       const progress$ = sessionId ? this.dataService.getProgress(sessionId) : of(null);
-      const survey$ = this.route.parent.data.pipe(map((data) => data['survey']));
+      const survey$ = this.route.parent.data.pipe(
+        map((data) => data['survey']),
+        shareReplay(),
+      );
       const schema$ = survey$
         .pipe(
           filter((survey): survey is Survey => !!survey),
@@ -116,10 +119,11 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
                   switchMap((formValues) => this.dataService.saveProgress(formValues, this.route.snapshot.queryParams['sessionId'])),
                   filter((res) => !!res),
                 )
-                .subscribe((res) => this.router.navigate([], {queryParams: {sessionId: res.sessionId}, replaceUrl: true}));
+                .subscribe((res) => this.router.navigate([], {queryParams: {sessionId: res.sessionId}, queryParamsHandling: 'merge', replaceUrl: true}));
             });
           }),
           map(([schema, progress]) => schema),
+          tap((x) => console.log(x)),
           catchError((err) => {
             this.isError = true;
             return throwError(err);
@@ -232,6 +236,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
       this.route.snapshot.queryParams['nomail'] === 'true'
     )
       .subscribe((res) => {
+        this.router.navigate([], {queryParams: {sessionId: null}, queryParamsHandling: 'merge', replaceUrl: true});
         this.isSubmitting = false;
         this.isCompleted = true;
         if (this.route.snapshot.queryParams['reload'] === 'true') {
@@ -252,7 +257,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   }
 
   public reload(): void {
-    this.router.navigate([], {queryParams: {sessionId: null}, replaceUrl: true})
+    this.router.navigate([], {queryParams: {sessionId: null}, replaceUrl: true, queryParamsHandling: 'merge'})
       .then(() => window.location.reload());
   }
 

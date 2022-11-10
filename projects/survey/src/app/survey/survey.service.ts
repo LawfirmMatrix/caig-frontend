@@ -9,16 +9,16 @@ import {UntypedFormGroup} from '@angular/forms';
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
-  public initializeError = false;
   public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
-  constructor(private http: HttpClient, private notifications: NotificationsService) { }
+  constructor(
+    private http: HttpClient,
+    private notifications: NotificationsService,
+  ) { }
   public initialize(): Observable<Survey> {
-    return this.errorHandler(this.http.get<Survey>('api/survey/initialize')).pipe(
-      catchError((err) => {
-        this.initializeError = true;
-        return throwError(err);
-      })
-    );
+    return this.errorHandler(this.http.get<Survey>('api/survey/initialize'));
+  }
+  public getOne(surveyId: string): Observable<Survey> {
+    return this.errorHandler(this.http.get<Survey>(`api/survey/${surveyId}`));
   }
   public getAllSchemas(): Observable<SurveySchema[]> {
     return this.errorHandler(this.http.get<SurveySchema[]>(`api-mock/survey/schema`));
@@ -30,8 +30,10 @@ export class SurveyService {
     const params: any = {
       nomail: typeof nomail === 'boolean' ? nomail : !environment.production,
       surveyId,
-      locationId,
     };
+    if (locationId) {
+      params.locationId = locationId;
+    }
     return this.errorHandler(this.http.post<any>('api/survey/submit', payload, { params }));
   }
   public getProgress(sessionId: string): Observable<any> {

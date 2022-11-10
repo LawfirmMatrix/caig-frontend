@@ -4,13 +4,7 @@ import {nageVa} from './unions/nage-va';
 import {contactStep} from './shared/contact';
 import {months$, years$, current} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
-import {
-  apptMonths$,
-  disableDay,
-  disableMonth,
-  followUpTimes,
-  times$, filterDate, maxDate
-} from './shared/appointment';
+import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {SurveySchema} from '../../../survey/survey.service';
 
 

@@ -3,13 +3,7 @@ import {Validators, UntypedFormGroup} from '@angular/forms';
 import {contactStep} from './shared/contact';
 import {months$, years$, current} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
-import {
-  apptMonths$,
-  disableDay,
-  disableMonth,
-  followUpTimes,
-  times$, filterDate, maxDate
-} from './shared/appointment';
+import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {liunaVa} from './unions/liuna-va';
 import {SurveySchema} from '../../../survey/survey.service';
 

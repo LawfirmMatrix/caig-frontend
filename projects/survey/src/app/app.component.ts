@@ -26,7 +26,4 @@ export class AppComponent {
       filter((loading): loading is boolean => typeof loading === 'boolean'),
     )
   constructor(private router: Router, public surveyService: SurveyService) { }
-  public reload(): void {
-    window.location.reload();
-  }
 }

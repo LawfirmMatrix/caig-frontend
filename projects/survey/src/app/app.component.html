@@ -2,7 +2,3 @@
   <mat-spinner></mat-spinner>
 </div>
 <router-outlet></router-outlet>
-<div *ngIf="surveyService.initializeError" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
-  <h1>Something went wrong...</h1>
-  <button mat-raised-button color="primary" (click)="reload()">RELOAD</button>
-</div>

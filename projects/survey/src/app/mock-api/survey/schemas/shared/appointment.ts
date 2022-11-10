@@ -1,51 +1,10 @@
 import {DateField, SelectField} from 'dynamic-form';
-import {of, Subject, tap, BehaviorSubject, interval} from 'rxjs';
+import {of} from 'rxjs';
 import * as moment from 'moment';
-import {FormGroup, UntypedFormGroup} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
+import {FormGroup} from '@angular/forms';
 import {current} from './date';
-import {SurveyQuestion, SurveyStep} from '../../../../survey/survey.service';
+import {SurveyQuestion} from '../../../../survey/survey.service';
 import {Moment} from 'moment';
-
-// const month1Change$ = new Subject<string>();
-// const month2Change$ = new Subject<string>();
-
-const currentMonth = String(current.month() + 1);
-const currentDate = current.date();
-// const dayLabelMap: { [day: number]: string } = {
-//   0: 'Sunday',
-//   1: 'Monday',
-//   2: 'Tuesday',
-//   3: 'Wednesday',
-//   4: 'Thursday',
-//   5: 'Friday',
-//   6: 'Saturday',
-// };
-
-const getDays = (yearMonth: string) => {
-  if (!yearMonth) {
-    return [];
-  }
-  const daysInMonth = moment(`${yearMonth}-01`).daysInMonth();
-  const isCurrentMonth = yearMonth.endsWith(currentMonth);
-  const options = isCurrentMonth ? (daysInMonth - currentDate) : daysInMonth;
-  const startAt = isCurrentMonth ? (daysInMonth - options + 1) : 1;
-  return new Array(options)
-    .fill('')
-    .map((v, i) => {
-      const strVal = String(startAt + i);
-      const value = strVal.length === 1 ? `0${strVal}` : strVal;
-      return { key: value, value: `${value} - ${moment(`${yearMonth}-${value}`).format('dddd')}` };
-    });
-};
-
-export const disableMonth = (option: {key: string, value: string}) => {
-  return false;
-  // const endOfMonth = moment(`${option.key}-01`).endOf('month');
-  // return endOfMonth.isSame(current, 'day') || endOfMonth.isBefore(current, 'month');
-};
-
-export const days$ = (monthChange$: Subject<string>) => monthChange$.pipe(map(getDays));
 
 const disabledDays = [0, 5, 6];
 
