@@ -1,21 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs';
-import {first, tap} from 'rxjs/operators';
+import {Resolve} from '@angular/router';
 import {EmployeeEntityService} from './employee-entity.service';
+import {AllEntityResolver} from '../../../core/services/all-entity.resolver';
 
 @Injectable()
-export class AllEmployeesResolver implements Resolve<any> {
-  constructor(private employeeService: EmployeeEntityService) { }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    return this.employeeService.loaded$
-      .pipe(
-        first(),
-        tap((loaded) => {
-          if (!loaded) {
-            this.employeeService.getAll().subscribe();
-          }
-        })
-      );
+export class AllEmployeesResolver extends AllEntityResolver implements Resolve<any> {
+  constructor(protected employeeService: EmployeeEntityService) {
+    super(employeeService);
   }
 }

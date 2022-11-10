@@ -7,24 +7,29 @@ import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-b
 @Component({
   selector: 'dynamic-form-datepicker',
   template: `
-    <mat-form-field [formGroup]="form" [appearance]="field.appearance" [color]="field.color">
-      <mat-label>{{field.label}}</mat-label>
-      <input autocomplete="off"
-             matInput
-             [min]="field.min"
-             [max]="field.max"
-             [required]="field.required"
-             [matDatepicker]="dp"
-             [matDatepickerFilter]="field.dateFilter"
-             [placeholder]="field.placeholder"
-             [formControlName]="field.key">
-      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-      <mat-datepicker #dp [startView]="field.startView" (monthSelected)="field.monthSelected($event, dp)"></mat-datepicker>
-      <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
-      <mat-error *ngIf="control?.hasError('required')">
-        {{field.label}} is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+      <mat-form-field [formGroup]="form" [appearance]="field.appearance" [color]="field.color">
+        <mat-label>{{field.label}}</mat-label>
+        <input autocomplete="off"
+               matInput
+               [min]="field.min"
+               [max]="field.max"
+               [required]="field.required"
+               [matDatepicker]="dp"
+               [matDatepickerFilter]="field.dateFilter"
+               [placeholder]="field.placeholder"
+               [formControlName]="field.key">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp [startView]="field.startView" (monthSelected)="field.monthSelected($event, dp)"></mat-datepicker>
+        <mat-hint *ngIf="field.hint" [align]="field.hint.align">{{field.hint.message}}</mat-hint>
+        <mat-error *ngIf="control?.hasError('required')">
+          {{field.label}} is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <div *ngIf="field.openButton" style="padding: 10px; height: 60px;">
+        <button mat-raised-button (click)="dp.open()">Select Date</button>
+      </div>
+    </div>
   `,
 })
 export class DateComponent extends FieldBaseComponent<DateField> implements OnInit {
@@ -47,6 +52,7 @@ export class DateField extends FieldBase<Moment> {
   public min: Moment | undefined;
   public max: Moment | undefined;
   public dateFilter: DateFilterFn<Moment | null | undefined>;
+  public openButton: boolean;
   constructor(options: DateOptions) {
     super(options);
     this.placeholder = options.placeholder || '';
@@ -56,6 +62,7 @@ export class DateField extends FieldBase<Moment> {
     this.min = options.min;
     this.max = options.max;
     this.dateFilter = options.dateFilter || ( () => true );
+    this.openButton = !!options.openButton;
   }
 }
 
@@ -66,4 +73,5 @@ export interface DateOptions extends BaseOptions<Moment> {
   min?: Moment;
   max?: Moment;
   dateFilter?: DateFilterFn<Moment | null | undefined>;
+  openButton?: boolean;
 }

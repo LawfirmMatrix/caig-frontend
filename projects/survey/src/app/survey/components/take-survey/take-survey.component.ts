@@ -14,7 +14,7 @@ import {
   takeUntil,
   ReplaySubject,
   interval, take, noop, of,
-  debounceTime, first, forkJoin, tap, skip, distinctUntilChanged,
+  debounceTime, first, forkJoin, tap, skip, distinctUntilChanged, catchError, throwError,
 } from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {SurveySchema, Survey, SurveyService, SurveyQuestion} from '../../survey.service';
@@ -41,7 +41,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
 
   public survey$!: Observable<Survey>;
   public schema$!: Observable<SurveySchema>;
-  public forms!: UntypedFormGroup[];
   public isSubmitting = false;
   public isCompleted = false;
   public isError = false;
@@ -57,7 +56,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     private router: Router,
     private dialog: MatDialog,
     private notifications: NotificationsService,
-    private titleService: Title
+    private titleService: Title,
   ) {
     super(breakpointObserver);
   }
@@ -66,59 +65,66 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     if (this.route.parent) {
       const sessionId = this.route.snapshot.queryParams['sessionId'];
       const progress$ = sessionId ? this.dataService.getProgress(sessionId) : of(null);
-      this.survey$ = this.route.parent.data.pipe(map((data) => data['survey']));
-      this.schema$ = this.survey$
+      const survey$ = this.route.parent.data.pipe(map((data) => data['survey']));
+      const schema$ = survey$
         .pipe(
           filter((survey): survey is Survey => !!survey),
           switchMap((survey) => this.dataService.getSchema(survey.schemaId)),
           first(),
         );
-      forkJoin([this.schema$, progress$])
-        .subscribe(([schema, progress]) => {
-          this.isError = false;
-          this.isSubmitting = false;
-          this.forms = schema.steps.map(() => new UntypedFormGroup({}));
-          if (this.forms[0]) {
-            this.forms[0].valueChanges.subscribe((value) => {
-              const title = value.firstName && value.lastName ? `${concatName(value)} - Survey` : 'Survey';
-              this.titleService.setTitle(title);
-            });
-          }
-          this.forms.forEach((form, index) => {
-            if (progress) {
-              setTimeout(() => {
-                const initialValue = {...form.value};
-                form.patchValue(progress, {emitEvent: true});
-                if (!isEqual(form.value, initialValue)) {
-                  setTimeout(() => this.goToIndex(index, false, schema), 100);
-                }
+      this.survey$ = survey$;
+      this.schema$ = forkJoin([schema$, progress$])
+        .pipe(
+          tap(([schema, progress]) => {
+            this.isError = false;
+            this.isSubmitting = false;
+            if (schema.steps[0]) {
+              schema.steps[0].form.valueChanges.subscribe((value) => {
+                const title = value.firstName && value.lastName ? `${concatName(value)} - Survey` : 'Survey';
+                this.titleService.setTitle(title);
               });
             }
-            const onChange = schema.steps[index].onChange;
-            form.valueChanges
-              .pipe(
-                map(() => this.getAllFormValues()),
-                tap((formValues) => {
-                  if (onChange) {
-                    const response = onChange(formValues);
-                    if (response.modifyQuestions !== undefined) {
-                      response.modifyQuestions.forEach((mod) => {
-                        schema.steps[mod.stepIndex].questions[mod.questionIndex].question = mod.modifiedQuestion;
-                        schema.steps[mod.stepIndex].questions = [...schema.steps[mod.stepIndex].questions];
-                      });
-                      setTimeout(() => form.patchValue({...progress, ...omitBy(form.value, (v) => v === undefined)}, {emitEvent: false}));
-                    }
+            schema.steps.forEach((step, index) => {
+              if (progress) {
+                setTimeout(() => {
+                  const initialValue = {...step.form.value};
+                  step.form.patchValue(progress, {emitEvent: true});
+                  if (!isEqual(step.form.value, initialValue)) {
+                    setTimeout(() => this.goToIndex(index, false, schema), 100);
                   }
-                }),
-                skip(progress ? 1 : 0),
-                debounceTime(3000),
-                distinctUntilChanged(isEqual),
-                switchMap((formValues) => this.dataService.saveProgress(formValues, this.route.snapshot.queryParams['sessionId'])),
-                filter((res) => !!res),
-              )
-              .subscribe((res) => this.router.navigate([], {queryParams: {sessionId: res.sessionId}, replaceUrl: true}));
-          });
-        }, () => this.isError = true);
+                });
+              }
+              const onChange = schema.steps[index].onChange;
+              step.form.valueChanges
+                .pipe(
+                  map(() => this.getAllFormValues(schema)),
+                  tap((formValues) => {
+                    if (onChange) {
+                      const response = onChange(formValues);
+                      if (response.modifyQuestions !== undefined) {
+                        response.modifyQuestions.forEach((mod) => {
+                          schema.steps[mod.stepIndex].questions[mod.questionIndex].question = mod.modifiedQuestion;
+                          schema.steps[mod.stepIndex].questions = [...schema.steps[mod.stepIndex].questions];
+                        });
+                        setTimeout(() => step.form.patchValue({...progress, ...omitBy(step.form.value, (v) => v === undefined)}, {emitEvent: false}));
+                      }
+                    }
+                  }),
+                  skip(progress ? 1 : 0),
+                  debounceTime(3000),
+                  distinctUntilChanged(isEqual),
+                  switchMap((formValues) => this.dataService.saveProgress(formValues, this.route.snapshot.queryParams['sessionId'])),
+                  filter((res) => !!res),
+                )
+                .subscribe((res) => this.router.navigate([], {queryParams: {sessionId: res.sessionId}, replaceUrl: true}));
+            });
+          }),
+          map(([schema, progress]) => schema),
+          catchError((err) => {
+            this.isError = true;
+            return throwError(err);
+          })
+        );
     }
   }
 
@@ -155,7 +161,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
 
   public next(stepper: MatStepper, schema: SurveySchema): void {
     const currentIndex = stepper.selectedIndex;
-    const form = this.forms[currentIndex];
+    const form = schema.steps[currentIndex].form;
     const step = schema.steps[currentIndex];
     const isValid = step.isValid ? step.isValid(form.value) : { valid: true };
     if (isValid.valid && form.valid) {
@@ -165,7 +171,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
         s.completed = false;
       });
       if (step.onNext) {
-        const onNext = step.onNext(this.getAllFormValues());
+        const onNext = step.onNext(this.getAllFormValues(schema));
         if (onNext.skipToStepIndex !== undefined) {
           this.goToIndex(onNext.skipToStepIndex, true, schema);
           return;
@@ -179,7 +185,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   }
 
   public submit(schema: SurveySchema): void {
-    const payload = this.getAllFormValues();
+    const payload = this.getAllFormValues(schema);
 
     if (payload.followUp !== false) {
       payload.followUp = true;
@@ -214,12 +220,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     delete payload.date1;
     delete payload.date2;
     delete payload.date3;
-    delete payload.month1;
-    delete payload.month2;
-    delete payload.month3;
-    delete payload.day1;
-    delete payload.day2;
-    delete payload.day3;
     delete payload.time1;
     delete payload.time2;
     delete payload.time3;
@@ -264,8 +264,8 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     setTimeout(() => this.stepperRef.selectedIndex = index);
   }
 
-  private getAllFormValues(): any {
-    return this.forms.reduce((prev, curr) => ({...prev, ...curr.value}), {});
+  private getAllFormValues(schema: SurveySchema): any {
+    return schema.steps.reduce((prev, curr) => ({...prev, ...curr.form.value}), {});
   }
 }
 

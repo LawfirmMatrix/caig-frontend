@@ -1,23 +1,17 @@
 import {CheckboxField, DateField, RadioField, SelectField} from 'dynamic-form';
-import {Validators} from '@angular/forms';
+import {Validators, UntypedFormGroup} from '@angular/forms';
 import {contactStep} from './shared/contact';
-import {months$, years$} from './shared/date';
+import {months$, years$, current} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {
   apptMonths$,
-  days$,
   disableDay,
   disableMonth,
   followUpTimes,
-  onDayChange,
-  onMonthChange,
-  times$
+  times$, filterDate, maxDate
 } from './shared/appointment';
-import {Subject} from 'rxjs';
 import {liunaVa} from './unions/liuna-va';
 import {SurveySchema} from '../../../survey/survey.service';
-
-const month3Change$ = new Subject<string>();
 
 export const schema4: SurveySchema = {
   id: 4,
@@ -32,6 +26,7 @@ export const schema4: SurveySchema = {
     contactStep,
     {
       title: 'Employment History',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Did you begin working for the Wilmington VA before September 2007?',
@@ -117,6 +112,7 @@ export const schema4: SurveySchema = {
     },
     {
       title: 'Overtime Work',
+      form: new UntypedFormGroup({}),
       headings: [
         {
           text: 'Since September 2007, have you ever:'
@@ -232,6 +228,7 @@ export const schema4: SurveySchema = {
     },
     {
       title: 'Follow-Up',
+      form: new UntypedFormGroup({}),
       headings: [
         {
           text: 'You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.',
@@ -273,39 +270,21 @@ export const schema4: SurveySchema = {
               new DateField({
                 key: 'date3',
                 label: 'Date #3',
-                hide: true,
-              }),
-              new SelectField({
-                key: 'month3',
-                label: 'Month',
-                itemKey: 'key',
-                displayField: 'value',
-                options: apptMonths$,
-                optionDisabled: disableMonth,
-                onChange: onMonthChange('date3', 'day3', month3Change$),
-                deselect: true,
-                required: true
-              }),
-              new SelectField({
-                key: 'day3',
-                label: 'Day',
-                itemKey: 'key',
-                displayField: 'value',
-                options: days$(month3Change$),
-                optionDisabled: disableDay('month3'),
-                onChange: onDayChange('date3', 'month3'),
-                deselect: true,
                 required: true,
+                dateFilter: filterDate,
+                min: current,
+                max: maxDate,
+                openButton: true,
               }),
               new SelectField({
                 key: 'time3',
                 label: 'Time #3',
                 fxFlex: 50,
+                required: true,
                 options: times$,
                 itemKey: 'key',
                 displayField: 'value',
                 deselect: true,
-                required: true
               }),
             ]
           ]

@@ -1,6 +1,6 @@
 import {CheckboxField, RadioField, SelectField} from 'dynamic-form';
 import {of} from 'rxjs';
-import {Validators} from '@angular/forms';
+import {Validators, UntypedFormGroup} from '@angular/forms';
 import {contactStep} from './shared/contact';
 import {months$, years$} from './shared/date';
 import {yesOrNo$} from './shared/common';
@@ -17,6 +17,7 @@ export const schema1: SurveySchema = {
     contactStep,
     {
       title: 'Employment History',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'When did you begin working for the VA?',
@@ -101,6 +102,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Overtime Work',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Going back to April 2016, have you worked more than forty hours in a week (for fixed schedule responses) or eighty hours in a pay period (for shift schedule responses)?',
@@ -134,6 +136,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Uncompensated Work',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Did you ever, since April 2016, do any work at the VA without any form of compensation? This is typically done when coming in early, staying late, working into or through lunch, and/or coming in on a weekend, holiday or other day off.',
@@ -231,6 +234,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Home Work',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Did you ever, since April 2016, perform any work for the VA at home when not in telework status (including receiving or making work phone calls and reading or sending work emails)?',
@@ -271,6 +275,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Supervisor Awareness',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: '',
@@ -313,6 +318,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Travel Work',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Have you travelled since April 2016 on behalf of the VA (such as for TDY or training) without receiving compensation?',
@@ -332,6 +338,7 @@ export const schema1: SurveySchema = {
     },
     {
       title: 'Follow-Up',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: `Are you available to receive follow-up contact from the Union's law firm to supply more details?`,

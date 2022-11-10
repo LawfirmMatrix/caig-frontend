@@ -6,6 +6,7 @@ import {contactStep} from './shared/contact';
 import {months$, years$} from './shared/date';
 import {yesOrNo$} from './shared/common';
 import {SurveySchema} from '../../../survey/survey.service';
+import {UntypedFormGroup} from '@angular/forms';
 
 export const protectiveEquipmentOptions = [
   { key: 'a', value: 'Yes, it is required.' },
@@ -36,6 +37,7 @@ export const schema3: SurveySchema = {
     contactStep,
     {
       title: 'Employment',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Name and location (city and state) of the VA facility at which you are employed:',
@@ -182,6 +184,7 @@ export const schema3: SurveySchema = {
     },
     {
       title: 'Hazardous Work',
+      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Have you ever received any extra pay for hazardous work (examples may be called: Hazardous Duty Pay or HDP, Environmental Differential Pay or EDP)?',

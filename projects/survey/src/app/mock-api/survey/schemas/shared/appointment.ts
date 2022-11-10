@@ -1,16 +1,26 @@
 import {DateField, SelectField} from 'dynamic-form';
-import {of, Subject} from 'rxjs';
+import {of, Subject, tap, BehaviorSubject, interval} from 'rxjs';
 import * as moment from 'moment';
-import {FormGroup} from '@angular/forms';
+import {FormGroup, UntypedFormGroup} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {current} from './date';
-import {SurveyQuestion} from '../../../../survey/survey.service';
+import {SurveyQuestion, SurveyStep} from '../../../../survey/survey.service';
+import {Moment} from 'moment';
 
-const month1Change$ = new Subject<string>();
-const month2Change$ = new Subject<string>();
+// const month1Change$ = new Subject<string>();
+// const month2Change$ = new Subject<string>();
 
 const currentMonth = String(current.month() + 1);
 const currentDate = current.date();
+// const dayLabelMap: { [day: number]: string } = {
+//   0: 'Sunday',
+//   1: 'Monday',
+//   2: 'Tuesday',
+//   3: 'Wednesday',
+//   4: 'Thursday',
+//   5: 'Friday',
+//   6: 'Saturday',
+// };
 
 const getDays = (yearMonth: string) => {
   if (!yearMonth) {
@@ -25,37 +35,17 @@ const getDays = (yearMonth: string) => {
     .map((v, i) => {
       const strVal = String(startAt + i);
       const value = strVal.length === 1 ? `0${strVal}` : strVal;
-      return { key: value, value: `${value} - ${getDayLabel(moment(`${yearMonth}-${value}`).day())}` };
+      return { key: value, value: `${value} - ${moment(`${yearMonth}-${value}`).format('dddd')}` };
     });
 };
 
-const getDayLabel = (day: number) => {
-  switch (day) {
-    case 0:
-      return 'Sunday';
-    case 1:
-      return 'Monday';
-    case 2:
-      return 'Tuesday';
-    case 3:
-      return 'Wednesday';
-    case 4:
-      return 'Thursday';
-    case 5:
-      return 'Friday';
-    case 6:
-      return 'Saturday';
-    default:
-      return '';
-  }
-};
-
 export const disableMonth = (option: {key: string, value: string}) => {
-  const endOfMonth = moment(`${option.key}-01`).endOf('month');
-  return endOfMonth.isSame(current, 'day') || endOfMonth.isBefore(current, 'month');
+  return false;
+  // const endOfMonth = moment(`${option.key}-01`).endOf('month');
+  // return endOfMonth.isSame(current, 'day') || endOfMonth.isBefore(current, 'month');
 };
 
-export const days$ = (monthChange$: Subject<string>) => monthChange$.pipe(map(getDays), startWith([]));
+export const days$ = (monthChange$: Subject<string>) => monthChange$.pipe(map(getDays));
 
 const disabledDays = [0, 5, 6];
 
@@ -110,28 +100,20 @@ export const times$ = of([
 ]);
 
 export const apptMonths$ = of(Array.from({length: 3}).map((v, i) => {
-  const date = current.add(i, 'month');
+  const date = current.clone().add(i, 'month');
   return {
     key: date.format('YYYY-MM'),
     value: date.format('MMMM, YYYY'),
   };
 }));
 
-export const onMonthChange = (dateField: string, dayField: string, changeSubject$: Subject<string>) => (value: string, form: FormGroup) => {
-  const day = form.controls[dayField].value;
-  if (value && day) {
-    form.controls[dateField].patchValue(`${value}-${day}`, {emitEvent: false});
-    form.controls[dayField].reset(null, {emitEvent: false});
-  }
-  changeSubject$.next(value);
+export const filterDate = (d?: Moment | null) => {
+  const day = (d || current).day();
+  return day !== 0 && day !== 5 && day !== 6;
 };
 
-export const onDayChange = (dateField: string, monthField: string) => (value: string, form: FormGroup) => {
-  const month = form.controls[monthField].value;
-  if (value && month) {
-    form.controls[dateField].patchValue(`${month}-${value}`, {emitEvent: false});
-  }
-};
+export const maxDate = current.clone().add(3, 'months').endOf('month');
+
 
 export const followUpTimes: SurveyQuestion = {
   question: '',
@@ -140,29 +122,11 @@ export const followUpTimes: SurveyQuestion = {
       new DateField({
         key: 'date1',
         label: 'Date #1',
-        hide: true,
-      }),
-      new SelectField({
-        key: 'month1',
-        label: 'Month',
         required: true,
-        itemKey: 'key',
-        displayField: 'value',
-        options: apptMonths$,
-        onChange: onMonthChange('date1', 'day1', month1Change$),
-        optionDisabled: disableMonth,
-        deselect: true,
-      }),
-      new SelectField({
-        key: 'day1',
-        label: 'Day',
-        required: true,
-        itemKey: 'key',
-        displayField: 'value',
-        options: days$(month1Change$),
-        optionDisabled: disableDay('month1'),
-        onChange: onDayChange('date1', 'month1'),
-        deselect: true,
+        dateFilter: filterDate,
+        min: current,
+        max: maxDate,
+        openButton: true,
       }),
       new SelectField({
         key: 'time1',
@@ -179,37 +143,22 @@ export const followUpTimes: SurveyQuestion = {
       new DateField({
         key: 'date2',
         label: 'Date #2',
-        hide: true,
-      }),
-      new SelectField({
-        key: 'month2',
-        label: 'Month',
-        itemKey: 'key',
-        displayField: 'value',
-        options: apptMonths$,
-        onChange: onMonthChange('date2', 'day2', month2Change$),
-        optionDisabled: disableMonth,
-        deselect: true,
-      }),
-      new SelectField({
-        key: 'day2',
-        label: 'Day',
-        itemKey: 'key',
-        displayField: 'value',
-        options: days$(month2Change$),
-        optionDisabled: disableDay('month2'),
-        onChange: onDayChange('date2', 'month2'),
-        deselect: true,
+        required: true,
+        dateFilter: filterDate,
+        min: current,
+        max: maxDate,
+        openButton: true,
       }),
       new SelectField({
         key: 'time2',
         label: 'Time #2',
         fxFlex: 50,
+        required: true,
         options: times$,
         itemKey: 'key',
         displayField: 'value',
         deselect: true,
       }),
-    ],
-  ]
+    ]
+  ],
 };

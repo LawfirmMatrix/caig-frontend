@@ -5,6 +5,7 @@ import {Observable, catchError, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {shareReplay} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Injectable({providedIn: 'root'})
 export class SurveyService {
@@ -84,6 +85,7 @@ export interface SurveyStep {
   onNext?: (formValue: any) => SurveyStepOnNext;
   completed?: boolean;
   skipped?: boolean;
+  form: UntypedFormGroup;
 }
 
 export interface SurveyQuestion {

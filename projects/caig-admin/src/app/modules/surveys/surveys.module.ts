@@ -6,6 +6,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {VsTableModule} from 'vs-table';
 import {CommonModule} from '@angular/common';
 import {RespondentsListComponent} from './components/respondents-list/respondents-list.component';
+import {LinkRespondentComponent} from './components/link-respondent/link-respondent.component';
+import {AllSurveysResolver} from './services/all-surveys.resolver';
 
 @NgModule({
   imports: [
@@ -18,6 +20,10 @@ import {RespondentsListComponent} from './components/respondents-list/respondent
   declarations: [
     SurveysListComponent,
     RespondentsListComponent,
+    LinkRespondentComponent,
   ],
+  providers: [
+    AllSurveysResolver,
+  ]
 })
 export class SurveysModule { }

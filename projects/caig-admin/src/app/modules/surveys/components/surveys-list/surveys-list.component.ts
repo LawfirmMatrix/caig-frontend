@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
-import {SurveysDataService} from '../../services/surveys-data.service';
 import {map} from 'rxjs/operators';
 import {TableColumn, TextColumn, NumberColumn, ButtonColumn, RowMenuItem, TableMenuItem} from 'vs-table';
 import {SurveyLocation, Survey} from '../../../../models/survey.model';
 import {Observable} from 'rxjs';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NgxCsvService} from 'export-csv';
-import {RespondentDataService} from '../../services/respondent-data.service';
+import {RespondentEntityService} from '../../services/respondent-entity.service';
 import {uniq} from 'lodash-es';
+import {SurveysEntityService} from '../../services/surveys-entity.service';
 
 @Component({
   selector: 'app-surveys-list',
@@ -15,14 +15,13 @@ import {uniq} from 'lodash-es';
   styleUrls: ['./surveys-list.component.scss']
 })
 export class SurveysListComponent {
-  public data$: Observable<SurveyFlat[]> = this.surveyService.get()
-    .pipe(
-      map((surveys) => surveys.reduce((prev, curr) => {
-        return curr.locations?.length ?
-          [...prev, ...curr.locations.map((l) => new SurveyFlat(curr, l))] :
-          [...prev, new SurveyFlat(curr)];
-      }, [] as SurveyFlat[]))
-    );
+  public data$: Observable<SurveyFlat[]> = this.surveyService.entities$.pipe(
+    map((surveys) => surveys.reduce((prev, curr) => {
+      return curr.locations?.length ?
+        [...prev, ...curr.locations.map((l) => new SurveyFlat(curr, l))] :
+        [...prev, new SurveyFlat(curr)];
+    }, [] as SurveyFlat[]))
+  );
   public columns: TableColumn<SurveyFlat>[] = [
     new TextColumn({
       title: 'Name',
@@ -69,26 +68,28 @@ export class SurveysListComponent {
   ];
   public isProcessing = false;
   constructor(
-    private surveyService: SurveysDataService,
-    private respondentService: RespondentDataService,
+    private surveyService: SurveysEntityService,
+    private respondentService: RespondentEntityService,
     private router: Router,
     private route: ActivatedRoute,
     private csv: NgxCsvService,
   ) { }
   public viewRespondents(survey: SurveyFlat): void {
-    this.router.navigate([survey.locationId || survey.surveyId], { relativeTo: this.route });
+    const route = survey.locationId ? [ survey.surveyId, survey.locationId ] : [ survey.surveyId ];
+    this.router.navigate(route, { relativeTo: this.route });
   }
   private exportToCsv(rows: SurveyFlat[]): void {
-    const surveyIds = uniq(rows.map((r) => r.surveyId));
+    const surveyId = uniq(rows.map((r) => r.surveyId));
     this.isProcessing = true;
-    this.respondentService.get(...surveyIds)
-      .subscribe(
-        (respondents) => {
-          this.csv.download(respondents, this.columns, 'Survey Respondents');
-          this.isProcessing = false;
-        },
-        () => this.isProcessing = false,
-      );
+    console.log(surveyId);
+    // this.respondentService.get({surveyId})
+    //   .subscribe(
+    //     (respondents) => {
+    //       this.csv.download(respondents, this.columns, 'Survey Respondents');
+    //       this.isProcessing = false;
+    //     },
+    //     () => this.isProcessing = false,
+    //   );
   }
 }
 
@@ -103,6 +104,6 @@ export class SurveyFlat {
     this.name = survey.name;
     this.locationName = location?.name;
     this.locationId = location?.id;
-    this.respondentCount = location?.respondentCount || survey.respondentCount;
+    this.respondentCount = location ? location.respondentCount : survey.respondentCount;
   }
 }

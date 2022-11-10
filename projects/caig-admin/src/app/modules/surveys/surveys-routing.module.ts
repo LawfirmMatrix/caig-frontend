@@ -2,10 +2,28 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SurveysListComponent} from './components/surveys-list/surveys-list.component';
 import {RespondentsListComponent} from './components/respondents-list/respondents-list.component';
+import {LinkRespondentComponent} from './components/link-respondent/link-respondent.component';
+import {AllSurveysResolver} from './services/all-surveys.resolver';
 
 const routes: Routes = [
-  { path: '', component: SurveysListComponent },
-  { path: ':id', component: RespondentsListComponent },
+  {
+    path: 'link',
+    pathMatch: 'full',
+    redirectTo: '/',
+  },
+  {
+    path: 'link/:respondentId',
+    component: LinkRespondentComponent,
+  },
+  {
+    path: '',
+    resolve: { surveys: AllSurveysResolver },
+    children: [
+      { path: '', component: SurveysListComponent },
+      { path: ':surveyId', component: RespondentsListComponent },
+      { path: ':surveyId/:locationId', component: RespondentsListComponent },
+    ],
+  },
 ];
 
 @NgModule({
