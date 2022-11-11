@@ -101,7 +101,128 @@ export class SurveysListComponent {
     });
     this.isProcessing = true;
     this.respondentService.get(params).subscribe((respondents) => {
-      this.csv.download(respondents, this.columns, 'Survey Respondents');
+      this.csv.download(
+        respondents,
+        [
+          {
+            title: 'Survey ID',
+            field: 'surveyId',
+          },
+          {
+            title: 'Survey Name',
+            field: 'surveyName',
+          },
+          {
+            title: 'When Submitted',
+            field: 'whenSubmitted',
+          },
+          {
+            title: 'First Name',
+            field: 'firstName',
+          },
+          {
+            title: 'Middle Name',
+            field: 'middleName',
+          },
+          {
+            title: 'Last Name',
+            field: 'lastName',
+          },
+          {
+            title: 'Annual Rate',
+            field: 'annualRate',
+          },
+          {
+            title: 'BUS Code',
+            field: 'busCode',
+          },
+          {
+            title: 'Grade',
+            field: 'grade',
+          },
+          {
+            title: 'Job Title',
+            field: 'jobTitle',
+          },
+          {
+            title: 'City',
+            field: 'locationCity',
+          },
+          {
+            title: 'State',
+            field: 'locationState',
+          },
+          {
+            title: 'Series',
+            field: 'series',
+          },
+          {
+            title: 'Step',
+            field: 'step',
+          },
+          {
+            title: 'Current BUE',
+            field: 'currentBue',
+          },
+          {
+            title: 'Current Hazard Pay',
+            field: 'currentHazardPay'
+          },
+          {
+            title: 'Email',
+            field: 'email',
+          },
+          {
+            title: 'Start Month',
+            field: 'startMonth',
+          },
+          {
+            title: 'Start Year',
+            field: 'startYear',
+          },
+          {
+            title: 'End Month',
+            field: 'endMonth',
+          },
+          {
+            title: 'End Year',
+            field: 'endYear',
+          },
+          {
+            title: 'Claimed Job Title',
+            field: 'positionTitle',
+          },
+          {
+            title: 'Claimed City',
+            field: 'facilityCity',
+          },
+          {
+            title: 'Claimed State',
+            field: 'facilityState',
+          },
+          {
+            title: 'Claimed Facility',
+            field: 'facilityName',
+          },
+          {
+            title: 'Follow Up',
+            field: 'followUp',
+          },
+          {
+            title: 'Phone Cell',
+            field: 'phoneCell',
+          },
+          {
+            title: 'Phone Home',
+            field: 'phoneHome',
+          },
+          {
+            title: 'Phone Work',
+            field: 'phoneWork',
+          },
+        ],
+        'Survey Respondents'
+      );
       this.isProcessing = false;
     }, () => this.isProcessing = false);
   }
