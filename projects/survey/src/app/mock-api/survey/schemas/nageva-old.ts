@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import {SurveySchema} from '../../../survey/survey-data.service';
 
 export const schema1: SurveySchema = {
-  id: 1,
+  id: 0,
   name: 'NAGE VA Triage (OLD)',
   fullName: 'NAGE VA Triage',
   estCompletionTime: '1 - 2 minutes',
@@ -47,7 +47,7 @@ export const schema1: SurveySchema = {
                 required: true,
                 itemKey: 'key',
                 displayField: 'value',
-                options: years$(75),
+                options: years$(1950),
                 deselect: true,
               }),
             ]

@@ -3,18 +3,18 @@ import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {LocationPipe} from './pipe/location.pipe';
 import {ZeroPadPipe} from './pipe/zero-pad.pipe';
-import {SafePipe} from './pipe/safe.pipe';
 import {StartCasePipe} from './pipe/start-case.pipe';
+import {PipesModule} from 'pipes';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
+    PipesModule,
   ],
   declarations: [
     LocationPipe,
     ZeroPadPipe,
-    SafePipe,
     StartCasePipe,
   ],
   exports: [
@@ -22,7 +22,6 @@ import {StartCasePipe} from './pipe/start-case.pipe';
     FlexLayoutModule,
     LocationPipe,
     ZeroPadPipe,
-    SafePipe,
     StartCasePipe,
   ],
 })

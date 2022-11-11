@@ -41,7 +41,7 @@
               <span #title>{{step.title}}</span>
             </ng-template>
             <form [formGroup]="step.form" fxLayout="column" fxLayoutGap="30px">
-              <h3 *ngFor="let heading of step.headings" [ngStyle]="{fontWeight: heading.bold ? 'bold' : '', textDecoration: heading.underline ? 'underline' : '', fontStyle: heading.italic ? 'italic' : ''}">{{heading.text}}</h3>
+              <h3 [innerHTML]="step.heading | safe:'html'"></h3>
               <div *ngIf="step.questions | hideQuestions as questions; else noQuestions">
                 <div *ngFor="let question of questions" style="margin-top: 30px">
                   <h2 [ngClass]="{'error-text': isTouched(question, step.form.controls) && question.invalid && question.invalid(step.form.value)}">

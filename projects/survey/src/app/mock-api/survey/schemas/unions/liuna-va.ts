@@ -8,8 +8,5 @@ const logo = {
 
 export const liunaVa: Partial<SurveySchema> = {
   toolbarStyle: { background: '#FC9721', color: 'white' },
-  // surveyStyle: { background: 'linear-gradient(#4640ba, #16108a 40%)' },
-  // backgroundStyle: { background: '#3d3d3c' },
-  // foregroundStyle: { color: 'white' },
   logo,
 };

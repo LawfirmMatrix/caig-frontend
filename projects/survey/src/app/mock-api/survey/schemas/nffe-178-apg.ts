@@ -1,29 +1,31 @@
-import {CheckboxField, DateField, RadioField, SelectField} from 'dynamic-form';
-import {Validators, UntypedFormGroup} from '@angular/forms';
-import {nageVa} from './unions/nage-va';
-import {contactStep} from './shared/contact';
-import {months$, years$, nextDay} from './shared/date';
-import {startBeforeDate$, yesOrNo$} from './shared/common';
-import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {SurveySchema} from '../../../survey/survey-data.service';
+import {nffeApg} from './unions/nffe-apg';
+import {contactStep} from './shared/contact';
+import {UntypedFormGroup, Validators} from '@angular/forms';
+import {RadioField, SelectField, CheckboxField, DateField} from 'dynamic-form';
+import {startBeforeDate$, yesOrNo$} from './shared/common';
+import {months$, years$, nextDay} from './shared/date';
+import {followUpTimes, filterDate, maxDate, times$} from './shared/appointment';
 
-
-export const schema2: SurveySchema = {
+export const schema5: SurveySchema = {
   id: 0,
-  ...nageVa,
-  name: 'NAGE VA - FLSA Overtime Survey',
-  fullName: 'NAGE VA - FLSA Overtime Survey',
-  location: 'Martinsburg',
+  ...nffeApg,
+  name: 'NFFE 178 APG',
+  fullName: 'NFFE 178 APG - FLSA Overtime Survey',
+  location: 'Maryland',
   estCompletionTime: '1 - 2 minutes',
-  headerContent: '<p>Your Union filed a Grievance because the VA has not properly compensated employees for overtime work. This likely includes you! We are now gathering information to determine which employees are owed back pay. Overtime work includes work performed at any time outside of your regularly scheduled hours – such as early and late work, work during lunch and work on off days. Work even includes things like checking or responding to work emails or taking work phone calls while off.</p>',
+  headerContent: `
+    <p>Your Union filed a Grievance because APG has not properly compensated employees for overtime work, as far back as 2006 and up to 2022. Many employees worked at times for which they should have been paid overtime but were not. This likely includes you!</p>
+    <p>We have already recovered a substantial amount of back pay compensation for a portion of those covered and we are now gathering information to determine which other employees are owed back pay and how much. <b>Overtime work includes work performed at any time outside your regularly scheduled hours</b> &mdash; such as early and late work, work during lunch and work on off days. Work even includes things like checking or responding to work emails or taking work phone calls while off.</p>
+  `,
   steps: [
     contactStep,
     {
-      title: 'Employment History',
+      title: 'Employment',
       form: new UntypedFormGroup({}),
       questions: [
         {
-          question: 'Did you begin working for the VA before April 2016?',
+          question: 'Did you begin working for APG before February 2006?',
           invalid: (value) => value.startBeforeDate === undefined,
           fields: [
             [
@@ -44,11 +46,7 @@ export const schema2: SurveySchema = {
                       month.clearValidators();
                       year.clearValidators();
                     }
-                    form.reset({
-                      startBeforeDate: value,
-                      scheduleC: !!form.value.scheduleC,
-                      scheduleE: !!form.value.scheduleE,
-                    }, {emitEvent: false});
+                    form.reset({startBeforeDate: value}, {emitEvent: false});
                   }
                 }
               }),
@@ -68,7 +66,7 @@ export const schema2: SurveySchema = {
                 options: months$,
                 optionDisabled: (option, form) => {
                   const num = Number(option.key);
-                  return form.value.startYear === '2016' && num > 0 && num < 4;
+                  return form.value.startYear === '2006' && num > 0 && num < 2;
                 },
                 deselect: true,
               }),
@@ -78,11 +76,11 @@ export const schema2: SurveySchema = {
                 required: true,
                 itemKey: 'key',
                 displayField: 'value',
-                options: years$(2016),
+                options: years$(2006),
                 onChange: (value, form) => {
                   const month = form.controls['startMonth'];
                   const num = Number(month.value);
-                  if (value === '2016' && num > 0 && num < 4) {
+                  if (value === '2006' && num > 0 && num < 2) {
                     month.reset(undefined, {emitEvent: false});
                   }
                 },
@@ -91,28 +89,6 @@ export const schema2: SurveySchema = {
             ]
           ],
         },
-        {
-          question: 'Which full time schedule(s) have you ever worked at the VA? Select all that apply:',
-          invalid: (value) => value.scheduleC === undefined && value.scheduleE === undefined,
-          fields: [
-            [
-              new CheckboxField({
-                key: 'scheduleC',
-                label: 'A flexible schedule that allows you to alter your start and/or stop times and use credit hours to shift work time from one day to another.',
-                position: 'start',
-                value: false,
-              }),
-            ],
-            [
-              new CheckboxField({
-                key: 'scheduleE',
-                label: 'Any other schedule, such as a fixed schedule, shift schedule or compressed schedule.',
-                position: 'start',
-                value: false,
-              }),
-            ],
-          ],
-        }
       ],
       onChange: (value) => {
         return {
@@ -125,15 +101,11 @@ export const schema2: SurveySchema = {
           ],
         };
       },
-      isValid: (value) => {
-        const valid = value.scheduleC || value.scheduleE;
-        return { valid, errorMessage: !value.startBeforeDate && value.startBeforeDate !== false ? 'Please choose when you began working for the VA.' : !valid ? 'Please select a work schedule.' : '' };
-      },
     },
     {
       title: 'Overtime Work',
       form: new UntypedFormGroup({}),
-      heading: 'Since April 2016, have you ever:',
+      heading: 'Since February 2006, have you ever:',
       questions: [
         {
           question: 'Started working early before your scheduled work day and not received overtime pay for that work?',
@@ -246,7 +218,7 @@ export const schema2: SurveySchema = {
       title: 'Follow-Up',
       form: new UntypedFormGroup({}),
       heading: `
-        <div>You may be contacted for more information. Please indicate three dates and times when it would be best to reach you.</div>
+        <div>You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.</div>
         <div><i>(Monday through Thursday, 8:30am - 6:00pm)</i></div>
       `,
       questions: [
@@ -263,7 +235,6 @@ export const schema2: SurveySchema = {
                     form.disable({emitEvent: false});
                     form.controls['followUp'].enable({emitEvent: false});
                     form.controls['followUpAnytime'].enable({emitEvent: false});
-                    form.controls['ppeSurvey'].enable({emitEvent: false});
                   } else {
                     form.enable({emitEvent: false});
                   }
@@ -301,22 +272,7 @@ export const schema2: SurveySchema = {
             ]
           ]
         },
-        {
-          question: 'Would you like information on how to participate in the COVID-19 Hazard Pay Survey?',
-          invalid: (value) => value.ppeSurvey === undefined,
-          fields: [
-            [
-              new RadioField({
-                key: 'ppeSurvey',
-                label: '',
-                options: yesOrNo$,
-                required: true,
-                fxLayout: 'row',
-              })
-            ]
-          ]
-        }
       ],
     },
   ],
-};
+}

@@ -69,7 +69,7 @@ export interface SurveySchema {
   fullName: string;
   location?: string;
   headerTitle?: string;
-  headerContent?: string[];
+  headerContent?: string;
   steps: SurveyStep[];
   estCompletionTime: string;
   logo?: { url: string, width: string, height: string };
@@ -80,7 +80,7 @@ export interface SurveySchema {
 
 export interface SurveyStep {
   title: string;
-  headings?: SurveyStepHeading[];
+  heading?: string;
   questions: SurveyQuestion[];
   isValid?: (formValue: any) => { valid: boolean; errorMessage?: string; };
   onChange?: (formValue: any) => SurveyStepOnChange;
@@ -103,11 +103,4 @@ export interface SurveyStepOnChange {
 
 export interface SurveyStepOnNext {
   skipToStepIndex?: number;
-}
-
-export interface SurveyStepHeading {
-  text: string;
-  bold?: boolean;
-  italic?: boolean;
-  underline?: boolean;
 }

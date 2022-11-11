@@ -23,7 +23,7 @@
       <mat-card-title *ngIf="schema.headerTitle">{{schema.headerTitle}}</mat-card-title>
       <mat-card-content [ngStyle]="{minHeight: schema.logo?.height}">
         <img *ngIf="schema.logo as logo" alt="Union Logo" [src]="logo.url" />
-        <p *ngFor="let p of schema.headerContent">{{p}}</p>
+        <div [innerHTML]="schema.headerContent | safe:'html'"></div>
       </mat-card-content>
     </mat-card>
     <router-outlet (activate)="onActivate($event)"></router-outlet>

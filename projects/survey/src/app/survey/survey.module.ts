@@ -9,6 +9,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HideQuestionsPipe} from './pipes/hide-questions.pipe';
 import {BackdropComponent} from './components/backdrop/backdrop.component';
 import {RouterModule} from '@angular/router';
+import {PipesModule} from 'pipes';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {RouterModule} from '@angular/router';
     DynamicFormModule,
     ReactiveFormsModule,
     RouterModule,
+    PipesModule,
   ],
   declarations: [
     BackdropComponent,

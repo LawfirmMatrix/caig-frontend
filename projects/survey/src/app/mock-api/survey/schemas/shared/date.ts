@@ -22,9 +22,9 @@ export const months$ = of([
   { key: '12', value: 'December' },
 ]);
 
-const years = (count: number) => new Array(count).fill(currentYear);
-
-export const years$ = (count: number) => of([uncertain, ...years(count).map((v, i) => {
-  const year = v - i;
-  return {key: year.toString(), value: year.toString()};
-})]);
+export const years$ = (fromYear: number) => {
+  return of(new Array(currentYear - fromYear).fill(fromYear).map((v, i) => {
+    const year = String(v + i);
+    return { key: year, value: year };
+  }));
+};

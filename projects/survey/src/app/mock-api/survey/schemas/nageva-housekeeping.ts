@@ -22,17 +22,17 @@ export const hazardTrainingOptions = [
 ];
 
 export const schema3: SurveySchema = {
-  id: 3,
+  id: 0,
   ...nageVa,
   name: 'NAGE VA HOUSEKEEPING',
   fullName: 'NAGE – Housekeeping/Laborer Hazard Pay Survey',
   estCompletionTime: '1 - 2 minutes',
   headerTitle: 'THIS IS NOT A SURVEY FOR HAZARD PAY RELATED TO COVID-19 EXPOSURE. THIS SURVEY IS ABOUT HAZARDS FROM MEDICAL WASTE ONLY.',
-  headerContent: [
-    'Employees of the U.S Department of Veterans Affairs (“VA”) whose work causes them to be in contact with, or close to hazardous medical materials (for example, blood, urine, feces, needles, syringes, etc.) may be entitled to receive additional pay. Depending on the severity of the contact and the position of record, a VA employee may be entitled to an additional percentage of pay for every day in which the employee was in contact with or close to hazardous material.',
-    'We have become aware that Housekeeping Aides and other Laborers at numerous VA facilities often come into contact with, or work close to hazardous medical materials without receiving this extra hazard pay. As such, the Union is investigating whether a grievance seeking this extra pay is appropriate.',
-    'Your response to this survey will help us determine whether there is a likely entitlement to extra hazard pay. If you deal with hazardous materials (for example, blood, urine, feces, needles, syringes, other medical waste, etc.) your response is critical.'
-  ],
+  headerContent: `
+    <p>Employees of the U.S Department of Veterans Affairs (“VA”) whose work causes them to be in contact with, or close to hazardous medical materials (for example, blood, urine, feces, needles, syringes, etc.) may be entitled to receive additional pay. Depending on the severity of the contact and the position of record, a VA employee may be entitled to an additional percentage of pay for every day in which the employee was in contact with or close to hazardous material.</p>
+    <p>We have become aware that Housekeeping Aides and other Laborers at numerous VA facilities often come into contact with, or work close to hazardous medical materials without receiving this extra hazard pay. As such, the Union is investigating whether a grievance seeking this extra pay is appropriate.</p>
+    <p>Your response to this survey will help us determine whether there is a likely entitlement to extra hazard pay. If you deal with hazardous materials (for example, blood, urine, feces, needles, syringes, other medical waste, etc.) your response is critical.</p>
+  `,
   steps: [
     contactStep,
     {
@@ -124,7 +124,7 @@ export const schema3: SurveySchema = {
                 required: true,
                 itemKey: 'key',
                 displayField: 'value',
-                options: years$(100),
+                options: years$(1950),
                 onChange: (value, form) => {
                   const month = form.value.startMonth ? Number(form.value.startMonth) - 1 : -1;
                   if (month > -1 && value) {
@@ -165,7 +165,7 @@ export const schema3: SurveySchema = {
                 label: 'Year',
                 itemKey: 'key',
                 displayField: 'value',
-                options: years$(100),
+                options: years$(1950),
                 deselect: true,
                 onChange: (value, form) => {
                   const month = form.value.endMonth ? Number(form.value.endMonth) - 1 : -1;

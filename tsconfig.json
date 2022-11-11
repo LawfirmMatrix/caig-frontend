@@ -31,6 +31,9 @@
       "notifications": [
         "dist/notifications"
       ],
+      "pipes": [
+        "dist/pipes"
+      ],
       "shared-components": [
         "dist/shared-components"
       ],

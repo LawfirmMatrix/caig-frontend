@@ -8,14 +8,12 @@ import {liunaVa} from './unions/liuna-va';
 import {SurveySchema} from '../../../survey/survey-data.service';
 
 export const schema4: SurveySchema = {
-  id: 4,
+  id: 0,
   ...liunaVa,
   name: 'LIUNA 1029 VA - FLSA Overtime Survey',
   fullName: 'LIUNA 1029 VA - FLSA Overtime Survey',
   estCompletionTime: '1 - 2 minutes',
-  headerContent: [
-    'Your Union filed a Grievance because the VA has not properly compensated employees for overtime work, as far back as 2007 and up to the present. This likely includes you! The Arbitrator in this case has already started issuing substantial backpay awards and we are now gathering information to determine which other employees are owed back pay and how much. Overtime work includes work performed at any time outside of your regularly scheduled hours – such as early and late work, work during lunch and work on off days. Work even includes things like checking or responding to work emails or taking work phone calls while off.',
-  ],
+  headerContent: '<p>Your Union filed a Grievance because the VA has not properly compensated employees for overtime work, as far back as 2007 and up to the present. This likely includes you! The Arbitrator in this case has already started issuing substantial backpay awards and we are now gathering information to determine which other employees are owed back pay and how much. Overtime work includes work performed at any time outside of your regularly scheduled hours – such as early and late work, work during lunch and work on off days. Work even includes things like checking or responding to work emails or taking work phone calls while off.</p>',
   steps: [
     contactStep,
     {
@@ -78,7 +76,7 @@ export const schema4: SurveySchema = {
                 required: true,
                 itemKey: 'key',
                 displayField: 'value',
-                options: years$(16),
+                options: years$(2007),
                 onChange: (value, form) => {
                   const month = form.controls['startMonth'];
                   const num = Number(month.value);
@@ -107,11 +105,7 @@ export const schema4: SurveySchema = {
     {
       title: 'Overtime Work',
       form: new UntypedFormGroup({}),
-      headings: [
-        {
-          text: 'Since September 2007, have you ever:'
-        }
-      ],
+      heading: 'Since September 2007, have you ever:',
       questions: [
         {
           question: 'Started working early before your scheduled work day and not received overtime pay for that work?',
@@ -223,15 +217,10 @@ export const schema4: SurveySchema = {
     {
       title: 'Follow-Up',
       form: new UntypedFormGroup({}),
-      headings: [
-        {
-          text: 'You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.',
-        },
-        {
-          text: '(Monday through Thursday, 8:30am - 6:00pm)',
-          italic: true,
-        }
-      ],
+      heading: `
+        <div>You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.</div>
+        <div><i>(Monday through Thursday, 8:30am - 6:00pm)</i></div>
+      `,
       questions: [
         {
           question: ' ',
