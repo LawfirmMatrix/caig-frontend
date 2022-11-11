@@ -53,7 +53,6 @@ const runtimeChecks = {
         Employee: { entityDispatcherOptions, sortComparer: (a, b) => a.id - b.id },
         User: { entityDispatcherOptions, sortComparer: (a, b) => a.username - b.username },
         Survey: { entityDispatcherOptions, sortComparer: (a, b) => a.name - b.name },
-        Respondent: { entityDispatcherOptions, sortComparer: (a, b) => a.name - b.name },
       }
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {

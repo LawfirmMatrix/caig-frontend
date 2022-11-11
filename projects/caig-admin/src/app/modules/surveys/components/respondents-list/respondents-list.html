@@ -1,0 +1,30 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="8px">
+  <mat-toolbar class="mat-elevation-z7" fxLayoutAlign="center center">{{ survey.name }}</mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="space-between center" style="padding: 0 16px">
+    <dynamic-form [fields]="formFields" [model]="formModel"></dynamic-form>
+    <button *ngIf="respondents$ | async as respondents"
+            mat-raised-button
+            color="accent"
+            (click)="exportRespondents$.next(respondents)"
+            [disabled]="!respondents.length">Export Data</button>
+  </div>
+  <div fxLayout="row" *ngIf="viewModes.length">
+    <mat-button-toggle-group
+      fxFlex
+      [value]="viewMode$ | async"
+      (change)="viewModeChange($event.value)"
+      name="viewMode"
+      aria-label="View Mode">
+      <mat-button-toggle *ngFor="let mode of viewModes" [value]="mode | lowercase" fxFlex>{{mode}}</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div fxFlex>
+    <vs-table
+      id="respondents-list-{{viewMode$ | async}}"
+      [data]="data$ | async"
+      [columns]="columns"
+      [rowMenuItems]="rowMenuItems"
+      [disableRowClick]="true">
+    </vs-table>
+  </div>
+</div>

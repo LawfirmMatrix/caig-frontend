@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
 import {Observable, map, tap} from 'rxjs';
-import {SurveyService} from '../survey.service';
+import {SurveyDataService} from '../survey-data.service';
 
 @Injectable({providedIn: 'root'})
 export class ShortcutRedirectGuard implements CanActivate {
-  constructor(private router: Router, private surveyService: SurveyService) { }
+  constructor(private router: Router, private surveyService: SurveyDataService) { }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.surveyService.initialize$
       .pipe(

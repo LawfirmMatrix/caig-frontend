@@ -1,4 +1,4 @@
-import {formatNumber} from '@angular/common';
+import {formatNumber, formatDate} from '@angular/common';
 import {ParticipationStatus} from '../../models/employee.model';
 
 export function isNotUndefined<T>(input: T | undefined): input is T {
@@ -47,4 +47,36 @@ function shuffleArray(array: string[]) {
     array[j] = temp;
   }
   return array;
+}
+
+export function formatDateTime(dateTime?: string): string {
+  return dateTime ? formatDate(dateTime, 'M/d/yy, h:mm:ss a', 'en-us') : '';
+}
+
+export function formatMonth(month?: number): string {
+  if (month === undefined) {
+    return '';
+  }
+  const months: {[key: number]: string} = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
+  return month === 0 ? 'Uncertain' : months[month];
+}
+
+export function formatYear(year?: number): string | number {
+  if (year === undefined) {
+    return '';
+  }
+  return year === 0 ? 'Uncertain' : year;
 }

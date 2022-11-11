@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, map, filter} from 'rxjs';
 import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
-import {SurveyService} from './survey/survey.service';
+import {SurveyDataService} from './survey/survey-data.service';
 
 @Component({
   selector: 'app-root',
@@ -25,5 +25,5 @@ export class AppComponent {
       }),
       filter((loading): loading is boolean => typeof loading === 'boolean'),
     )
-  constructor(private router: Router, public surveyService: SurveyService) { }
+  constructor(private router: Router, public surveyService: SurveyDataService) { }
 }

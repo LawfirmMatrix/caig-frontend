@@ -1,4 +1,10 @@
 import {Component} from '@angular/core';
+import {RespondentDataService} from '../../services/respondent-data.service';
+import {ActivatedRoute} from '@angular/router';
+import {SurveysEntityService} from '../../services/surveys-entity.service';
+import {map} from 'rxjs/operators';
+import {Observable, combineLatest} from 'rxjs';
+import {Survey} from '../../../../models/survey.model';
 
 @Component({
   selector: 'app-respondents-list',
@@ -6,17 +12,14 @@ import {Component} from '@angular/core';
   styleUrls: ['./respondents-list.component.scss']
 })
 export class RespondentsListComponent {
-  // public survey$: Observable<Survey | undefined> = this.route.data
-  //   .pipe(
-  //     map((data) => data['surveys']),
-  //     filter((surveys): surveys is Survey[] => !!surveys),
-  //     map((surveys) => surveys.find((s) => s.id === this.route.snapshot.params['surveyId'])),
-  //   );
-  // public location$: Observable<SurveyLocation | undefined> = this.survey$
-  //   .pipe(
-  //     map((survey) => survey && survey.locations &&
-  //       survey.locations.find((l) => l.id === this.route.snapshot.params['locationId'])
-  //     )
-  //   );
-  constructor() { }
+  public survey$: Observable<Survey | undefined> =
+    combineLatest([this.surveyService.entityMap$, this.route.params])
+      .pipe(
+        map(([entityMap, params]) => entityMap[params['surveyId']])
+      );
+  constructor(
+    private respondentService: RespondentDataService,
+    private route: ActivatedRoute,
+    private surveyService: SurveysEntityService,
+  ) { }
 }

@@ -1,8 +1,12 @@
 <div fxFlexFill fxLayout="column">
-  <mat-toolbar>Surveys</mat-toolbar>
+  <mat-toolbar fxLayoutAlign="space-between center">
+    <div>Surveys</div>
+    <button mat-raised-button color="primary" [disabled]="surveyService.loading$ | async" (click)="surveyService.getAll()">Refresh</button>
+  </mat-toolbar>
   <mat-progress-bar mode="indeterminate" *ngIf="isProcessing"></mat-progress-bar>
   <div fxFlex>
     <vs-table [data]="data$ | async"
+              id="surveys-list"
               [columns]="columns"
               [buttonColumns]="buttonColumns"
               [rowMenuItems]="rowMenuItems"

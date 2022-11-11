@@ -21,7 +21,7 @@ import {
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
-import {moveItemInArray, CdkDrag} from '@angular/cdk/drag-drop';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {
   auditTime,
   BehaviorSubject,
@@ -106,8 +106,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
   public readonly scrollbarWidth = VsTableComponent.SCROLLBAR_WIDTH;
   public readonly onWindowResize$ = new Subject<void>();
-  private readonly cacheKey = this.elementRef.nativeElement.id ?
-    `vs-table-${this.elementRef.nativeElement.id}` : undefined;
 
   public padScrollbar = false;
   public showFooter = false;
@@ -120,6 +118,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public buttonColumnsEnd: ButtonColumn<T>[] | undefined;
   public calcColumnPrefix = '_';
 
+  private cacheKey: string | undefined;
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
   private resizeObserver = new ResizeObserver(() => this.viewport.checkViewportSize());
@@ -473,7 +472,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     return this.columns.filter((c) => !c.hide);
   }
 
+  private acquireCacheKey(): void {
+    this.cacheKey = this.elementRef.nativeElement.id ?
+      `vs-table-${this.elementRef.nativeElement.id}` : undefined;
+  }
+
   private applyCache(field?: keyof TableCache<T>): void {
+    this.acquireCacheKey();
     if (this.cacheKey) {
       const cache = localStorage.getItem(this.cacheKey);
       if (cache) {
@@ -503,6 +508,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private clearCache(fields?: (keyof TableCache<T>)[]): void {
+    this.acquireCacheKey();
     if (this.cacheKey) {
       const cache = localStorage.getItem(this.cacheKey);
       if (cache) {
@@ -518,6 +524,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   private saveCache(fields: (keyof TableCache<T>)[]): void {
+    this.acquireCacheKey();
     if (this.cacheKey) {
       const cache = localStorage.getItem(this.cacheKey);
       const payload: TableCache<T> = cache ? JSON.parse(cache) : {};

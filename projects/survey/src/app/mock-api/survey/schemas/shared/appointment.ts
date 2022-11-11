@@ -1,7 +1,7 @@
 import {DateField, SelectField} from 'dynamic-form';
 import {of} from 'rxjs';
 import {currentDay, nextDay} from './date';
-import {SurveyQuestion} from '../../../../survey/survey.service';
+import {SurveyQuestion} from '../../../../survey/survey-data.service';
 import {Moment} from 'moment';
 
 export const times$ = of([

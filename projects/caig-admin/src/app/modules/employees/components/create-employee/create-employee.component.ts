@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
-import {RespondentEntityService} from '../../../surveys/services/respondent-entity.service';
+import {RespondentDataService} from '../../../surveys/services/respondent-data.service';
 
 @Component({
   selector: 'app-create-employee',
@@ -47,7 +47,7 @@ export class CreateEmployeeComponent {
     private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmployeeEntityService,
-    private respondentService: RespondentEntityService,
+    private respondentService: RespondentDataService,
   ) {
   }
   public submit(payload: any): void {

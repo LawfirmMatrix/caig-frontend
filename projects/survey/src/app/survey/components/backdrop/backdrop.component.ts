@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HandsetComponent} from '../handset-component';
 import {switchMap} from 'rxjs/operators';
 import {map, filter, Observable, combineLatest, BehaviorSubject} from 'rxjs';
-import {Survey, SurveyService, SurveySchema, SurveyLocation} from '../../survey.service';
+import {Survey, SurveyDataService, SurveySchema, SurveyLocation} from '../../survey-data.service';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {ActivatedRoute} from '@angular/router';
 
@@ -25,7 +25,7 @@ export class BackdropComponent extends HandsetComponent implements OnInit {
   }
   constructor(
     protected override breakpointObserver: BreakpointObserver,
-    private dataService: SurveyService,
+    private dataService: SurveyDataService,
     private route: ActivatedRoute,
   ) {
     super(breakpointObserver);

@@ -5,7 +5,7 @@ import {contactStep} from './shared/contact';
 import {months$, years$, nextDay} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
-import {SurveySchema} from '../../../survey/survey.service';
+import {SurveySchema} from '../../../survey/survey-data.service';
 
 
 export const schema2: SurveySchema = {

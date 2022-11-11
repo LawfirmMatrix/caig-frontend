@@ -8,7 +8,7 @@ import {NotificationsService} from 'notifications';
 import {UntypedFormGroup} from '@angular/forms';
 
 @Injectable({providedIn: 'root'})
-export class SurveyService {
+export class SurveyDataService {
   public initialize$: Observable<Survey> = this.initialize().pipe(shareReplay(1));
   constructor(
     private http: HttpClient,

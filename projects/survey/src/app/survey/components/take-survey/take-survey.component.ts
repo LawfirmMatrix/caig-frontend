@@ -17,7 +17,7 @@ import {
   debounceTime, first, forkJoin, tap, skip, distinctUntilChanged, catchError, throwError,
 } from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {SurveySchema, Survey, SurveyService, SurveyQuestion} from '../../survey.service';
+import {SurveySchema, Survey, SurveyDataService, SurveyQuestion} from '../../survey-data.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HandsetComponent} from '../handset-component';
 import {shareReplay, switchMap} from 'rxjs/operators';
@@ -56,7 +56,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     private dialog: MatDialog,
     private notifications: NotificationsService,
     private titleService: Title,
-    private dataService: SurveyService,
+    private dataService: SurveyDataService,
   ) {
     super(breakpointObserver);
   }

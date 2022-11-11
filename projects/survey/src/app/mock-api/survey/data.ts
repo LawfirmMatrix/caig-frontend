@@ -1,4 +1,4 @@
-import {SurveySchema} from '../../survey/survey.service';
+import {SurveySchema} from '../../survey/survey-data.service';
 import {schema2} from './schemas/nageva-martinsburg';
 import {schema3} from './schemas/nageva-housekeeping';
 import {schema4} from './schemas/liunava-overtime';

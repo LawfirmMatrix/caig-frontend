@@ -5,7 +5,7 @@ import {nageVa} from './unions/nage-va';
 import {contactStep} from './shared/contact';
 import {months$, years$} from './shared/date';
 import {yesOrNo$} from './shared/common';
-import {SurveySchema} from '../../../survey/survey.service';
+import {SurveySchema} from '../../../survey/survey-data.service';
 import {UntypedFormGroup} from '@angular/forms';
 
 export const protectiveEquipmentOptions = [

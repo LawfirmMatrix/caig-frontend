@@ -5,7 +5,7 @@ import {months$, years$, nextDay} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {liunaVa} from './unions/liuna-va';
-import {SurveySchema} from '../../../survey/survey.service';
+import {SurveySchema} from '../../../survey/survey-data.service';
 
 export const schema4: SurveySchema = {
   id: 4,

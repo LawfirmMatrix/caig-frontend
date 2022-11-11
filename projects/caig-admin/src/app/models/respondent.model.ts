@@ -7,9 +7,7 @@ export interface Respondent {
   proposedMatches?: Employee[];
   whenSubmitted: string;
   progress: any;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
+  name: string;
   notes?: string;
   employeeId?: number;
   employeeView?: Partial<Employee>;

@@ -1,6 +1,6 @@
 import {CheckboxField, InputField, PhoneNumberField} from 'dynamic-form';
 import {Validators, UntypedFormGroup} from '@angular/forms';
-import {SurveyStep} from '../../../../survey/survey.service';
+import {SurveyStep} from '../../../../survey/survey-data.service';
 
 export const contactStep: SurveyStep = {
   title: 'Contact Information',

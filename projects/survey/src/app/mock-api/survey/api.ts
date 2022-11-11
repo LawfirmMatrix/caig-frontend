@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {cloneDeep, chunk, flatten} from 'lodash-es';
 import { MockApiService } from 'mock-api';
-import {SurveySchema} from '../../survey/survey.service';
+import {SurveySchema} from '../../survey/survey-data.service';
 import {schemas} from './data';
 
 @Injectable({providedIn: 'root'})

@@ -1,0 +1,21 @@
+<div fxLayout="column" fxLayoutGap="10px">
+  <h2>Notes for {{data.name}}</h2>
+  <mat-form-field color="accent" appearance="outline">
+        <textarea matInput
+                  #input="matInput"
+                  [value]="data.notes || ''"
+                  [disabled]="isProcessing"
+                  placeholder="Provide additional information about {{data.name}}">
+        </textarea>
+    <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" color="accent"></mat-progress-bar>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button mat-raised-button
+            color="primary"
+            [disabled]="isProcessing || !input.value.length"
+            (click)="save(input.value)">
+      Save
+    </button>
+  </div>
+</div>

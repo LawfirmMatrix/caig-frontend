@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {SurveyQuestion} from '../survey.service';
+import {SurveyQuestion} from '../survey-data.service';
 
 @Pipe({name: 'hideQuestions'})
 export class HideQuestionsPipe implements PipeTransform {

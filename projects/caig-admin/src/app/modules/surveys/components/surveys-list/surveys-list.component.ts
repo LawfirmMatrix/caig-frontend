@@ -5,8 +5,7 @@ import {SurveyLocation, Survey} from '../../../../models/survey.model';
 import {Observable} from 'rxjs';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NgxCsvService} from 'export-csv';
-import {RespondentEntityService} from '../../services/respondent-entity.service';
-import {uniq} from 'lodash-es';
+import {RespondentDataService} from '../../services/respondent-data.service';
 import {SurveysEntityService} from '../../services/surveys-entity.service';
 
 @Component({
@@ -15,6 +14,7 @@ import {SurveysEntityService} from '../../services/surveys-entity.service';
   styleUrls: ['./surveys-list.component.scss']
 })
 export class SurveysListComponent {
+  private static testUrl = 'testsurvey.caig.co';
   public data$: Observable<SurveyFlat[]> = this.surveyService.entities$.pipe(
     map((surveys) => surveys.reduce((prev, curr) => {
       return curr.locations?.length ?
@@ -41,14 +41,23 @@ export class SurveysListComponent {
       title: '',
       position: 'end',
       label: (row) => 'Test',
-      callback: (row) => window.open(`https://testsurvey.caig.co/survey/${row.surveyId}${row.locationId ? `/${row.locationId}` : ''}`, '_blank'),
-      color: (row) => 'warn',
+      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row),
+      color: (row) => undefined,
     },
     {
       title: '',
       position: 'end',
       label: (row) => 'Live',
-      callback: (row) => {},
+      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row), // @ TODO - replace baseUrl with row.url
+      color: (row) => 'warn',
+      disabled: (row) => true,
+    },
+    {
+      title: '',
+      position: 'end',
+      label: (row) => 'Event',
+      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row, true), // @ TODO - replace baseUrl with row.url
+      color: (row) => 'accent',
       disabled: (row) => true,
     }
   ];
@@ -68,8 +77,8 @@ export class SurveysListComponent {
   ];
   public isProcessing = false;
   constructor(
-    private surveyService: SurveysEntityService,
-    private respondentService: RespondentEntityService,
+    public surveyService: SurveysEntityService,
+    private respondentService: RespondentDataService,
     private router: Router,
     private route: ActivatedRoute,
     private csv: NgxCsvService,
@@ -79,17 +88,25 @@ export class SurveysListComponent {
     this.router.navigate(route, { relativeTo: this.route });
   }
   private exportToCsv(rows: SurveyFlat[]): void {
-    const surveyId = uniq(rows.map((r) => r.surveyId));
+    const params: any = {
+      surveyId: [],
+      locationId: [],
+    };
+    rows.forEach((row) => {
+      if (row.locationId) {
+        params.locationId.push(row.locationId);
+      } else {
+        params.surveyId.push(row.surveyId);
+      }
+    });
     this.isProcessing = true;
-    console.log(surveyId);
-    // this.respondentService.get({surveyId})
-    //   .subscribe(
-    //     (respondents) => {
-    //       this.csv.download(respondents, this.columns, 'Survey Respondents');
-    //       this.isProcessing = false;
-    //     },
-    //     () => this.isProcessing = false,
-    //   );
+    this.respondentService.get(params).subscribe((respondents) => {
+      this.csv.download(respondents, this.columns, 'Survey Respondents');
+      this.isProcessing = false;
+    }, () => this.isProcessing = false);
+  }
+  private static openSurvey(baseUrl: string, survey: SurveyFlat, reload?: boolean): void {
+    window.open(`https://${baseUrl}/survey/${survey.surveyId}${survey.locationId ? `/${survey.locationId}` : ''}${reload ? '?reload=true' : ''}`, '_blank')
   }
 }
 

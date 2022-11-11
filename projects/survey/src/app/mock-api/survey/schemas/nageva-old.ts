@@ -6,7 +6,7 @@ import {months$, years$} from './shared/date';
 import {yesOrNo$} from './shared/common';
 import {followUpTimes} from './shared/appointment';
 import * as moment from 'moment';
-import {SurveySchema} from '../../../survey/survey.service';
+import {SurveySchema} from '../../../survey/survey-data.service';
 
 export const schema1: SurveySchema = {
   id: 1,

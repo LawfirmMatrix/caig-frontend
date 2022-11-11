@@ -1,4 +1,4 @@
-import {SurveySchema} from '../../../../survey/survey.service';
+import {SurveySchema} from '../../../../survey/survey-data.service';
 
 const logo = {
   url: 'assets/union-logos/liunaLogo.png',
