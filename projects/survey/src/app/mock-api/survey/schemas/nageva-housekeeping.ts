@@ -5,8 +5,7 @@ import {nageVa} from './unions/nage-va';
 import {contactStep} from './shared/contact';
 import {months$, years$} from './shared/date';
 import {yesOrNo$} from './shared/common';
-import {SurveySchema} from '../../../survey/survey-data.service';
-import {UntypedFormGroup} from '@angular/forms';
+import {SurveySchemaBase} from '../../../survey/survey-data.service';
 
 export const protectiveEquipmentOptions = [
   { key: 'a', value: 'Yes, it is required.' },
@@ -21,8 +20,7 @@ export const hazardTrainingOptions = [
   { key: 'c', value: 'No' },
 ];
 
-export const schema3: SurveySchema = {
-  id: 0,
+export const schema3: SurveySchemaBase = {
   ...nageVa,
   name: 'NAGE VA HOUSEKEEPING',
   fullName: 'NAGE – Housekeeping/Laborer Hazard Pay Survey',
@@ -37,7 +35,6 @@ export const schema3: SurveySchema = {
     contactStep,
     {
       title: 'Employment',
-      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Name and location (city and state) of the VA facility at which you are employed:',
@@ -184,7 +181,6 @@ export const schema3: SurveySchema = {
     },
     {
       title: 'Hazardous Work',
-      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Have you ever received any extra pay for hazardous work (examples may be called: Hazardous Duty Pay or HDP, Environmental Differential Pay or EDP)?',

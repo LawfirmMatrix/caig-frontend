@@ -21,7 +21,7 @@ import {SurveySchema, Survey, SurveyDataService, SurveyQuestion} from '../../sur
 import {ActivatedRoute, Router} from '@angular/router';
 import {HandsetComponent} from '../handset-component';
 import {shareReplay, switchMap} from 'rxjs/operators';
-import {AbstractControl} from '@angular/forms';
+import {AbstractControl, UntypedFormGroup} from '@angular/forms';
 import {MatStepper} from '@angular/material/stepper';
 import {some, flatten, isEqual, omitBy} from 'lodash-es';
 import {MatDialog} from '@angular/material/dialog';
@@ -45,6 +45,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
   public isCompleted = false;
   public isError = false;
   public reloadTimerValue: number | undefined;
+  public forms: UntypedFormGroup[] = [];
   public readonly reloadTimerMax = 9;
 
   private onDestroy$ = new ReplaySubject<void>(1);
@@ -81,26 +82,27 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
           tap(([schema, progress]) => {
             this.isError = false;
             this.isSubmitting = false;
-            if (schema.steps[0]) {
-              schema.steps[0].form.valueChanges.subscribe((value) => {
+            this.forms = schema.steps.map(() => new UntypedFormGroup({}));
+            if (this.forms[0]) {
+              this.forms[0].valueChanges.subscribe((value) => {
                 const title = value.firstName && value.lastName ? `${concatName(value)} - Survey` : 'Survey';
                 this.titleService.setTitle(title);
               });
             }
-            schema.steps.forEach((step, index) => {
+            this.forms.forEach((form, index) => {
               if (progress) {
                 setTimeout(() => {
-                  const initialValue = {...step.form.value};
-                  step.form.patchValue(progress, {emitEvent: true});
-                  if (!isEqual(step.form.value, initialValue)) {
+                  const initialValue = {...form.value};
+                  form.patchValue(progress, {emitEvent: true});
+                  if (!isEqual(form.value, initialValue)) {
                     setTimeout(() => this.goToIndex(index, false, schema), 100);
                   }
                 });
               }
               const onChange = schema.steps[index].onChange;
-              step.form.valueChanges
+              form.valueChanges
                 .pipe(
-                  map(() => this.getAllFormValues(schema)),
+                  map(() => this.getAllFormValues()),
                   tap((formValues) => {
                     if (onChange) {
                       const response = onChange(formValues);
@@ -109,12 +111,13 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
                           schema.steps[mod.stepIndex].questions[mod.questionIndex].question = mod.modifiedQuestion;
                           schema.steps[mod.stepIndex].questions = [...schema.steps[mod.stepIndex].questions];
                         });
-                        setTimeout(() => step.form.patchValue({...progress, ...omitBy(step.form.value, (v) => v === undefined)}, {emitEvent: false}));
+                        setTimeout(() => form.patchValue({...progress, ...omitBy(form.value, (v) => v === undefined)}, {emitEvent: false}));
                       }
                     }
                   }),
                   skip(progress ? 1 : 0),
                   debounceTime(3000),
+                  filter(() => !this.isCompleted),
                   distinctUntilChanged(isEqual),
                   switchMap((formValues) => this.dataService.saveProgress(formValues, this.route.snapshot.queryParams['sessionId'])),
                   filter((res) => !!res),
@@ -123,7 +126,6 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
             });
           }),
           map(([schema, progress]) => schema),
-          tap((x) => console.log(x)),
           catchError((err) => {
             this.isError = true;
             return throwError(err);
@@ -165,7 +167,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
 
   public next(stepper: MatStepper, schema: SurveySchema): void {
     const currentIndex = stepper.selectedIndex;
-    const form = schema.steps[currentIndex].form;
+    const form = this.forms[currentIndex];
     const step = schema.steps[currentIndex];
     const isValid = step.isValid ? step.isValid(form.value) : { valid: true };
     if (isValid.valid && form.valid) {
@@ -175,7 +177,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
         s.completed = false;
       });
       if (step.onNext) {
-        const onNext = step.onNext(this.getAllFormValues(schema));
+        const onNext = step.onNext(this.getAllFormValues());
         if (onNext.skipToStepIndex !== undefined) {
           this.goToIndex(onNext.skipToStepIndex, true, schema);
           return;
@@ -188,8 +190,8 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     }
   }
 
-  public submit(schema: SurveySchema): void {
-    const payload = this.getAllFormValues(schema);
+  public submit(): void {
+    const payload = this.getAllFormValues();
 
     if (payload.followUp !== false) {
       payload.followUp = true;
@@ -233,7 +235,7 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
       payload,
       this.route.snapshot.params['surveyId'],
       this.route.snapshot.params['locationId'],
-      this.route.snapshot.queryParams['nomail'] === 'true'
+      this.route.snapshot.queryParams['nomail']
     )
       .subscribe((res) => {
         this.router.navigate([], {queryParams: {sessionId: null}, queryParamsHandling: 'merge', replaceUrl: true});
@@ -269,8 +271,8 @@ export class TakeSurveyComponent extends HandsetComponent implements OnInit, OnD
     setTimeout(() => this.stepperRef.selectedIndex = index);
   }
 
-  private getAllFormValues(schema: SurveySchema): any {
-    return schema.steps.reduce((prev, curr) => ({...prev, ...curr.form.value}), {});
+  private getAllFormValues(): any {
+    return this.forms.reduce((prev, curr) => ({...prev, ...curr.value}), {});
   }
 }
 

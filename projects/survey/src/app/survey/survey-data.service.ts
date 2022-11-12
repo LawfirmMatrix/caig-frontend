@@ -26,9 +26,9 @@ export class SurveyDataService {
   public getSchema(id: number | string): Observable<SurveySchema> {
     return this.errorHandler(this.http.get<SurveySchema>(`api-mock/survey/schema/${id}`));
   }
-  public submit(payload: any, surveyId: string, locationId?: string, nomail?: boolean): Observable<any> {
+  public submit(payload: any, surveyId: string, locationId?: string, nomail?: string): Observable<any> {
     const params: any = {
-      nomail: typeof nomail === 'boolean' ? nomail : !environment.production,
+      nomail: nomail === 'true' || (!nomail && !environment.production),
       surveyId,
     };
     if (locationId) {
@@ -63,8 +63,7 @@ export interface SurveyLocation {
   shortcut?: string;
 }
 
-export interface SurveySchema {
-  id: number;
+export interface SurveySchemaBase {
   name: string;
   fullName: string;
   location?: string;
@@ -78,6 +77,10 @@ export interface SurveySchema {
   foregroundStyle?: { [style: string]: any };
 }
 
+export interface SurveySchema extends SurveySchemaBase {
+  id: number;
+}
+
 export interface SurveyStep {
   title: string;
   heading?: string;
@@ -87,7 +90,6 @@ export interface SurveyStep {
   onNext?: (formValue: any) => SurveyStepOnNext;
   completed?: boolean;
   skipped?: boolean;
-  form: UntypedFormGroup;
 }
 
 export interface SurveyQuestion {

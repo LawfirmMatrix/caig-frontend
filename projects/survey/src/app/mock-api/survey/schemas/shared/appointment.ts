@@ -46,14 +46,6 @@ export const times$ = of([
   { key: '18:00', value: '6:00 PM' },
 ]);
 
-export const apptMonths$ = of(Array.from({length: 3}).map((v, i) => {
-  const date = currentDay.clone().add(i, 'month');
-  return {
-    key: date.format('YYYY-MM'),
-    value: date.format('MMMM, YYYY'),
-  };
-}));
-
 export const filterDate = (d?: Moment | null) => {
   const day = (d || currentDay).day();
   return day !== 0 && day !== 5 && day !== 6;

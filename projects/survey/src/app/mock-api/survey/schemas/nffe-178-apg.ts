@@ -1,14 +1,13 @@
-import {SurveySchema} from '../../../survey/survey-data.service';
+import {SurveySchemaBase} from '../../../survey/survey-data.service';
 import {nffeApg} from './unions/nffe-apg';
 import {contactStep} from './shared/contact';
-import {UntypedFormGroup, Validators} from '@angular/forms';
+import {Validators} from '@angular/forms';
 import {RadioField, SelectField, CheckboxField, DateField} from 'dynamic-form';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {months$, years$, nextDay} from './shared/date';
 import {followUpTimes, filterDate, maxDate, times$} from './shared/appointment';
 
-export const schema5: SurveySchema = {
-  id: 0,
+export const schema5: SurveySchemaBase = {
   ...nffeApg,
   name: 'NFFE 178 APG',
   fullName: 'NFFE 178 APG - FLSA Overtime Survey',
@@ -22,7 +21,6 @@ export const schema5: SurveySchema = {
     contactStep,
     {
       title: 'Employment',
-      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Did you begin working for APG before February 2006?',
@@ -104,7 +102,6 @@ export const schema5: SurveySchema = {
     },
     {
       title: 'Overtime Work',
-      form: new UntypedFormGroup({}),
       heading: 'Since February 2006, have you ever:',
       questions: [
         {
@@ -216,7 +213,6 @@ export const schema5: SurveySchema = {
     },
     {
       title: 'Follow-Up',
-      form: new UntypedFormGroup({}),
       heading: `
         <div>You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.</div>
         <div><i>(Monday through Thursday, 8:30am - 6:00pm)</i></div>

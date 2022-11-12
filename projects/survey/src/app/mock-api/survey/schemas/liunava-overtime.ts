@@ -1,14 +1,13 @@
 import {CheckboxField, DateField, RadioField, SelectField} from 'dynamic-form';
-import {Validators, UntypedFormGroup} from '@angular/forms';
+import {Validators} from '@angular/forms';
 import {contactStep} from './shared/contact';
 import {months$, years$, nextDay} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {liunaVa} from './unions/liuna-va';
-import {SurveySchema} from '../../../survey/survey-data.service';
+import {SurveySchemaBase} from '../../../survey/survey-data.service';
 
-export const schema4: SurveySchema = {
-  id: 0,
+export const schema4: SurveySchemaBase = {
   ...liunaVa,
   name: 'LIUNA 1029 VA - FLSA Overtime Survey',
   fullName: 'LIUNA 1029 VA - FLSA Overtime Survey',
@@ -18,7 +17,6 @@ export const schema4: SurveySchema = {
     contactStep,
     {
       title: 'Employment History',
-      form: new UntypedFormGroup({}),
       questions: [
         {
           question: 'Did you begin working for the Wilmington VA before September 2007?',
@@ -104,7 +102,6 @@ export const schema4: SurveySchema = {
     },
     {
       title: 'Overtime Work',
-      form: new UntypedFormGroup({}),
       heading: 'Since September 2007, have you ever:',
       questions: [
         {
@@ -216,7 +213,6 @@ export const schema4: SurveySchema = {
     },
     {
       title: 'Follow-Up',
-      form: new UntypedFormGroup({}),
       heading: `
         <div>You may be contacted for more information. If you are not generally available anytime, please indicate up to three dates and times when it would be best to reach you.</div>
         <div><i>(Monday through Thursday, 8:30am - 6:00pm)</i></div>

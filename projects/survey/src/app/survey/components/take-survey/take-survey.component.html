@@ -10,13 +10,13 @@
       </ng-template>
     </div>
     <ng-template #surveyContent>
-      <mat-card *ngIf="survey.locations && survey.locations.length > 1" [ngClass]="{'full-body': !(isHandset$ | async)}" class="btn-card" fxLayout="row" fxLayoutAlign="start center" routerLink="/">
+      <mat-card *ngIf="!isCompleted && survey.locations && survey.locations.length > 1" [ngClass]="{'full-body': !(isHandset$ | async)}" class="btn-card" fxLayout="row" fxLayoutAlign="start center" routerLink="/">
         <mat-icon fxFlexOffset="16px" aria-label="Go back">arrow_back_ios</mat-icon>
         <h1>Select a different facility location</h1>
       </mat-card>
       <div *ngIf="isCompleted; else showSteps" fxLayoutAlign="center center" fxLayout="column" [ngStyle]="schema?.foregroundStyle || {}">
         <h1>Survey Completed!</h1>
-        <p>Thank you for completing the survey<span *ngIf="schema.steps[0] as step1">, {{step1.form.value['firstName']}} {{step1.form.value['lastName']}}</span>.</p>
+        <p>Thank you for completing the survey<span *ngIf="forms[0] as nameForm">, {{nameForm.value['firstName']}} {{nameForm.value['lastName']}}</span>.</p>
         <div style="position: relative" *ngIf="reloadTimerValue">
           <mat-spinner mode="determinate"
                        [color]="reloadTimerValue > 67 ? 'warn' : reloadTimerValue > 33 ? 'accent' : 'primary'"
@@ -35,21 +35,21 @@
                      [selectedIndex]="0"
                      (animationDone)="scrollToTitle(stepper.selectedIndex)">
           <mat-step *ngFor="let step of schema.steps; let i = index; first as first"
-                    [stepControl]="step.form"
+                    [stepControl]="forms[i]"
                     [completed]="step.completed">
             <ng-template matStepLabel>
               <span #title>{{step.title}}</span>
             </ng-template>
-            <form [formGroup]="step.form" fxLayout="column" fxLayoutGap="30px">
-              <h3 [innerHTML]="step.heading | safe:'html'"></h3>
+            <form [formGroup]="forms[i]" fxLayout="column" fxLayoutGap="30px">
+              <h3 *ngIf="step.heading" [innerHTML]="step.heading | safe:'html'"></h3>
               <div *ngIf="step.questions | hideQuestions as questions; else noQuestions">
                 <div *ngFor="let question of questions" style="margin-top: 30px">
-                  <h2 [ngClass]="{'error-text': isTouched(question, step.form.controls) && question.invalid && question.invalid(step.form.value)}">
+                  <h2 [ngClass]="{'error-text': isTouched(question, forms[i].controls) && question.invalid && question.invalid(forms[i].value)}">
                     {{question.question}}<span *ngIf="question.invalid">&nbsp;*</span>
                   </h2>
-                  <dynamic-form *ngIf="isHandset$ | async; else notHandset" [form]="step.form" [fields]="question.handsetFields || []"></dynamic-form>
+                  <dynamic-form *ngIf="isHandset$ | async; else notHandset" [form]="forms[i]" [fields]="question.handsetFields || []"></dynamic-form>
                   <ng-template #notHandset>
-                    <dynamic-form [form]="step.form" [fields]="question.fields"></dynamic-form>
+                    <dynamic-form [form]="forms[i]" [fields]="question.fields"></dynamic-form>
                   </ng-template>
                 </div>
               </div>
@@ -71,7 +71,7 @@
                 <button mat-stroked-button color="accent" (click)="back(stepper, schema)">Back</button>
                 <button mat-stroked-button color="warn" (click)="reset(stepper)">Reset</button>
               </div>
-              <button mat-raised-button color="primary" (click)="submit(schema)">Submit</button>
+              <button mat-raised-button color="primary" (click)="submit()">Submit</button>
             </div>
           </mat-step>
           <ng-template matStepperIcon="review">
