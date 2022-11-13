@@ -6,6 +6,7 @@ import {ConfirmDialogComponent} from 'shared-components';
 import {RowMenuItem, TableColumn, TableMenuItem, TextColumn} from 'vs-table';
 import {concatName} from '../../util/functions';
 import {EmployeeEntityService} from '../../../modules/employees/services/employee-entity.service';
+import {differenceBy} from 'lodash-es';
 
 @Component({
   selector: 'app-view-attached-files',
@@ -74,6 +75,9 @@ export class ViewAttachedFilesComponent {
         if (!this.data.whenSubmitted) {
           this.employeesDataService.getByKey(this.data.id);
         }
+        try {
+          this.data.attachedFiles = differenceBy(this.data.attachedFiles, files, 'id');
+        } catch { }
       });
   }
 

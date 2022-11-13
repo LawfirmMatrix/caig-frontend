@@ -18,7 +18,7 @@ export enum TableColumnDataType {
 
 export interface RowMenuItem<T> {
   name: (row: T) => string;
-  callback: (row: T) => void;
+  callback: (row: T, index: number) => void;
   hide?: (row: T) => boolean;
   disabled?: (row: T) => boolean;
 }
@@ -88,3 +88,15 @@ export interface ButtonColumn<T> {
   color?: (row: T) => ThemePalette;
   disabled?: (row: T) => boolean;
 }
+
+export interface ExpandRowConfig<T> {
+  title: string;
+  callback: (newRow: any, row: T) => void;
+  newRows: (row: T) => any[];
+  newRowKey: string;
+  newRowBadge?: NewRowBadge;
+  expandBadge?: (row: T) => string | number | undefined;
+  hide?: (row: T) => boolean;
+}
+
+export type NewRowBadge = (newRow: any) => string | number | undefined;

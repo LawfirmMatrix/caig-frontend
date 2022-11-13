@@ -1,7 +1,14 @@
 import {Component} from '@angular/core';
-import {map} from 'rxjs/operators';
-import {TableColumn, TextColumn, NumberColumn, ButtonColumn, RowMenuItem, TableMenuItem} from 'vs-table';
-import {SurveyLocation, Survey} from '../../../../models/survey.model';
+import {
+  TableColumn,
+  TextColumn,
+  NumberColumn,
+  ButtonColumn,
+  RowMenuItem,
+  TableMenuItem,
+  ExpandRowConfig, IconColumn
+} from 'vs-table';
+import {Survey} from '../../../../models/survey.model';
 import {Observable} from 'rxjs';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NgxCsvService} from 'export-csv';
@@ -15,28 +22,27 @@ import {SurveysEntityService} from '../../services/surveys-entity.service';
 })
 export class SurveysListComponent {
   private static testUrl = 'testsurvey.caig.co';
-  public data$: Observable<SurveyFlat[]> = this.surveyService.entities$.pipe(
-    map((surveys) => surveys.reduce((prev, curr) => {
-      return curr.locations?.length ?
-        [...prev, ...curr.locations.map((l) => new SurveyFlat(curr, l))] :
-        [...prev, new SurveyFlat(curr)];
-    }, [] as SurveyFlat[]))
-  );
-  public columns: TableColumn<SurveyFlat>[] = [
+  public data$: Observable<Survey[]> = this.surveyService.entities$;
+  public columns: TableColumn<Survey>[] = [
     new TextColumn({
       title: 'Name',
       field: 'name',
     }),
-    new TextColumn({
-      title: 'Location',
-      field: 'locationName',
-    }),
     new NumberColumn({
       title: 'Respondents',
       field: 'respondentCount',
-    })
+    }),
   ];
-  public buttonColumns: ButtonColumn<SurveyFlat>[] = [
+  public expandRowConfig: ExpandRowConfig<Survey> = {
+    title: 'Locations',
+    hide: (row) => !row.locations?.length,
+    newRows: (row) => row.locations,
+    newRowKey: 'name',
+    newRowBadge: (row) => row.respondentCount,
+    callback: (newRow, row) => this.router.navigate([row.id, newRow.id], {relativeTo: this.route}),
+    expandBadge: (row) => row.locations?.length,
+  };
+  public buttonColumns: ButtonColumn<Survey>[] = [
     {
       title: '',
       position: 'end',
@@ -61,14 +67,14 @@ export class SurveysListComponent {
       disabled: (row) => true,
     }
   ];
-  public rowMenuItems: RowMenuItem<SurveyFlat>[] = [
+  public rowMenuItems: RowMenuItem<Survey>[] = [
     {
       name: () => 'Export respondents',
       callback: (row) => this.exportToCsv([row]),
       disabled: (row) => !row.respondentCount,
     }
   ];
-  public tableMenuItems: TableMenuItem<SurveyFlat>[] = [
+  public tableMenuItems: TableMenuItem<Survey>[] = [
     {
       name: () => 'Bulk export respondents',
       callback: (rows) => this.exportToCsv(rows),
@@ -83,24 +89,13 @@ export class SurveysListComponent {
     private route: ActivatedRoute,
     private csv: NgxCsvService,
   ) { }
-  public viewRespondents(survey: SurveyFlat): void {
-    const route = survey.locationId ? [ survey.surveyId, survey.locationId ] : [ survey.surveyId ];
-    this.router.navigate(route, { relativeTo: this.route });
+  public viewRespondents(survey: Survey): void {
+    this.router.navigate([survey.id], { relativeTo: this.route });
   }
-  private exportToCsv(rows: SurveyFlat[]): void {
-    const params: any = {
-      surveyId: [],
-      locationId: [],
-    };
-    rows.forEach((row) => {
-      if (row.locationId) {
-        params.locationId.push(row.locationId);
-      } else {
-        params.surveyId.push(row.surveyId);
-      }
-    });
+  private exportToCsv(rows: Survey[]): void {
+    const surveyId = rows.map((r) => r.id);
     this.isProcessing = true;
-    this.respondentService.get(params).subscribe((respondents) => {
+    this.respondentService.get({surveyId}).subscribe((respondents) => {
       this.csv.download(
         respondents,
         [
@@ -226,22 +221,7 @@ export class SurveysListComponent {
       this.isProcessing = false;
     }, () => this.isProcessing = false);
   }
-  private static openSurvey(baseUrl: string, survey: SurveyFlat, reload?: boolean): void {
-    window.open(`https://${baseUrl}/survey/${survey.surveyId}${survey.locationId ? `/${survey.locationId}` : ''}${reload ? '?reload=true' : ''}`, '_blank')
-  }
-}
-
-export class SurveyFlat {
-  public surveyId: string;
-  public locationId: string | undefined;
-  public name: string;
-  public locationName: string | undefined;
-  public respondentCount: number;
-  constructor(survey: Survey, location?: SurveyLocation) {
-    this.surveyId = survey.id;
-    this.name = survey.name;
-    this.locationName = location?.name;
-    this.locationId = location?.id;
-    this.respondentCount = location ? location.respondentCount : survey.respondentCount;
+  private static openSurvey(baseUrl: string, survey: Survey, reload?: boolean): void {
+    window.open(`https://${baseUrl}/survey/${survey.id}${reload ? '?reload=true' : ''}`, '_blank')
   }
 }

@@ -28,6 +28,6 @@ export class AppComponent implements OnInit {
     )
   constructor(private router: Router, public surveyService: SurveyDataService) { }
   ngOnInit() {
-    console.log(environment.production);
+    console.log('environment.production:', environment.production);
   }
 }

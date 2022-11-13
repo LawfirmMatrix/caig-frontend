@@ -52,6 +52,12 @@
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
       </th>
+      <th *ngIf="expandRowConfig"
+          [style.width.px]="columnWidth"
+          fxLayoutAlign="center center"
+          class="mat-app-background">
+        {{expandRowConfig.title}}
+      </th>
       <th *ngFor="let column of buttonColumnsStart"
           [style.width.px]="columnWidth"
           fxLayoutAlign="center center"
@@ -198,89 +204,114 @@
           <mat-icon>filter_alt_off</mat-icon>
         </button>
       </h1>
-      <tr *cdkVirtualFor="let row of filteredData; let i = index; let last = last;"
-          [style.minWidth.px]="minRowWidth"
-          [style.minHeight.px]="rowHeight"
-          [style.color]="textPainter ? textPainter(row) : undefined"
-          [style.backgroundColor]="rowPainter ? rowPainter(row) : undefined"
-          [matTooltip]="rowTooltip ? rowTooltip(row) : ''"
-          (click)="onRowClick(row, i)"
-          fxLayout="row"
-          class="border-sides table-row"
-          [ngClass]="{'pointer': !disableRowClick, 'even-row': i % 2 === 0, 'border-bottom': !last}">
-        <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
-          <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
-        </td>
-        <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
-          <button mat-raised-button
-                  [color]="column.color && column.color(row)"
-                  (click)="buttonColumnClick($event, column, row)"
-                  [disabled]="column.disabled && column.disabled(row)">
-            {{ column.label(row) }}
-          </button>
-        </td>
-        <td *ngIf="!visibleColumns.length" fxFlex></td>
-        <td *ngFor="let column of visibleColumns"
-            [fxFlex]="column.fxFlex"
-            [fxLayoutAlign]="column.fxLayoutAlign"
-            [ngSwitch]="column.dataType"
-            style="border-radius: 15px;">
-          <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
-            <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
-                 [matBadgeColor]="column.badge ? column.badge.color : undefined"
-                 [matTooltip]="column.tooltip ? column.tooltip(row) : ''">
-              <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
-              <div *ngSwitchCase="columnDataTypes.currency">{{row[column.field] | currency:'USD':'$' | accounting}}</div>
-              <div *ngSwitchCase="columnDataTypes.number">{{row[column.field] | number:column.format}}</div>
-              <div *ngSwitchCase="columnDataTypes.calc">{{row[calcColumnPrefix + column.field]}}</div>
-              <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
-              <div *ngSwitchCase="columnDataTypes.changes">
-                <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
-                  <b>{{item.field}}:</b>
-                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
-                    <div>{{item.oldValue}}</div>
-                    <mat-icon aria-label="Change">arrow_right</mat-icon>
-                    <div>{{item.newValue}}</div>
+
+      <div *cdkVirtualFor="let row of filteredData; let i = index; let last = last;"
+           fxLayout="column"
+           [@detailExpand]="row == expandRow ? 'expanded' : 'collapsed'"
+           class="border-sides border-bottom"
+           [ngClass]="{'even-row': i % 2 === 0}"
+           [style.height.px]="rowHeight"
+           [style.backgroundColor]="rowPainter ? rowPainter(row) : undefined"
+           [style.color]="textPainter ? textPainter(row) : undefined">
+        <tr fxLayout="row"
+            (click)="onRowClick(row, i)"
+            [ngClass]="{'pointer': !disableRowClick}"
+            [matTooltip]="rowTooltip ? rowTooltip(row) : ''"
+            [style.minHeight.px]="rowHeight">
+          <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+            <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
+          </td>
+          <td *ngIf="expandRowConfig as config" [style.width.px]="columnWidth" (click)="$event.stopPropagation()">
+            <div *ngIf="!config.hide || !config.hide(row)"
+                 style="cursor: pointer"
+                 (click)="toggleExpandRows(row, config)"
+                 fxFlexFill
+                 fxLayoutAlign="center center">
+              <mat-icon class="stretch-badge" [matBadge]="config.expandBadge && config.expandBadge(row)">expand_{{expandRow ? 'less' : 'more'}}</mat-icon>
+            </div>
+          </td>
+          <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+            <button mat-raised-button
+                    [color]="column.color && column.color(row)"
+                    (click)="buttonColumnClick($event, column, row)"
+                    [disabled]="column.disabled && column.disabled(row)">
+              {{ column.label(row) }}
+            </button>
+          </td>
+          <td *ngIf="!visibleColumns.length" fxFlex></td>
+          <td *ngFor="let column of visibleColumns"
+              [fxFlex]="column.fxFlex"
+              [fxLayoutAlign]="column.fxLayoutAlign"
+              [ngSwitch]="column.dataType"
+              style="border-radius: 15px;">
+            <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
+              <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
+                   class="stretch-badge"
+                   [matBadgeColor]="column.badge ? column.badge.color : undefined"
+                   [matTooltip]="column.tooltip ? column.tooltip(row) : ''">
+                <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
+                <div *ngSwitchCase="columnDataTypes.currency">{{row[column.field] | currency:'USD':'$' | accounting}}</div>
+                <div *ngSwitchCase="columnDataTypes.number">{{row[column.field] | number:column.format}}</div>
+                <div *ngSwitchCase="columnDataTypes.calc">{{row[calcColumnPrefix + column.field]}}</div>
+                <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
+                <div *ngSwitchCase="columnDataTypes.changes">
+                  <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
+                    <b>{{item.field}}:</b>
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+                      <div>{{item.oldValue}}</div>
+                      <mat-icon aria-label="Change">arrow_right</mat-icon>
+                      <div>{{item.newValue}}</div>
+                    </div>
+                    <mat-divider *ngIf="!last"></mat-divider>
                   </div>
-                  <mat-divider *ngIf="!last"></mat-divider>
                 </div>
+                <div *ngSwitchDefault>{{row[column.field]}}</div>
               </div>
-              <div *ngSwitchDefault>{{row[column.field]}}</div>
             </div>
-          </div>
-        </td>
-        <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
-          <button mat-raised-button
-                  [color]="column.color && column.color(row)"
-                  (click)="buttonColumnClick($event, column, row)"
-                  [disabled]="column.disabled && column.disabled(row)">
-            {{ column.label(row) }}
-          </button>
-        </td>
-        <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
-          <button *ngIf="rowMenuItems"
-                  mat-icon-button
-                  aria-label="Row menu"
-                  [matMenuTriggerFor]="rowMenu"
-                  (click)="$event.stopPropagation()">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #rowMenu="matMenu">
-            <div *ngFor="let item of rowMenuItems">
-              <button mat-menu-item
-                      *ngIf="item.callback && (!item.hide || !item.hide(row))"
-                      [disabled]="item.disabled && item.disabled(row)"
-                      (click)="item.callback(row)">
-                <span>{{item.name(row)}}</span>
+          </td>
+          <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+            <button mat-raised-button
+                    [color]="column.color && column.color(row)"
+                    (click)="buttonColumnClick($event, column, row)"
+                    [disabled]="column.disabled && column.disabled(row)">
+              {{ column.label(row) }}
+            </button>
+          </td>
+          <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+            <button *ngIf="rowMenuItems"
+                    mat-icon-button
+                    aria-label="Row menu"
+                    [matMenuTriggerFor]="rowMenu"
+                    (click)="$event.stopPropagation()">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #rowMenu="matMenu">
+              <div *ngFor="let item of rowMenuItems">
+                <button mat-menu-item
+                        *ngIf="item.callback && (!item.hide || !item.hide(row))"
+                        [disabled]="item.disabled && item.disabled(row)"
+                        (click)="item.callback(row, i)">
+                  <span>{{item.name(row)}}</span>
+                </button>
+              </div>
+            </mat-menu>
+          </td>
+        </tr>
+        <tr *ngIf="expandRowConfig && expandRow === row" fxLayout="row" class="row-expanded">
+          <mat-grid-list cols="4" [rowHeight]="rowHeight">
+            <mat-grid-tile *ngFor="let tile of expandedRows">
+              <button mat-stroked-button (click)="expandRowConfig.callback(tile, row)">
+                {{tile[expandRowConfig.newRowKey]}} <span *ngIf="tile[calcColumnPrefix + expandRowConfig.newRowKey] as v">({{v}})</span>
               </button>
-            </div>
-          </mat-menu>
-        </td>
-      </tr>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </tr>
+      </div>
     </cdk-virtual-scroll-viewport>
   </table>
   <tr #footer *ngIf="data && showFooter" [style.minHeight.px]="headerHeight" [style.minWidth.px]="minRowWidth + (padScrollbar ? scrollbarWidth : 0)" [style.paddingRight.px]="padScrollbar ? scrollbarWidth : 0" class="footer mat-app-background mat-elevation-z4 border-top">
     <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" fxLayoutAlign="center center"></td>
+    <td *ngIf="expandRowConfig" [style.width.px]="columnWidth" fxLayoutAlign="center center"></td>
     <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center"></td>
     <td *ngIf="!visibleColumns.length" fxFlex></td>
     <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign">

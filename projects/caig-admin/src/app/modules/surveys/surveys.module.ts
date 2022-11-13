@@ -13,6 +13,8 @@ import {EditNotesComponent} from './components/edit-notes/edit-notes.component';
 import {ColumnConfigService} from './components/respondents-list/column-config.service';
 import {HazardPayComponent} from './components/respondents-list/surveys/hazard-pay.component';
 import {DynamicFormModule} from 'dynamic-form';
+import {LiunaVaComponent} from './components/respondents-list/surveys/liuna-va.component';
+import {NageVaTriageComponent} from './components/respondents-list/surveys/nage-va-triage.component';
 
 @NgModule({
   imports: [
@@ -30,6 +32,8 @@ import {DynamicFormModule} from 'dynamic-form';
     RespondentsListDirective,
     EditNotesComponent,
     HazardPayComponent,
+    LiunaVaComponent,
+    NageVaTriageComponent,
   ],
   providers: [
     AllSurveysResolver,

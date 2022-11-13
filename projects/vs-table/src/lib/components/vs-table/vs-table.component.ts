@@ -16,10 +16,10 @@ import {
   SelectionChange, TableCache,
   TableColumn,
   TableColumnDataType,
-  TableMenuItem, ButtonColumn
+  TableMenuItem, ButtonColumn, ExpandRowConfig, NewRowBadge
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
-import {intersection, omit, orderBy, round, some} from 'lodash-es';
+import {intersection, omit, orderBy, round, some, cloneDeep} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {
@@ -42,11 +42,19 @@ import {measureScrollbarWidth} from '../../utils/consts';
 import {NgxCsvService} from 'export-csv';
 import {ExportDataComponent} from '../export-data/export-data.component';
 import {MatDialog} from '@angular/material/dialog';
+import {trigger, state, transition, animate, style} from '@angular/animations';
 
 @Component({
   selector: 'vs-table',
   templateUrl: './vs-table.component.html',
   styleUrls: ['./vs-table.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '48px', minHeight: '48px'})),
+      state('expanded', style({height: '264px'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() public data: T[] | null = null;
@@ -66,6 +74,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   @Input() public preselect: ((row: T) => boolean) | undefined;
   @Input() public filter = '';
   @Input() public buttonColumns: ButtonColumn<T>[] | undefined;
+  @Input() public expandRowConfig: ExpandRowConfig<T> | undefined;
 
   @Output() public rowClick = new EventEmitter<RowClick<T>>(true);
   @Output() public selectionChange = new EventEmitter<SelectionChange<T>>(true);
@@ -117,6 +126,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public buttonColumnsStart: ButtonColumn<T>[] | undefined;
   public buttonColumnsEnd: ButtonColumn<T>[] | undefined;
   public calcColumnPrefix = '_';
+  public expandRow: T | null = null;
+  public expandedRows: any[] = [];
 
   private cacheKey: string | undefined;
   private scrollToOffset: number | undefined;
@@ -332,6 +343,14 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     }
   }
 
+  public toggleExpandRows(row: T, config: ExpandRowConfig<T>): void {
+    this.expandRow = this.expandRow === row ? null : row;
+    this.expandedRows = this.expandRow ? cloneDeep(config.newRows(row)) : [];
+    if (this.expandRow && config.newRowBadge) {
+      this.expandedRows.forEach((r: any) => r[this.calcColumnPrefix + config.newRowKey] = (config.newRowBadge as NewRowBadge)(r));
+    }
+  }
+
   private initializeColumnFilters(): void {
     const columnFilters: { [key: string]: ColumnFilter } = this.columnFilter$.value;
     this.columns
@@ -344,6 +363,21 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     const columnFilters: any = this.columnFilter$.value;
     columnFilters[column.field].noValue = checked;
     this.columnFilter$.next(columnFilters);
+  }
+
+  public recalculateRow(index: number): void {
+    this.filteredData.splice(index, 1, this.calculateRow(this.filteredData[index], this.getCalcColumns()));
+    this.filteredData = [...this.filteredData];
+  }
+
+  private calculateRow(row: T, calcColumns: CalculateColumn<T>[]): T {
+    const calculatedValues: any = { };
+    calcColumns.forEach((col) => calculatedValues[this.calcColumnPrefix + col.field] = col.calculate(row));
+    return { ...row, ...calculatedValues };
+  }
+
+  private getCalcColumns(): CalculateColumn<T>[] {
+    return this.columns.filter((c) => !!c.calculate) as CalculateColumn<T>[];
   }
 
   private removeOldColumnFilters(): void {
@@ -570,12 +604,8 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   private initializeData(): void {
     if (this.data && this.columns) {
-      const calcColumns = this.columns.filter((c) => !!c.calculate) as CalculateColumn<T>[];
-      this._data = this.data.map((row) => {
-        const calculatedValues: any = { };
-        calcColumns.forEach((col) => calculatedValues[this.calcColumnPrefix + col.field] = col.calculate(row));
-        return { ...row, ...calculatedValues };
-      });
+      const calcColumns = this.getCalcColumns();
+      this._data = this.data.map((row) => this.calculateRow(row, calcColumns));
     }
   }
 }

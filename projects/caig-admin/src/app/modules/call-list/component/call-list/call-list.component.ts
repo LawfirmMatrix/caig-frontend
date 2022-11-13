@@ -94,8 +94,8 @@ export class CallListComponent implements OnInit, OnDestroy {
       field: 'username',
     }),
   ];
-  public rowPainter = (row: Employee) => participationRowPainter(row.participationStatus);
-  public tableMenuItems$: Observable<TableMenuItem<Employee>[] | null> = this.store.select(isAdmin)
+  public rowPainter = (row: CallListEmployee) => participationRowPainter(row.participationStatus);
+  public tableMenuItems$: Observable<TableMenuItem<CallListEmployee>[] | null> = this.store.select(isAdmin)
     .pipe(
       map((isAdmin) => isAdmin ? [
         {
@@ -104,7 +104,7 @@ export class CallListComponent implements OnInit, OnDestroy {
         },
       ] : null)
     )
-  public rowMenuItems$: Observable<RowMenuItem<Employee>[] | null> = this.store.select(isAdmin)
+  public rowMenuItems$: Observable<RowMenuItem<CallListEmployee>[] | null> = this.store.select(isAdmin)
     .pipe(map((isAdmin) => isAdmin ? [
       {
         name: () => 'Assign',
@@ -241,7 +241,7 @@ export class CallListComponent implements OnInit, OnDestroy {
   public viewEmployee(employee: CallListEmployee): void {
     this.router.navigate([employee.id, 'view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
   }
-  public assignUser(employees: Employee[]): void {
+  public assignUser(employees: CallListEmployee[]): void {
     this.dialog.open(AssignUserComponent, {data: employees});
   }
   public applyFilters(): void {
@@ -255,7 +255,7 @@ export class CallListComponent implements OnInit, OnDestroy {
   private fetchData(): Observable<Employee[]> {
     return this.dataService.getWithQuery({includeEvents: 'true'}).pipe(tap(() => this.dataService.setLoaded(true)));
   }
-  private filterData(entities: Employee[] | null, statuses: ParticipationStatus[], removed: RemovedFilter): CallListEmployee[] | null {
+  private filterData(entities: CallListEmployee[] | null, statuses: ParticipationStatus[], removed: RemovedFilter): CallListEmployee[] | null {
     if (!entities) {
       return entities;
     }

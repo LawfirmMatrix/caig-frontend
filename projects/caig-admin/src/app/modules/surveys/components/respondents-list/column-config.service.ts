@@ -48,6 +48,6 @@ export class ColumnConfigService {
   }
 }
 
-export function notesIcon(row: RespondentFlat): string {
+function notesIcon(row: RespondentFlat): string {
   return !row.notes ? '' : 'sticky_note_2';
 }

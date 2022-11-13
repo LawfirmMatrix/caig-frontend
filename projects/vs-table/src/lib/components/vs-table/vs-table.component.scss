@@ -170,3 +170,16 @@ h1 {
   margin: 16px;
   overflow: visible;
 }
+
+mat-grid-list {
+  width: 100%;
+
+  mat-grid-tile {
+    overflow: visible;
+  }
+}
+
+.row-expanded {
+  height: 100%;
+  padding: 10px;
+}

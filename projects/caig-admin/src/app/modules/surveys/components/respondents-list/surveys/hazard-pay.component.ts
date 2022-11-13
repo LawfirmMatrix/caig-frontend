@@ -1,11 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {RespondentsList, RespondentFlat, rowIcon, rowColor} from '../respondents-list';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {NgxCsvService} from 'export-csv';
 import {RespondentDataService} from '../../../services/respondent-data.service';
-import {TableColumn, TextColumn, IconColumn} from 'vs-table';
+import {TableColumn, TextColumn, IconColumn, VsTableComponent} from 'vs-table';
 import {Respondent} from '../../../../../models/respondent.model';
 import {
   protectiveEquipmentOptions, hazardTrainingOptions
@@ -19,6 +19,7 @@ import {ColumnConfigService} from '../column-config.service';
   styleUrls: ['../respondents-list.scss'],
 })
 export class HazardPayComponent extends RespondentsList {
+  @ViewChild(VsTableComponent) public override table!: VsTableComponent<RespondentFlat>;
   constructor(
     protected override router: Router,
     protected override route: ActivatedRoute,

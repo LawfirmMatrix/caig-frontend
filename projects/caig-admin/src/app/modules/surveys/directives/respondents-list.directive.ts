@@ -11,11 +11,13 @@ import {
 import {RespondentsList} from '../components/respondents-list/respondents-list';
 import {Survey} from '../../../models/survey.model';
 import {HazardPayComponent} from '../components/respondents-list/surveys/hazard-pay.component';
+import {NageVaTriageComponent} from '../components/respondents-list/surveys/nage-va-triage.component';
+import {LiunaVaComponent} from '../components/respondents-list/surveys/liuna-va.component';
 
 const componentMapper: ComponentMap = {
-  // 2: NageVaTriageComponent,
+  2: NageVaTriageComponent,
   3: HazardPayComponent,
-  // 4: LiunaVaComponent,
+  4: LiunaVaComponent,
 };
 
 @Directive({selector: '[respondentsList]'})

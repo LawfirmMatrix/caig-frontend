@@ -3,7 +3,7 @@ import {TableColumn, RowMenuItem, TableMenuItem, TextColumn} from 'vs-table';
 import {HttpClient} from '@angular/common/http';
 import {filter, switchMap} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {difference} from 'lodash-es';
+import {differenceBy} from 'lodash-es';
 import {Employee} from '../../../../../models/employee.model';
 import {
   AttachedFile,
@@ -85,7 +85,7 @@ export class DocumentsComponent implements OnChanges {
       .pipe(filter((res) => !!res), switchMap(() => request$))
       .subscribe(() => {
         if (this.files) {
-          this.files = difference(this.files, files);
+          this.files = differenceBy(this.files, files, 'id');
           this.employeeService.updateOneInCache({...this.employee, attachedFiles: this.files});
         }
       });

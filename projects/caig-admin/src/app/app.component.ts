@@ -22,7 +22,7 @@ export class AppComponent {
     private theme: ThemeService,
   ) { }
   public ngOnInit() {
-    console.log(environment.production);
+    console.log('environment.production:', environment.production);
     this.applyCachedToken();
     this.listenToLoadingEvents();
   }

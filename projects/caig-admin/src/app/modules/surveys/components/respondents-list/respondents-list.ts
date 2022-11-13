@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable, combineLatest, of, filter, Subject, debounceTime} from 'rxjs';
+import {BehaviorSubject, Observable, combineLatest, of, filter, Subject, debounceTime, noop} from 'rxjs';
 import {map, switchMap, shareReplay} from 'rxjs/operators';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NotificationsService} from 'notifications';
@@ -9,7 +9,7 @@ import {Respondent} from '../../../../models/respondent.model';
 import {RespondentDataService} from '../../services/respondent-data.service';
 import {formatDateTime} from '../../../../core/util/functions';
 import {FieldBase, RadioField} from 'dynamic-form';
-import {TableColumn, RowMenuItem} from 'vs-table';
+import {TableColumn, RowMenuItem, VsTableComponent} from 'vs-table';
 import {AttachFilesComponent} from '../../../../core/components/attach-files/attach-files.component';
 import {
   ViewAttachedFilesComponent
@@ -17,7 +17,7 @@ import {
 import {EditNotesComponent} from '../edit-notes/edit-notes.component';
 import {forIn, flatten} from 'lodash-es';
 import {ConfirmDialogData, ConfirmDialogComponent} from 'shared-components';
-import {ColumnConfigService, notesIcon} from './column-config.service';
+import {ColumnConfigService} from './column-config.service';
 
 export abstract class RespondentsList {
   private static readonly DEFAULT_STATUS = 'all';
@@ -25,6 +25,8 @@ export abstract class RespondentsList {
   private static readonly STATUS_PARAM = 'status';
   private static readonly VIEW_MODE_PARAM = 'viewMode';
   private static readonly SURVEY_ID_PARAM = 'surveyId';
+
+  public abstract table: VsTableComponent<RespondentFlat>;
 
   protected refreshRespondents$ = new BehaviorSubject<void>(void 0);
 
@@ -80,44 +82,41 @@ export abstract class RespondentsList {
   public rowMenuItems: RowMenuItem<RespondentFlat>[] = [
     {
       name: (row) => `Link to Employee${row.proposedMatches?.length ? ` (${row.proposedMatches.length} proposed matches)` : ''}`,
-      callback: (row) => {
-        // @TODO - how to redirect with portal guards?
-        const url = row.employeeView ? ['/employees', row.employeeId] :
-          ['/surveys', this.route.snapshot.params[RespondentsList.SURVEY_ID_PARAM], 'respondents', 'link', row.id];
-        this.router.navigate(url);
-      },
+      callback: (row) => this.router.navigate(['link', row.id], {relativeTo: this.route.parent}),
       hide: (row) => !!row.employeeView,
     },
     {
       name: () => 'Attach File(s)',
-      callback: (data: any) => this.dialog.open(AttachFilesComponent, {data}).afterClosed()
+      callback: (data: any, index) => this.dialog.open(AttachFilesComponent, {data}).afterClosed()
         .pipe(filter((res) => !!res))
-        .subscribe((res) => {
-          data.fileCount = (data.fileCount || 0) + res.length;
-          this.columns = this.columns.slice();
+        .subscribe(() => {
+          this.dataService.getOne(data.id).subscribe((r) => {
+            data.attachedFiles = r.attachedFiles;
+            this.table.recalculateRow(index);
+          });
         }),
     },
     {
-      name: (row: any) => `View ${row.fileCount} Attachment${row.fileCount === 1 ? '' : 's'}`,
-      callback: (data) => this.dialog.open(ViewAttachedFilesComponent, {data})
+      name: (row: any) => `View ${row.attachedFiles.length} Attachment${row.attachedFiles.length === 1 ? '' : 's'}`,
+      callback: (data, index) => this.dialog.open(ViewAttachedFilesComponent, {data})
         .afterClosed()
-        .subscribe(() => this.columns = this.columns.slice()),
-      hide: (row: any) => !row.fileCount,
+        .subscribe(noop, noop, () => this.table.recalculateRow(index)),
+      hide: (row: any) => !row.attachedFiles.length,
     },
     {
       name: (row) => `${!row.notes ? 'Add' : 'Edit'} Notes`,
-      callback: (data) => this.dialog.open(EditNotesComponent, {data})
+      callback: (data, index) => this.dialog.open(EditNotesComponent, {data})
         .afterClosed()
         .pipe(filter((res) => !!res))
         .subscribe((notes) => {
           data.notes = notes;
-          data['__notes'] = notesIcon(data);
+          this.table.recalculateRow(index);
           this.notifications.showSimpleInfoMessage(`Successfully saved notes for ${data.name}`);
         })
     },
     {
       name: () => 'Delete Notes',
-      callback: (row) => {
+      callback: (row, index) => {
         const data = {
           title: 'Confirm Delete',
           text: `Are you sure you want to delete the notes for ${row.name}?`,
@@ -125,9 +124,8 @@ export abstract class RespondentsList {
         };
         this.asyncRowAction(this.dataService.patch(row.id, {notes: ''}), row.id, data)
           .subscribe(() => {
-            // @TODO - automatically refresh calc values
             row.notes = '';
-            row['__notes'] = '';
+            this.table.recalculateRow(index);
             this.notifications.showSimpleInfoMessage(`Successfully deleted notes for ${row.name}`);
           });
       },
@@ -141,7 +139,7 @@ export abstract class RespondentsList {
     },
     {
       name: () => 'Unlink from Employee',
-      callback: (row) => {
+      callback: (row, index) => {
         const data = {
           title: 'Confirm Unlink',
           text: `Are you sure you want to unlink ${row.name}?`,
@@ -149,8 +147,10 @@ export abstract class RespondentsList {
         };
         this.asyncRowAction(this.dataService.patch(row.id, {employeeId: 0}), row.id, data)
           .subscribe(() => {
+            delete row.employeeView;
+            delete row.employeeId;
+            this.table.recalculateRow(index);
             this.notifications.showSimpleInfoMessage(`Successfully unlinked ${row.name}`);
-            this.refreshRespondents$.next(void 0);
           });
       },
       hide: (row) => !row.employeeView
@@ -196,8 +196,9 @@ export abstract class RespondentsList {
           forIn(formatted, (val, key) => formatted[key] = val === true ? 'YES' : val === false ? 'NO' : val);
           return formatted;
         });
+        const startIndex = this.columnConfigService.sharedColumns.length;
         const columns = flatten(this.viewModes.map((viewMode, index) =>
-          this.getColumns(viewMode.toLowerCase()).slice(index > 0 ? 3 : 2)));
+          this.getColumns(viewMode.toLowerCase()).slice(index > 0 ? startIndex : (startIndex - 1))));
         this.csvService.download(formattedData, columns, 'Respondents');
       });
   }
