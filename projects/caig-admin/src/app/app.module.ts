@@ -62,7 +62,6 @@ const runtimeChecks = {
     MsalModule.forRoot(msalClient, guardConfig, interceptorConfig),
     QuillModule.forRoot(),
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

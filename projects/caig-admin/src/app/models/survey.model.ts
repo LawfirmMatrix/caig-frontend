@@ -2,6 +2,7 @@ export interface Survey extends SurveyLocation {
   schemaId: number;
   estTime: string;
   locations: SurveyLocation[];
+  url: string;
 }
 
 export interface SurveyLocation {

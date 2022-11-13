@@ -4,7 +4,6 @@ import {HttpClient} from '@angular/common/http';
 import {filter, switchMap} from 'rxjs/operators';
 import {ConfirmDialogComponent} from 'shared-components';
 import {RowMenuItem, TableColumn, TableMenuItem, TextColumn} from 'vs-table';
-import {concatName} from '../../util/functions';
 import {EmployeeEntityService} from '../../../modules/employees/services/employee-entity.service';
 import {differenceBy} from 'lodash-es';
 
@@ -45,7 +44,7 @@ export class ViewAttachedFilesComponent {
     }
   ];
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { id: string, firstName: string, middleName?: string, lastName: string, attachedFiles: AttachedFile[], whenSubmitted?: string },
+    @Inject(MAT_DIALOG_DATA) public data: { id: string, name: string, attachedFiles: AttachedFile[], whenSubmitted?: string },
     private dialogRef: MatDialogRef<ViewAttachedFilesComponent>,
     private dialog: MatDialog,
     private http: HttpClient,
@@ -83,7 +82,7 @@ export class ViewAttachedFilesComponent {
 
   private bulkDownload(files: AttachedFile[]): void {
     this.http.post('/api/attachedFile/bulk', files.map((f) => f.id), { responseType: 'blob' })
-      .subscribe((blob) => ViewAttachedFilesComponent.openFile(blob, concatName(this.data)));
+      .subscribe((blob) => ViewAttachedFilesComponent.openFile(blob, this.data.name));
   }
 
   public static openFile(blob: Blob, filename: string): void {

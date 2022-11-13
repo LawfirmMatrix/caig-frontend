@@ -15,6 +15,8 @@ import {HazardPayComponent} from './components/respondents-list/surveys/hazard-p
 import {DynamicFormModule} from 'dynamic-form';
 import {LiunaVaComponent} from './components/respondents-list/surveys/liuna-va.component';
 import {NageVaTriageComponent} from './components/respondents-list/surveys/nage-va-triage.component';
+import {NoSurveyComponent} from './components/respondents-list/surveys/no-survey.component';
+import {EmployeeInfoComponent} from './components/employee-info/employee-info.component';
 
 @NgModule({
   imports: [
@@ -34,6 +36,8 @@ import {NageVaTriageComponent} from './components/respondents-list/surveys/nage-
     HazardPayComponent,
     LiunaVaComponent,
     NageVaTriageComponent,
+    NoSurveyComponent,
+    EmployeeInfoComponent,
   ],
   providers: [
     AllSurveysResolver,

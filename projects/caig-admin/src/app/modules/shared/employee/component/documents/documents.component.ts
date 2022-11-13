@@ -10,7 +10,6 @@ import {
   ViewAttachedFilesComponent
 } from '../../../../../core/components/view-attached-files/view-attached-files.component';
 import {ConfirmDialogComponent} from 'shared-components';
-import {concatName} from '../../../../../core/util/functions';
 import {EmployeeEntityService} from '../../../../employees/services/employee-entity.service';
 
 @Component({
@@ -92,7 +91,7 @@ export class DocumentsComponent implements OnChanges {
   }
   private bulkDownload(files: AttachedFile[]): void {
     this.http.post('/api/attachedFile/bulk', files.map((f) => f.id), { responseType: 'blob' })
-      .subscribe((blob) => ViewAttachedFilesComponent.openFile(blob, concatName(this.employee)));
+      .subscribe((blob) => ViewAttachedFilesComponent.openFile(blob, this.employee.name));
   }
 }
 

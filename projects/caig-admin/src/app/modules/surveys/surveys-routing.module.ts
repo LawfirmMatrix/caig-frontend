@@ -4,6 +4,7 @@ import {SurveysListComponent} from './components/surveys-list/surveys-list.compo
 import {RespondentsListComponent} from './components/respondents-list/respondents-list.component';
 import {LinkRespondentComponent} from './components/link-respondent/link-respondent.component';
 import {AllSurveysResolver} from './services/all-surveys.resolver';
+import {AllEmployeesResolver} from '../employees/services/all-employees.resolver';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
   {
     path: 'link/:respondentId',
     component: LinkRespondentComponent,
+    resolve: { employees: AllEmployeesResolver },
   },
   {
     path: '',

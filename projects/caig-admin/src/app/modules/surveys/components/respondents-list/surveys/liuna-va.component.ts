@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {RespondentsList, RespondentFlat} from '../respondents-list';
+import {RespondentFlat} from '../respondents-list';
 import {VsTableComponent, TableColumn} from 'vs-table';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NotificationsService} from 'notifications';
@@ -7,13 +7,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {NgxCsvService} from 'export-csv';
 import {RespondentDataService} from '../../../services/respondent-data.service';
 import {ColumnConfigService} from '../column-config.service';
+import {NageVaTriageComponent} from './nage-va-triage.component';
 
 @Component({
   selector: 'app-liuna-va',
   templateUrl: '../respondents-list.html',
   styleUrls: ['../respondents-list.scss'],
 })
-export class LiunaVaComponent extends RespondentsList {
+export class LiunaVaComponent extends NageVaTriageComponent {
   @ViewChild(VsTableComponent) public override table!: VsTableComponent<RespondentFlat>;
   constructor(
     protected override router: Router,
@@ -27,6 +28,7 @@ export class LiunaVaComponent extends RespondentsList {
     super(router, route, notifications, dialog, csvService, dataService, columnConfigService);
   }
   protected override getColumns(viewMode: string): TableColumn<RespondentFlat>[] {
-    return [];
+    const cols = super.getColumns(viewMode);
+    return cols.filter((c) => c.field !== 'ppeSurvey');
   }
 }

@@ -10,7 +10,7 @@
         </div>
       </div>
       <div fxFlex fxLayoutAlign="center center" *ngIf="employee">
-        <h1>{{employee.firstName}} {{employee.middleName}} {{employee.lastName}}</h1>
+        <h1>{{employee.name}}</h1>
       </div>
       <div fxFlex fxLayoutAlign="end center" fxLayoutGap="10px">
         <mat-slide-toggle #toggle (change)="togglePreview($event.checked)" [disabled]="isLoading">Preview</mat-slide-toggle>

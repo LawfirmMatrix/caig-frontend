@@ -54,17 +54,17 @@ export class SurveysListComponent {
       title: '',
       position: 'end',
       label: (row) => 'Live',
-      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row), // @ TODO - replace baseUrl with row.url
+      callback: (row) => SurveysListComponent.openSurvey(row.url, row),
       color: (row) => 'warn',
-      disabled: (row) => true,
+      disabled: (row) => !row.url,
     },
     {
       title: '',
       position: 'end',
       label: (row) => 'Event',
-      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row, true), // @ TODO - replace baseUrl with row.url
+      callback: (row) => SurveysListComponent.openSurvey(row.url, row, true),
       color: (row) => 'accent',
-      disabled: (row) => true,
+      disabled: (row) => !row.url,
     }
   ];
   public rowMenuItems: RowMenuItem<Survey>[] = [

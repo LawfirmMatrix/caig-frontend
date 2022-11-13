@@ -1,1 +1,104 @@
-<div>link</div>
+<div fxFlexFill fxLayout="column">
+  <mat-card fxLayoutAlign="center center" class="mat-elevation-z7">
+    <h1 *ngIf="respondent$ | async as res">{{res.name}}</h1>
+  </mat-card>
+  <div fxFlex fxLayout="row">
+    <mat-card fxFlex>
+      <object [data]="pdfUrl$ | async" type="application/pdf" width="100%" height="100%">
+        <p>Your browser does not support PDFs.</p>
+      </object>
+    </mat-card>
+    <mat-card fxFlex>
+      <div *ngIf="respondent$ | async as res" fxFlex>
+        <mat-tab-group color="accent"
+                       backgroundColor="primary"
+                       [disablePagination]="true"
+                       mat-stretch-tabs
+                       fxFlex
+                       [selectedIndex]="res.proposedMatches?.length ? 0 : 1">
+          <mat-tab label="Proposed Matches" [disabled]="isProcessing || !res.proposedMatches?.length">
+            <ng-template matTabContent>
+              <div fxFlex fxLayout="column" fxLayoutGap="10px">
+                <div fxFlex style="overflow: auto">
+                  <mat-selection-list #list="matSelectionList" [multiple]="false">
+                    <mat-list-option *ngFor="let employee of res.proposedMatches; let i = index;" [value]="employee">
+                      <div mat-list-icon>{{i + 1}}</div>
+                      <div mat-line>{{employee.name}}</div>
+                      <div mat-line>
+                        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+                          <div>{{employee.jobTitle}}</div>
+                          <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="moreInfo(employee)">More Info</button>
+                          </mat-menu>
+                        </div>
+                      </div>
+                      <div mat-line>
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                          <div fxLayoutAlign="start center" *ngIf="employee.phone">
+                            <mat-icon class="small-icon">phone</mat-icon> {{employee.phone}}
+                          </div>
+                          <div fxLayoutAlign="start center" *ngIf="employee.email">
+                            <mat-icon class="small-icon">email</mat-icon> {{employee.email}}
+                          </div>
+                        </div>
+                      </div>
+                    </mat-list-option>
+                  </mat-selection-list>
+                </div>
+                <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center">
+                  <a mat-raised-button
+                     color="accent"
+                     [disabled]="isProcessing"
+                     [queryParams]="{respondentId: res.id}"
+                     [routerLink]="['/employees', 'new']">
+                    New BUE
+                  </a>
+                  <button mat-raised-button
+                          color="primary"
+                          [disabled]="isProcessing || !list.selectedOptions.selected.length"
+                          (click)="link(list.selectedOptions.selected[0].value)">
+                    Confirm Match
+                  </button>
+                </div>
+                <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" color="accent"></mat-progress-bar>
+              </div>
+            </ng-template>
+          </mat-tab>
+          <mat-tab label="All BUE's" [disabled]="isProcessing">
+            <ng-template matTabContent>
+              <div fxFlex fxLayout="column" fxLayoutGap="10px">
+                <div fxFlex>
+                  <vs-table [data]="employees$ | async"
+                            id="link-respondents"
+                            [columns]="columns"
+                            (rowClick)="selectedEmployee = $event.row"
+                            [rowMenuItems]="rowMenuItems"
+                            [rowPainter]="rowPainter"></vs-table>
+                </div>
+                <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center">
+                  <button mat-raised-button
+                          color="accent"
+                          [disabled]="isProcessing"
+                          [queryParams]="{respondentId: res.id}"
+                          [routerLink]="['/employees', 'new']">
+                    New BUE
+                  </button>
+                  <button mat-raised-button
+                          color="primary"
+                          [disabled]="isProcessing || !selectedEmployee"
+                          (click)="link(selectedEmployee)">
+                    Link to BUE
+                  </button>
+                </div>
+                <mat-progress-bar *ngIf="isProcessing" mode="indeterminate" color="accent"></mat-progress-bar>
+              </div>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </mat-card>
+  </div>
+</div>

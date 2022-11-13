@@ -9,7 +9,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ToolbarButton} from '../../../shared/employee/component/toolbar-buttons/toolbar-buttons.component';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
 import {Employee} from '../../../../models/employee.model';
-import {concatName, isNotUndefined} from '../../../../core/util/functions';
+import {isNotUndefined} from '../../../../core/util/functions';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
@@ -135,10 +135,9 @@ export class ViewEmployeeComponent implements OnInit, OnDestroy {
 
   private deleteEmployee(): void {
     if (this.employee) {
-      const name = concatName(this.employee);
       const data: ConfirmDialogData = {
         title: 'Confirm Delete',
-        text: `Are you sure you want to delete ${name}?`,
+        text: `Are you sure you want to delete ${this.employee.name}?`,
         confirmText: 'Yes',
       };
       this.dialog.open(ConfirmDialogComponent, {data})
@@ -149,7 +148,7 @@ export class ViewEmployeeComponent implements OnInit, OnDestroy {
           switchMap((employee) => this.employeeService.delete(employee.id).pipe(map(() => employee))),
         )
         .subscribe((emp) => {
-          this.notifications.showSimpleInfoMessage(`Successfully deleted ${concatName(emp)}`);
+          this.notifications.showSimpleInfoMessage(`Successfully deleted ${emp.name}`);
           this.router.navigate(['/employees'], {replaceUrl: true, queryParamsHandling: 'preserve'});
         });
     }

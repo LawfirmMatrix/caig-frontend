@@ -5,10 +5,6 @@ export function isNotUndefined<T>(input: T | undefined): input is T {
   return input !== undefined;
 }
 
-export function concatName(entity: {firstName: string, middleName?: string, lastName: string}): string {
-  return `${entity.firstName} ${entity.middleName ? entity.middleName + ' ' : ''}${entity.lastName}`;
-}
-
 export function zeroPad(value: number | undefined, padding: number): string {
   return value === undefined ? '' : formatNumber(value, 'en-us', `${padding}.0-0`).replace(',', '');
 }

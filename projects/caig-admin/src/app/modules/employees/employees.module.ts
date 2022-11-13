@@ -7,7 +7,6 @@ import {VsTableModule} from 'vs-table';
 import {SharedEmployeeModule} from '../shared/employee/shared-employee.module';
 import {CreateEmployeeComponent} from './components/create-employee/create-employee.component';
 import {ViewEmployeeComponent} from './components/view-employee/view-employee.component';
-import {AllEmployeesResolver} from './services/all-employees.resolver';
 import {ContactInfoComponent} from './components/view-employee/contact-info/contact-info.component';
 import {DecryptButtonComponent} from './components/view-employee/contact-info/decrypt-button/decrypt-button.component';
 import {EmailMenuComponent} from './components/view-employee/contact-info/email-menu/email-menu.component';
@@ -51,7 +50,6 @@ import {EditEmployeeComponent} from './components/edit-employee/edit-employee.co
     EditEmployeeComponent,
   ],
   providers: [
-    AllEmployeesResolver,
     EmployeeEnumsResolver,
     SettlementStatesResolver,
     EmployeeStatusResolver,

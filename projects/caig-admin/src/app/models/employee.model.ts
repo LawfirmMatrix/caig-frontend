@@ -100,6 +100,7 @@ export interface Employee {
   supervisorEmail?: string;
   password?: string | null;
   attachedFiles?: AttachedFile[];
+  name: string;
 }
 
 export enum ParticipationStatus {

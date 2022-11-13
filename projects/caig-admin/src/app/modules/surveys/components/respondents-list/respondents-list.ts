@@ -25,6 +25,7 @@ export abstract class RespondentsList {
   private static readonly STATUS_PARAM = 'status';
   private static readonly VIEW_MODE_PARAM = 'viewMode';
   private static readonly SURVEY_ID_PARAM = 'surveyId';
+  private static readonly LOCATION_ID_PARAM = 'locationId';
 
   public abstract table: VsTableComponent<RespondentFlat>;
 
@@ -32,13 +33,25 @@ export abstract class RespondentsList {
 
   public survey!: Survey;
 
-  protected surveyId$: Observable<string> = this.route.params
-    .pipe(map((params) => params[RespondentsList.SURVEY_ID_PARAM]));
+  protected params$ = this.route.params.pipe(
+    map((qp) => {
+      const params: {surveyId: string, locationId?: string} = { surveyId: qp[RespondentsList.SURVEY_ID_PARAM] };
+      const locationId = qp[RespondentsList.LOCATION_ID_PARAM];
+      if (locationId) {
+        params.locationId = locationId;
+      }
+      return params;
+    })
+  );
+
+  public location$ = this.params$.pipe(
+    map((params) => this.survey.locations?.find((l) => l.id === params.locationId))
+  );
 
   public respondents$: Observable<RespondentFlat[]> =
-    combineLatest([this.refreshRespondents$, this.surveyId$])
+    combineLatest([this.refreshRespondents$, this.params$])
       .pipe(
-        switchMap(([, surveyId]) => this.dataService.get({surveyId})),
+        switchMap(([, params]) => this.dataService.get(params)),
         map((data) => data.map(this.sanitizeRespondent)),
         shareReplay(),
       );
@@ -80,6 +93,11 @@ export abstract class RespondentsList {
   public columns: TableColumn<RespondentFlat>[] = this.getColumns(this.route.snapshot.queryParams[RespondentsList.VIEW_MODE_PARAM] || RespondentsList.DEFAULT_VIEW);
 
   public rowMenuItems: RowMenuItem<RespondentFlat>[] = [
+    {
+      name: (row) => 'View Employee',
+      callback: (row) => this.router.navigate(['/employees', row.employeeView?.id, 'view']),
+      hide: (row) => !row.employeeView,
+    },
     {
       name: (row) => `Link to Employee${row.proposedMatches?.length ? ` (${row.proposedMatches.length} proposed matches)` : ''}`,
       callback: (row) => this.router.navigate(['link', row.id], {relativeTo: this.route.parent}),

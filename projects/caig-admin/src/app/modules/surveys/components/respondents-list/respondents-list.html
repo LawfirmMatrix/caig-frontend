@@ -1,5 +1,8 @@
 <div fxFlexFill fxLayout="column" fxLayoutGap="8px">
-  <mat-toolbar class="mat-elevation-z7" fxLayoutAlign="center center">{{ survey.name }}</mat-toolbar>
+  <mat-toolbar class="mat-elevation-z7" fxLayout="column" fxLayoutAlign="center center">
+    <div>{{survey.name}}</div>
+    <small *ngIf="location$ | async as loc">{{loc.name}}</small>
+  </mat-toolbar>
   <div fxLayout="row" fxLayoutAlign="space-between center" style="padding: 0 16px">
     <dynamic-form [fields]="formFields" [model]="formModel"></dynamic-form>
     <button *ngIf="respondents$ | async as respondents"

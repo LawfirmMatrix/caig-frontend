@@ -14,7 +14,7 @@ import {
 } from 'rxjs/operators';
 import {chunk, flatten, isArray, omitBy} from 'lodash-es';
 import {Employee} from '../../../../models/employee.model';
-import {concatName, isNotUndefined} from '../../../../core/util/functions';
+import {isNotUndefined} from '../../../../core/util/functions';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -248,10 +248,9 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     {
       name: () => 'Delete',
       callback: (row) => {
-        const name = concatName(row);
         const data: ConfirmDialogData = {
           title: 'Confirm Delete',
-          text: `Are you sure you want to delete ${name}?`,
+          text: `Are you sure you want to delete ${row.name}?`,
           confirmText: 'Yes',
         };
         this.dialog.open(ConfirmDialogComponent, {data})
@@ -262,7 +261,7 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
             switchMap(() => this.employeeService.delete(row.id))
           )
           .subscribe(
-            () => this.notifications.showSimpleInfoMessage(`Successfully deleted ${name}`),
+            () => this.notifications.showSimpleInfoMessage(`Successfully deleted ${row.name}`),
             () => this.isProcessing = false
           );
       },

@@ -11,7 +11,7 @@ import {Employee} from '../../../../../models/employee.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../store/reducers';
 import {emailTemplates} from '../../store/selectors/employees.selectors';
-import {concatName, isNotUndefined} from '../../../../../core/util/functions';
+import {isNotUndefined} from '../../../../../core/util/functions';
 import {EmployeesActions} from '../../store/actions/action-types';
 import {ConfirmDialogComponent} from 'shared-components';
 import {MatDialog} from '@angular/material/dialog';
@@ -114,7 +114,7 @@ export class ComposeEmailComponent {
     this.sendingEmail = true;
     const email: ComposedEmail = {
       toAddress: (this.emailForm.value as any).to,
-      toName: concatName(employee),
+      toName: employee.name,
       // body: this.selectedTemplate.bodyRendered,
       employeeId: employee.id,
       ...this.emailForm.value as any,

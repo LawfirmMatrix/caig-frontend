@@ -12,7 +12,7 @@ import {BehaviorSubject, combineLatest, of} from 'rxjs';
 import {Employee} from '../../../../../models/employee.model';
 import {EmployeeEntityService} from '../../../../employees/services/employee-entity.service';
 import {EventService} from '../../../../../core/services/event.service';
-import {concatName, isNotUndefined} from '../../../../../core/util/functions';
+import {isNotUndefined} from '../../../../../core/util/functions';
 import {ConfirmDialogComponent} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../store/reducers';
@@ -201,7 +201,7 @@ export class ComposeEmailComponent implements OnInit {
           fromAddress: formValue.fromAddress,
           toAddress: formValue.toAddress,
           ccAddress: formValue.ccAddress,
-          toName: concatName(employee),
+          toName: employee.name,
           employeeId: employee.id,
           body: renderedEmail.bodyRendered,
           subject: renderedEmail.subjectRendered,

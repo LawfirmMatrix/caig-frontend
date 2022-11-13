@@ -1,0 +1,13 @@
+mat-card {
+  margin: 10px;
+}
+
+.small-icon {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+::ng-deep .mat-tab-body-wrapper {
+  height: 100%;
+  overflow: auto;
+}

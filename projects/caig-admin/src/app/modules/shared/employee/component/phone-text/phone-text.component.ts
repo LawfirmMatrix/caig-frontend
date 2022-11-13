@@ -5,7 +5,6 @@ import {AutocompleteField, FieldBase, SelectField, TextareaField} from 'dynamic-
 import {Observable, of} from 'rxjs';
 import {NotificationsService} from 'notifications';
 import {map, startWith, tap} from 'rxjs/operators';
-import {concatName} from '../../../../../core/util/functions';
 import {PhoneNumberInfo, PhoneService} from '../../../../../core/services/phone.service';
 import {Employee} from '../../../../../models/employee.model';
 
@@ -125,7 +124,7 @@ export class PhoneTextComponent implements OnInit {
     }
     request$.subscribe(() => {
       this.dialogRef.close();
-      this.notificationsService.showSimpleInfoMessage(`${this.data.tts ? 'TTS Call placed' : 'SMS sent'} to ${concatName(this.data)}`);
+      this.notificationsService.showSimpleInfoMessage(`${this.data.tts ? 'TTS Call placed' : 'SMS sent'} to ${this.data.name}`);
     }, () => this.form.enable());
   }
 }

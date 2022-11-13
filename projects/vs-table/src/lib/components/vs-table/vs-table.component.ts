@@ -42,7 +42,7 @@ import {measureScrollbarWidth} from '../../utils/consts';
 import {NgxCsvService} from 'export-csv';
 import {ExportDataComponent} from '../export-data/export-data.component';
 import {MatDialog} from '@angular/material/dialog';
-import {trigger, state, transition, animate, style} from '@angular/animations';
+import {trigger, state, transition, animate, style, keyframes} from '@angular/animations';
 
 @Component({
   selector: 'vs-table',
@@ -50,11 +50,17 @@ import {trigger, state, transition, animate, style} from '@angular/animations';
   styleUrls: ['./vs-table.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '48px', minHeight: '48px'})),
+      state('collapsed', style({height: '*'})),
       state('expanded', style({height: '264px'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      transition('collapsed => expanded', [
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)', keyframes([
+          style({ height: '48px' }),
+          style({ height: '264px' })
+        ]))
+      ]),
+      transition('expanded => collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
-  ],
+  ]
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() public data: T[] | null = null;
@@ -115,6 +121,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
   public readonly scrollbarWidth = VsTableComponent.SCROLLBAR_WIDTH;
   public readonly onWindowResize$ = new Subject<void>();
+  public readonly noValuePlaceholder = '(No Value)';
 
   public padScrollbar = false;
   public showFooter = false;
@@ -395,7 +402,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
     this.minRowWidth = (this.visibleColumns.length * this.columnWidth) +
       (this.disableSelection ? 0 : this.rowHeight) +
-      (this.rowMenuItems || this.tableMenuItems ? this.rowHeight : 0);
+      (this.rowMenuItems || this.tableMenuItems ? this.rowHeight : 0) +
+      (this.expandRowConfig ? this.columnWidth : 0) +
+      (this.buttonColumns ? (this.buttonColumns.length * this.columnWidth) : 0);
 
     if (this.showFooter) {
       setTimeout(() => {

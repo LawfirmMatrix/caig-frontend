@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 import {FieldBase, InputField} from 'dynamic-form';
 import {UntypedFormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
 import {RespondentDataService} from '../../../surveys/services/respondent-data.service';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-create-employee',
@@ -45,9 +46,9 @@ export class CreateEmployeeComponent {
   public showSubmit = true;
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private employeeService: EmployeeEntityService,
     private respondentService: RespondentDataService,
+    private location: Location,
   ) {
   }
   public submit(payload: any): void {
@@ -62,8 +63,10 @@ export class CreateEmployeeComponent {
         })
       )
       .subscribe(() => {
-        const redirect = respondentId ? '/respondents' : '/employees';
-        this.router.navigate([redirect]);
+        this.location.back();
+        if (respondentId) {
+          this.location.back();
+        }
       }, () => this.showSubmit = true);
   }
 }

@@ -5,7 +5,7 @@ import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {NgxCsvService} from 'export-csv';
 import {RespondentDataService} from '../../../services/respondent-data.service';
-import {TableColumn, TextColumn, IconColumn, VsTableComponent} from 'vs-table';
+import {TableColumn, TextColumn, IconColumn, VsTableComponent, CurrencyColumn} from 'vs-table';
 import {Respondent} from '../../../../../models/respondent.model';
 import {
   protectiveEquipmentOptions, hazardTrainingOptions
@@ -88,7 +88,7 @@ export class HazardPayComponent extends RespondentsList {
             title: 'Series',
             field: 'series',
           }),
-          new TextColumn({
+          new CurrencyColumn({
             title: 'Annual Rate',
             field: 'annualRate',
           }),
