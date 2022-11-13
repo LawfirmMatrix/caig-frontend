@@ -47,9 +47,6 @@ export class IconFilterComponent<T> implements OnInit, OnChanges {
       return;
     }
     const data = this.filterOptions ? this.filteredData : this.data;
-    this.uniqueColumnValues = uniq(data
-      .filter((row) => row[this.column.field] !== null && row[this.column.field] !== undefined)
-      .map((this.column as IconColumn<T>).calculate)
-    );
+    this.uniqueColumnValues = uniq(data.map((this.column as IconColumn<T>).calculate));
   }
 }
