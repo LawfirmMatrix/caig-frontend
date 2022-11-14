@@ -18,11 +18,11 @@ export abstract class PortalGuard {
       .pipe(
         first(),
         map(([portal, isSuperAdmin]) => {
-          const notAllowed = this.allowAccess.indexOf(portal) === -1;
-          if (notAllowed && isSuperAdmin) {
+          const isAllowed = this.allowAccess.indexOf(portal) > -1;
+          if (!isAllowed && isSuperAdmin) {
             this.store.dispatch(CoreActions.portalChange({portal: this.allowAccess[0]}));
           }
-          return isSuperAdmin || notAllowed;
+          return isSuperAdmin || isAllowed;
         }),
         tap((canLoad) => {
           if (!canLoad) {
