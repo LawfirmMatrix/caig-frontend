@@ -9,11 +9,12 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ToolbarButton} from '../../../shared/employee/component/toolbar-buttons/toolbar-buttons.component';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
 import {Employee} from '../../../../models/employee.model';
-import {isNotUndefined} from '../../../../core/util/functions';
+import {isNotUndefined, participationRowPainter} from '../../../../core/util/functions';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {settlementId} from '../../../../core/store/selectors/core.selectors';
+import {Role} from '../../../../models/session.model';
 
 @Component({
   selector: 'app-view-bue',
@@ -82,16 +83,8 @@ export class ViewEmployeeComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.route.params
       .pipe(
-        tap((params) => {
-          this.employee = undefined;
-          this.employeeService.getByKey(params['id']);
-        }),
-        switchMap((params) =>
-          this.employeeService.entityMap$.pipe(
-            map((entityMap) => entityMap[Number(params['id'])])
-          )
-        ),
-        filter(isNotUndefined),
+        tap(() => this.employee = undefined),
+        switchMap((params) => this.employeeService.getByKey(params['id'])),
         tap((employee) => this.employee = employee),
         withLatestFrom(this.store.select(settlementId)),
         map(([employee, settlementId]) => employee.settlementId === settlementId),
@@ -102,8 +95,7 @@ export class ViewEmployeeComponent implements OnInit, OnDestroy {
         }),
         switchMap((inSettlement) => inSettlement ? this.findEmployeeIndex() : of(null)),
         takeUntil(this.onDestroy$),
-      )
-      .subscribe();
+      ).subscribe();
 
     this.store.select(settlementId)
       .pipe(

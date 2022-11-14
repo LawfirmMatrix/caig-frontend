@@ -30,11 +30,7 @@
   "appData": {
     "changes": {
       "Tables": [
-        "Column headers can now be dragged and dropped to re-order them. You no longer have to access the table options to do this.",
-        "Additional filters have been added to column headers to allow for more refined filtering"
-      ],
-      "Misc.": [
-        "Various bug fixes and improvements"
+        "Fixed a bug causing the \"Changes\" column of Events tables to display incorrect information"
       ]
     },
     "forceReloadDuration": 0,

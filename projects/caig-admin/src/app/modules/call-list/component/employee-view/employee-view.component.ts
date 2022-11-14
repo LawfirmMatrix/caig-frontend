@@ -260,17 +260,8 @@ export class EmployeeViewComponent implements OnInit, OnDestroy {
     const user$ = this.store.select(user).pipe(filter(isNotUndefined));
     this.route.params
       .pipe(
-        tap((params) => {
-          this.employee = undefined;
-          this.dataService.getByKey(params['id']);
-        }),
-        switchMap((params) =>
-          this.dataService.entityMap$.pipe(
-            map((entityMap) => entityMap[Number(params['id'])])
-          )
-        ),
-        distinctUntilChanged(isEqual),
-        filter(isNotUndefined),
+        tap(() => this.employee = undefined),
+        switchMap((params) => this.dataService.getByKey(params['id'])),
         withLatestFrom(user$),
         tap(([employee, user]) => {
           this.employee = employee;
@@ -288,8 +279,7 @@ export class EmployeeViewComponent implements OnInit, OnDestroy {
         }),
         switchMap((inSettlement) => inSettlement ? this.findEmployeeIndex() : of(null)),
         takeUntil(this.onDestroy$),
-      )
-      .subscribe();
+      ).subscribe();
 
     this.store.select(settlementId)
       .pipe(
