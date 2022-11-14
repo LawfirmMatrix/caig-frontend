@@ -3,7 +3,7 @@ import {AuthToken} from '../../../models/token.model';
 
 export const login = createAction(
   '[Login Page] User Login',
-  props<{token: AuthToken, redirect?: boolean}>()
+  props<{token: AuthToken}>()
 );
 
 export const logout = createAction(

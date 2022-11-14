@@ -6,6 +6,7 @@ import {AppState} from '../../store/reducers';
 import {ThemeService} from '../../theme/theme.service';
 import {map} from 'rxjs/operators';
 import {AuthActions} from '../store/actions/action-types';
+import {Router, ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +33,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private store: Store<AppState>,
+    private router: Router,
+    private route: ActivatedRoute,
     public themeService: ThemeService,
   ) {
   }
@@ -44,13 +47,14 @@ export class LoginComponent {
     this.signInForm.disable();
     const password = this.signInForm.value.password || '';
     this.authService.login(this.signInForm.value.username || '', password)
-      .subscribe(
-        (token) => this.store.dispatch(AuthActions.login({token, redirect: true})),
-        () => {
-          this.showErrorMessage = true;
-          this.signInForm.enable();
-        }
-      );
+      .subscribe((token) => {
+        this.store.dispatch(AuthActions.login({token}));
+        const redirectURL = this.route.snapshot.queryParamMap.get('redirect') || '/';
+        this.router.navigateByUrl(redirectURL);
+      }, () => {
+        this.showErrorMessage = true;
+        this.signInForm.enable();
+      });
   }
 }
 

@@ -3,7 +3,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {AuthActions} from '../actions/action-types';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AuthService} from '../../services/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {LOGIN_REDIRECT} from '../../auth.module';
 import {Session} from '../../../models/session.model';
 import {HttpClient} from '@angular/common/http';
@@ -22,13 +22,7 @@ export class AuthEffects {
   public login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      tap((action) => {
-        AuthService.token = action.token;
-        if (action.redirect) {
-          const redirectURL = this.route.snapshot.queryParamMap.get('redirect') || '/';
-          this.router.navigateByUrl(redirectURL);
-        }
-      }),
+      tap((action) => AuthService.token = action.token),
       switchMap(() =>
         this.http.get<Session>('/api/session/initialize').pipe(
           catchError((err) => {
@@ -61,7 +55,6 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private router: Router,
-    private route: ActivatedRoute,
     private http: HttpClient,
     private dialog: MatDialog,
     private store: Store<AppState>,
