@@ -35,12 +35,8 @@ export abstract class RespondentsList {
 
   protected params$ = this.route.params.pipe(
     map((qp) => {
-      const params: {surveyId: string, locationId?: string} = { surveyId: qp[RespondentsList.SURVEY_ID_PARAM] };
       const locationId = qp[RespondentsList.LOCATION_ID_PARAM];
-      if (locationId) {
-        params.locationId = locationId;
-      }
-      return params;
+      return locationId ? { locationId } : { surveyId: qp[RespondentsList.SURVEY_ID_PARAM] };
     })
   );
 

@@ -219,7 +219,12 @@
             [ngClass]="{'pointer': !disableRowClick}"
             [matTooltip]="rowTooltip ? rowTooltip(row) : ''"
             [style.minHeight.px]="rowHeight">
-          <td *ngIf="!disableSelection" [style.width.px]="stickyCellWidth" class="sticky mat-app-background left" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+          <td *ngIf="!disableSelection"
+              [style.width.px]="stickyCellWidth"
+              class="sticky mat-app-background left"
+              fxLayoutAlign="center center"
+              [style.backgroundColor]="rowPainter ? rowPainter(row) : undefined"
+              (click)="$event.stopPropagation()">
             <mat-checkbox (click)="rowSelect($event, row)" (change)="selection.toggle(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
           </td>
           <td *ngIf="expandRowConfig as config"
@@ -288,7 +293,12 @@
               {{ column.label(row) }}
             </button>
           </td>
-          <td *ngIf="tableMenuItems || rowMenuItems" [style.width.px]="stickyCellWidth" class="sticky mat-app-background right" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
+          <td *ngIf="tableMenuItems || rowMenuItems"
+              [style.width.px]="stickyCellWidth"
+              class="sticky mat-app-background right"
+              fxLayoutAlign="center center"
+              [style.backgroundColor]="rowPainter ? rowPainter(row) : undefined"
+              (click)="$event.stopPropagation()">
             <button *ngIf="rowMenuItems"
                     mat-icon-button
                     aria-label="Row menu"
