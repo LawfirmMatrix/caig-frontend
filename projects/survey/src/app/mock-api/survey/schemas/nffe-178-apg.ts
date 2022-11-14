@@ -4,7 +4,7 @@ import {contactStep} from './shared/contact';
 import {Validators} from '@angular/forms';
 import {RadioField, SelectField, CheckboxField, DateField} from 'dynamic-form';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
-import {months$, years$, nextDay} from './shared/date';
+import {months$, years$, nextDay, currentYear, currentMonth} from './shared/date';
 import {followUpTimes, filterDate, maxDate, times$} from './shared/appointment';
 
 export const schema5: SurveySchemaBase = {
@@ -64,7 +64,8 @@ export const schema5: SurveySchemaBase = {
                 options: months$,
                 optionDisabled: (option, form) => {
                   const num = Number(option.key);
-                  return form.value.startYear === '2006' && num > 0 && num < 2;
+                  const startYear = Number(form.value.startYear);
+                  return startYear === 2006 && num > 0 && num < 2 || startYear === currentYear && num > currentMonth + 1;
                 },
                 deselect: true,
               }),

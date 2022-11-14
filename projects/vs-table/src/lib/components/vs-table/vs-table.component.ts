@@ -121,7 +121,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
   public readonly scrollbarWidth = VsTableComponent.SCROLLBAR_WIDTH;
   public readonly onWindowResize$ = new Subject<void>();
-  public readonly noValuePlaceholder = '(No Value)';
+  public readonly noValuePlaceholder = 'No Value';
 
   public padScrollbar = false;
   public showFooter = false;

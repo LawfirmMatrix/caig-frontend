@@ -6,7 +6,7 @@ import {
   ButtonColumn,
   RowMenuItem,
   TableMenuItem,
-  ExpandRowConfig, IconColumn
+  ExpandRowConfig,
 } from 'vs-table';
 import {Survey} from '../../../../models/survey.model';
 import {Observable} from 'rxjs';
@@ -31,6 +31,7 @@ export class SurveysListComponent {
     new NumberColumn({
       title: 'Respondents',
       field: 'respondentCount',
+      format: '1.0-0',
     }),
   ];
   public expandRowConfig: ExpandRowConfig<Survey> = {
@@ -97,16 +98,8 @@ export class SurveysListComponent {
     this.isProcessing = true;
     this.respondentService.get({surveyId}).subscribe((respondents) => {
       this.csv.download(
-        respondents,
+        respondents.map((r) => ({...r, ...r.progress})),
         [
-          {
-            title: 'Survey ID',
-            field: 'surveyId',
-          },
-          {
-            title: 'Survey Name',
-            field: 'surveyName',
-          },
           {
             title: 'When Submitted',
             field: 'whenSubmitted',

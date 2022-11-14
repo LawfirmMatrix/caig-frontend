@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {TableColumn, IconColumn, TextColumn} from 'vs-table';
+import {TableColumn, IconColumn, TextColumn, DateColumn} from 'vs-table';
 import {RespondentFlat} from './respondents-list';
 
 @Injectable()
@@ -35,9 +35,10 @@ export class ColumnConfigService {
       title: 'Note',
       field: 'notes',
     }),
-    new TextColumn({
+    new DateColumn({
       title: 'Submitted',
       field: 'whenSubmitted',
+      format: 'short',
     }),
   ];
   public get notesColumns(): TableColumn<RespondentFlat>[] {

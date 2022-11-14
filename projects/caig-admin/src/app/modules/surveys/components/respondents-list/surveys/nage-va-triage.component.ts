@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {RespondentsList, RespondentFlat, rowIcon, rowColor} from '../respondents-list';
-import {VsTableComponent, TableColumn, TextColumn, IconColumn, CurrencyColumn} from 'vs-table';
+import {VsTableComponent, TableColumn, TextColumn, IconColumn, CurrencyColumn, DateColumn} from 'vs-table';
 import {Router, ActivatedRoute} from '@angular/router';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
@@ -196,17 +196,20 @@ export class NageVaTriageComponent extends RespondentsList {
             calculate: rowIcon('followUp'),
             color: rowColor('followUp')
           }),
-          new TextColumn({
+          new DateColumn({
             title: 'Appt #1',
             field: 'dateTime1',
+            format: 'short',
           }),
-          new TextColumn({
+          new DateColumn({
             title: 'Appt #2',
             field: 'dateTime2',
+            format: 'short',
           }),
-          new TextColumn({
+          new DateColumn({
             title: 'Appt #3',
             field: 'dateTime3',
+            format: 'short',
           }),
         ];
       case 'notes':

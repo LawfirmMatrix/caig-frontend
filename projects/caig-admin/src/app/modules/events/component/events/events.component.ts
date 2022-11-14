@@ -85,7 +85,7 @@ export class EventsComponent implements OnInit {
     new DateColumn({
       title: 'Date',
       field: 'whenCreated',
-      format: 'medium',
+      format: 'short',
     }),
     new TextColumn({
       title: 'Message',

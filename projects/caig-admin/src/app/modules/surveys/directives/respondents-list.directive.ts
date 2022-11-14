@@ -14,11 +14,13 @@ import {HazardPayComponent} from '../components/respondents-list/surveys/hazard-
 import {NageVaTriageComponent} from '../components/respondents-list/surveys/nage-va-triage.component';
 import {LiunaVaComponent} from '../components/respondents-list/surveys/liuna-va.component';
 import {NoSurveyComponent} from '../components/respondents-list/surveys/no-survey.component';
+import {Nffe178ApgComponent} from '../components/respondents-list/surveys/nffe-178-apg.component';
 
 const componentMapper: ComponentMap = {
   2: NageVaTriageComponent,
   3: HazardPayComponent,
   4: LiunaVaComponent,
+  5: Nffe178ApgComponent,
 };
 
 @Directive({selector: '[respondentsList]'})

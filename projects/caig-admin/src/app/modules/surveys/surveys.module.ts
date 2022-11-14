@@ -17,6 +17,7 @@ import {LiunaVaComponent} from './components/respondents-list/surveys/liuna-va.c
 import {NageVaTriageComponent} from './components/respondents-list/surveys/nage-va-triage.component';
 import {NoSurveyComponent} from './components/respondents-list/surveys/no-survey.component';
 import {EmployeeInfoComponent} from './components/employee-info/employee-info.component';
+import {Nffe178ApgComponent} from './components/respondents-list/surveys/nffe-178-apg.component';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {EmployeeInfoComponent} from './components/employee-info/employee-info.co
     NageVaTriageComponent,
     NoSurveyComponent,
     EmployeeInfoComponent,
+    Nffe178ApgComponent,
   ],
   providers: [
     AllSurveysResolver,

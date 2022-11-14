@@ -263,9 +263,12 @@
                   <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
                     <b>{{item.field}}:</b>
                     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
-                      <div>{{item.oldValue}}</div>
-                      <div>&#187;</div>
-                      <div style="min-width: 67px">
+                      <div style="min-width: 57px">
+                        <b *ngIf="item.newValue === ''; else displayValue">{{noValuePlaceholder}}</b>
+                        <ng-template #displayValue>{{item.oldValue}}</ng-template>
+                      </div>
+                      <div>&#8594;</div>
+                      <div style="min-width: 57px">
                         <b *ngIf="item.newValue === ''; else displayValue">{{noValuePlaceholder}}</b>
                         <ng-template #displayValue>{{item.newValue}}</ng-template>
                       </div>

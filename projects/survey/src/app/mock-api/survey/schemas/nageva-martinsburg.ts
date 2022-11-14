@@ -2,7 +2,7 @@ import {CheckboxField, DateField, RadioField, SelectField} from 'dynamic-form';
 import {Validators} from '@angular/forms';
 import {nageVa} from './unions/nage-va';
 import {contactStep} from './shared/contact';
-import {months$, years$, nextDay} from './shared/date';
+import {months$, years$, nextDay, currentYear, currentMonth} from './shared/date';
 import {startBeforeDate$, yesOrNo$} from './shared/common';
 import {followUpTimes, times$, filterDate, maxDate} from './shared/appointment';
 import {SurveySchemaBase} from '../../../survey/survey-data.service';
@@ -65,7 +65,8 @@ export const schema2: SurveySchemaBase = {
                 options: months$,
                 optionDisabled: (option, form) => {
                   const num = Number(option.key);
-                  return form.value.startYear === '2016' && num > 0 && num < 4;
+                  const startYear = Number(form.value.startYear);
+                  return startYear === 2016 && num > 0 && num < 4 || startYear === currentYear && num > currentMonth + 1;
                 },
                 deselect: true,
               }),

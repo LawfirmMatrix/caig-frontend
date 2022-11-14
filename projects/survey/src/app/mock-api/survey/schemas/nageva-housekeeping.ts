@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import {of} from 'rxjs';
 import {nageVa} from './unions/nage-va';
 import {contactStep} from './shared/contact';
-import {months$, years$} from './shared/date';
+import {months$, years$, currentDay} from './shared/date';
 import {yesOrNo$} from './shared/common';
 import {SurveySchemaBase} from '../../../survey/survey-data.service';
 
@@ -109,7 +109,7 @@ export const schema3: SurveySchemaBase = {
                   const year = form.value.startYear;
                   if (month > -1 && year) {
                     const date = moment({year: Number(year), month, date: 1});
-                    return date.isSameOrAfter(moment());
+                    return date.isSameOrAfter(currentDay);
                   }
                   return false;
                 },
@@ -152,7 +152,7 @@ export const schema3: SurveySchemaBase = {
                   const year = form.value.endYear;
                   if (month > -1 && year) {
                     const date = moment({year: Number(year), month, date: 1});
-                    return date.isSameOrAfter(moment());
+                    return date.isSameOrAfter(currentDay);
                   }
                   return false;
                 },

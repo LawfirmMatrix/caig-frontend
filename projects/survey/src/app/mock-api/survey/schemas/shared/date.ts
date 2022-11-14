@@ -5,6 +5,7 @@ import {uncertain} from './common';
 export const currentDay = moment();
 export const nextDay = moment().add(1, 'day');
 export const currentYear = currentDay.year();
+export const currentMonth = currentDay.month();
 
 export const months$ = of([
   uncertain,
@@ -23,7 +24,7 @@ export const months$ = of([
 ]);
 
 export const years$ = (fromYear: number) => {
-  return of(new Array(currentYear - fromYear).fill(fromYear).map((v, i) => {
+  return of(new Array(currentYear - fromYear + 1).fill(fromYear).map((v, i) => {
     const year = String(v + i);
     return { key: year, value: year };
   }));
