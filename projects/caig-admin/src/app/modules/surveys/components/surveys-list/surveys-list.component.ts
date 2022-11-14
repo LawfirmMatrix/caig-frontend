@@ -215,6 +215,6 @@ export class SurveysListComponent {
     }, () => this.isProcessing = false);
   }
   private static openSurvey(baseUrl: string, survey: Survey, reload?: boolean): void {
-    window.open(`https://${baseUrl}/survey/${survey.id}${reload ? '?reload=true' : ''}`, '_blank')
+    window.open(`https://${baseUrl}/survey${survey.locations?.length ? '' : `/${survey.id}`}${reload ? '?reload=true' : ''}`, '_blank')
   }
 }
