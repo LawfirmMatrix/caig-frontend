@@ -29,7 +29,13 @@
   ],
   "appData": {
     "changes": {
-
+      "Tables": [
+        "Column headers can now be dragged and dropped to re-order them. You no longer have to access the table options to do this.",
+        "Additional filters have been added to column headers to allow for more refined filtering"
+      ],
+      "Misc.": [
+        "Various bug fixes and improvements"
+      ]
     },
     "forceReloadDuration": 0,
     "clearLocalStorage": false
