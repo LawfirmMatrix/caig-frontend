@@ -6,6 +6,7 @@ import {CommonModule} from '@angular/common';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DynamicFormModule} from 'dynamic-form';
 import {VsTableModule} from 'vs-table';
+import {EventsFiltersResolver} from './events-filters.resolver';
 
 @NgModule({
   imports: [
@@ -19,5 +20,8 @@ import {VsTableModule} from 'vs-table';
   declarations: [
     EventsComponent,
   ],
+  providers: [
+    EventsFiltersResolver,
+  ]
 })
 export class EventsModule { }

@@ -43,14 +43,7 @@ export class EventsComponent implements OnInit {
             new SelectField({
               key: 'code',
               label: 'Type(s)',
-              options: this.store.select(eventTypes).pipe(
-                tap((types) => {
-                  if (!types) {
-                    this.store.dispatch(EnumsActions.loadEnums({enumType: 'eventTypes'}));
-                  }
-                }),
-                filter(isNotUndefined)
-              ),
+              options: this.store.select(eventTypes).pipe(filter(isNotUndefined)),
               itemKey: 'code',
               displayField: 'description',
               multiple: true,
@@ -61,14 +54,7 @@ export class EventsComponent implements OnInit {
           fields[0].push(new SelectField({
             key: 'userId',
             label: 'User(s)',
-            options: this.store.select(usersForSettlement).pipe(
-              tap((users) => {
-                if (!users) {
-                  this.store.dispatch(UserActions.loadUsers());
-                }
-              }),
-              filter(isNotUndefined)
-            ),
+            options: this.store.select(usersForSettlement).pipe(filter(isNotUndefined)),
             itemKey: 'id',
             displayField: 'username',
             multiple: true,
