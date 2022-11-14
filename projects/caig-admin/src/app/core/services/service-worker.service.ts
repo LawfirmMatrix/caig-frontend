@@ -42,14 +42,12 @@ export class ServiceWorkerService {
       this.handleUpdateError();
     }
   }
-  public installUpdate(notify = true): void {
+  public installUpdate(): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
         this.isUpdating = false;
-        if (notify) {
-          localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
-        }
+        localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
         location.reload();
       });
     }
@@ -62,7 +60,7 @@ export class ServiceWorkerService {
       .pipe(
         tap((updateFound) => {
           if (updateFound) {
-            this.installUpdate(false);
+            this.installUpdate();
           }
         }),
         filter((installUpdate) => !installUpdate),

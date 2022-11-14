@@ -6,7 +6,6 @@ import {ThemeService} from './theme/theme.service';
 import {map} from 'rxjs/operators';
 import {AuthService} from './auth/services/auth.service';
 import {AuthActions} from './auth/store/actions/action-types';
-import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +21,6 @@ export class AppComponent {
     private theme: ThemeService,
   ) { }
   public ngOnInit() {
-    console.log('environment.production:', environment.production);
     this.applyCachedToken();
     this.listenToLoadingEvents();
   }
