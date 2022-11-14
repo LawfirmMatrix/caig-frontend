@@ -57,15 +57,7 @@ export class EditUserComponent implements OnInit {
       new SelectField({
         key: 'roleId',
         label: 'Role',
-        options: this.store.select(roles)
-          .pipe(
-            tap((roles) => {
-              if (!roles) {
-                this.store.dispatch(UserActions.loadRoles());
-              }
-            }),
-            filter(isNotUndefined)
-          ),
+        options: this.store.select(roles).pipe(filter(isNotUndefined)),
         itemKey: 'id',
         displayField: 'name',
         required: true,

@@ -48,7 +48,7 @@ export class LoginComponent {
     const password = this.signInForm.value.password || '';
     this.authService.login(this.signInForm.value.username || '', password)
       .subscribe((token) => {
-        this.store.dispatch(AuthActions.login({token}));
+        this.store.dispatch(AuthActions.login({token}))
         const redirectURL = this.route.snapshot.queryParamMap.get('redirect') || '/';
         this.router.navigateByUrl(redirectURL);
       }, () => {
@@ -57,4 +57,3 @@ export class LoginComponent {
       });
   }
 }
-

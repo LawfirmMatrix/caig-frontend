@@ -8,6 +8,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {EditUserComponent} from './component/edit-user/edit-user.component';
 import {DynamicFormModule} from 'dynamic-form';
 import {UsersResolver} from './services/users.resolver';
+import {UserRolesResolver} from './services/user-roles.resolver';
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import {UsersResolver} from './services/users.resolver';
     UsersComponent,
     EditUserComponent,
   ],
-  providers: [ UsersResolver ],
+  providers: [ UsersResolver, UserRolesResolver ],
 })
 export class UsersModule { }
