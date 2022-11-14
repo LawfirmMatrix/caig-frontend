@@ -34,6 +34,7 @@ export class NavMenuService {
         ];
       case Portal.Survey:
         return [
+          employees,
           surveys,
         ];
       default:

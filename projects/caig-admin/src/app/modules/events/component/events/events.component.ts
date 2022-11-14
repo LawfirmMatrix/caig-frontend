@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, SelectField} from 'dynamic-form';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, first} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {isAdmin, settlementId} from '../../../../core/store/selectors/core.selectors';
-import {debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, tap} from 'rxjs/operators';
+import {isAdmin, settlementId, portal} from '../../../../core/store/selectors/core.selectors';
+import {debounceTime, distinctUntilChanged, filter, map, startWith, switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GeneralEvent} from '../../../../models/employee.model';
 import {EventService} from '../../../../core/services/event.service';
@@ -13,11 +13,10 @@ import {ChangesColumn, DateColumn, TableColumn, TextColumn} from 'vs-table';
 import * as moment from 'moment';
 import {mapNumberArrToModel} from '../../../employees/components/employees-list/employees-list.component';
 import {eventTypes} from '../../../../enums/store/selectors/enums.selectors';
-import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {isNotUndefined} from '../../../../core/util/functions';
 import {isEqual} from 'lodash-es';
 import {usersForSettlement} from '../../../users/store/selectors/user.selectors';
-import {UserActions} from '../../../users/store/actions/action-types';
+import {Portal} from '../../../../models/session.model';
 
 @Component({
   selector: 'app-events',
@@ -133,6 +132,11 @@ export class EventsComponent implements OnInit {
       .subscribe((queryParams) => this.router.navigate([], {queryParams, replaceUrl: true}));
   }
   public viewEmployee(id: number): void {
-    this.router.navigate(['/employees', id, 'view']);
+    this.store.select(portal)
+      .pipe(first())
+      .subscribe((portal) => {
+        const baseUrl = portal === Portal.CallCenter ? 'call-list' : 'employees';
+        this.router.navigate([`/${baseUrl}`, id, 'view']);
+      });
   }
 }

@@ -6,8 +6,8 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store/reducers';
 
 @Injectable({providedIn: 'root'})
-export class CaigPortalGuard extends PortalGuard implements CanActivate {
-  protected override allowAccess = [ Portal.CAIG ];
+export class CaigSurveyPortalGuard extends PortalGuard implements CanActivate {
+  protected override allowAccess = [ Portal.CAIG, Portal.Survey ];
   constructor(protected override store: Store<AppState>, protected override router: Router) {
     super(store, router);
   }

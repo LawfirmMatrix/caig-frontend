@@ -7,7 +7,7 @@ import {LoginComponent} from './auth/login/login.component';
 import {NoAuthGuard} from './auth/services/guards/no-auth.guard';
 import {CheckForUpdatesResolver} from './check-for-updates.resolver';
 import {SessionResolver} from './session.resolver';
-import {CaigPortalGuard} from './core/guards/caig-portal.guard';
+import {CaigSurveyPortalGuard} from './core/guards/caig-survey-portal.guard';
 import {AdminGuard} from './core/guards/admin-guard';
 import {CaigCallCenterPortalGuard} from './core/guards/caig-call-center-portal.guard';
 import {CallCenterPortalGuard} from './core/guards/call-center-portal.guard';
@@ -40,7 +40,7 @@ const routes: Routes = [
             path: 'employees',
             loadChildren: () => import('./modules/employees/employees.module').then(m => m.EmployeesModule),
             data: { animation: 'employees' },
-            canActivate: [ CaigPortalGuard ],
+            canActivate: [ CaigSurveyPortalGuard ],
           },
           {
             path: 'call-list',
