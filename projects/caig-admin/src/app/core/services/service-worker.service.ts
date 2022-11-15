@@ -1,7 +1,7 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
-import {catchError, first, shareReplay, skip, switchMap, tap, map, withLatestFrom} from 'rxjs/operators';
+import {concat, filter, from, interval, Observable, of, throwError, delay} from 'rxjs';
+import {catchError, first, shareReplay, skip, switchMap, tap} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
@@ -61,7 +61,7 @@ export class ServiceWorkerService {
     }
     return from(this.updates.checkForUpdate())
       .pipe(
-        withLatestFrom(this.isUpdateAvailable$),
+        delay(1000),
         tap((updateFound) => {
           console.log(updateFound);
           if (updateFound) {
