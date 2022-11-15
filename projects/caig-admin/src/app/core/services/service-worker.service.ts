@@ -41,7 +41,6 @@ export class ServiceWorkerService {
     return event.type === 'VERSION_READY';
   }
   private static storeAppData(event: VersionReadyEvent): void {
-    console.log('STORING APP DATA!');
     const appData = event.latestVersion.appData as AppData | undefined;
     if (appData) {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
@@ -66,10 +65,9 @@ export class ServiceWorkerService {
     return from(this.updates.checkForUpdate())
       .pipe(
         switchMap((updateFound) =>
-          this.updates.versionUpdates.pipe(
+          updateFound ? this.updates.versionUpdates.pipe(
             first(),
             tap((event) => {
-              console.log('version updates', event, updateFound);
               if (ServiceWorkerService.isVersionReady(event)) {
                 ServiceWorkerService.storeAppData(event);
               }
@@ -78,7 +76,7 @@ export class ServiceWorkerService {
               }
             }),
             map(() => updateFound),
-          )
+          ) : of(updateFound)
         ),
         filter((updateFound) => !updateFound),
         catchError((err) => {
