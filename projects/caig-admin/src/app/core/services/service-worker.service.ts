@@ -41,6 +41,7 @@ export class ServiceWorkerService {
     return event.type === 'VERSION_READY';
   }
   private static storeAppData(event: VersionReadyEvent): void {
+    console.log('STORING APP DATA!');
     const appData = event.latestVersion.appData as AppData | undefined;
     if (appData) {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
