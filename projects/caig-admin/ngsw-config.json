@@ -29,9 +29,7 @@
   ],
   "appData": {
     "changes": {
-      "Tables": [
-        "Fixed a bug causing the \"Changes\" column of Events tables to display incorrect information"
-      ]
+
     },
     "forceReloadDuration": 0,
     "clearLocalStorage": false

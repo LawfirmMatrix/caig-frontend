@@ -1,7 +1,7 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
 import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
-import {catchError, first, shareReplay, skip, switchMap, tap} from 'rxjs/operators';
+import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
@@ -42,12 +42,14 @@ export class ServiceWorkerService {
       this.handleUpdateError();
     }
   }
-  public installUpdate(): void {
+  public installUpdate(notify = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
         this.isUpdating = false;
-        localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
+        if (notify) {
+          localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
+        }
         location.reload();
       });
     }
@@ -58,9 +60,11 @@ export class ServiceWorkerService {
     }
     return from(this.updates.checkForUpdate())
       .pipe(
+        switchMap((updateFound) => updateFound ?
+          this.isUpdateAvailable$.pipe(first(), map(() => updateFound)) : of(updateFound)),
         tap((updateFound) => {
           if (updateFound) {
-            this.installUpdate();
+            this.installUpdate(false);
           }
         }),
         filter((installUpdate) => !installUpdate),
