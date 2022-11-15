@@ -1,7 +1,7 @@
 import {ApplicationRef, Injectable} from '@angular/core';
-import {SwUpdate, VersionReadyEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, delay} from 'rxjs';
-import {catchError, first, shareReplay, skip, switchMap, tap, withLatestFrom, map} from 'rxjs/operators';
+import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
+import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
+import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
@@ -15,14 +15,8 @@ export class ServiceWorkerService {
   public isUpdating = false;
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
-      filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY'),
-      tap((event) => {
-        console.log(event);
-        const appData = event.latestVersion.appData as AppData | undefined;
-        if (appData) {
-          localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
-        }
-      }),
+      filter(ServiceWorkerService.isVersionReady),
+      tap(ServiceWorkerService.storeAppData),
       shareReplay(1),
     );
   constructor(
@@ -41,6 +35,15 @@ export class ServiceWorkerService {
       this.pollForUpdates();
       this.handleUnrecoverableState();
       this.handleUpdateError();
+    }
+  }
+  private static isVersionReady(event: VersionEvent): event is VersionReadyEvent {
+    return event.type === 'VERSION_READY';
+  }
+  private static storeAppData(event: VersionReadyEvent): void {
+    const appData = event.latestVersion.appData as AppData | undefined;
+    if (appData) {
+      localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
   }
   public installUpdate(notify = true): void {
@@ -64,17 +67,19 @@ export class ServiceWorkerService {
         switchMap((updateFound) =>
           this.updates.versionUpdates.pipe(
             first(),
-            tap((x) => console.log(x)),
-            map(() => updateFound)
+            tap((event) => {
+              console.log('version updates', event, updateFound);
+              if (ServiceWorkerService.isVersionReady(event)) {
+                ServiceWorkerService.storeAppData(event);
+              }
+              if (updateFound) {
+                this.installUpdate(false);
+              }
+            }),
+            map(() => updateFound),
           )
         ),
-        tap((updateFound) => {
-          console.log(updateFound);
-          if (updateFound) {
-            this.installUpdate(false);
-          }
-        }),
-        filter((installUpdate) => !installUpdate),
+        filter((updateFound) => !updateFound),
         catchError((err) => {
           location.reload();
           return throwError(err);
