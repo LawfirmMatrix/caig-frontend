@@ -68,7 +68,6 @@ export class ServiceWorkerService {
           updateFound ? this.updates.versionUpdates.pipe(
             first(),
             tap((event) => {
-              console.log(event);
               if (ServiceWorkerService.isVersionReady(event)) {
                 ServiceWorkerService.storeAppData(event);
               }

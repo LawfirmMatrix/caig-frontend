@@ -29,7 +29,7 @@
   ],
   "appData": {
     "changes": {
-      "Test": [ "A", "B", "C" ]
+
     },
     "forceReloadDuration": 0,
     "clearLocalStorage": false
