@@ -63,6 +63,7 @@ export class ServiceWorkerService {
       .pipe(
         switchMap((updateFound) =>
           this.updates.versionUpdates.pipe(
+            first(),
             tap((x) => console.log(x)),
             map(() => updateFound)
           )
