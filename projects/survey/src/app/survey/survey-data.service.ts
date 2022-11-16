@@ -5,7 +5,6 @@ import {Observable, catchError, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {shareReplay} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
-import {UntypedFormGroup} from '@angular/forms';
 
 @Injectable({providedIn: 'root'})
 export class SurveyDataService {

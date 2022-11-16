@@ -10,7 +10,7 @@ export class ShortcutRedirectGuard implements CanActivate {
     return this.surveyService.initialize$
       .pipe(
         tap((survey) => {
-          const extras: NavigationExtras = { replaceUrl: true, queryParamsHandling: 'preserve' };
+          const extras: NavigationExtras = { replaceUrl: true, queryParams: route.queryParams };
           const shortcut = route.paramMap.get('shortcut');
           const baseUrl = '/';
           if (!shortcut) {

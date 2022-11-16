@@ -10,7 +10,7 @@ export class MultipleLocationsGuard implements CanActivate {
     return this.surveyService.initialize$
       .pipe(
         tap((survey) => {
-          const extras: NavigationExtras = { replaceUrl: true, queryParamsHandling: 'preserve' };
+          const extras: NavigationExtras = { replaceUrl: true, queryParams: route.queryParams };
           if (survey.locations?.length === 1) {
             this.router.navigate(['/survey', survey.id, survey.locations[0].id], extras);
           } else if (!survey.locations?.length) {
