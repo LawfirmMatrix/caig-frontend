@@ -48,14 +48,14 @@ export class SurveysListComponent {
       title: '',
       position: 'end',
       label: (row) => 'Test',
-      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl),
+      callback: (row) => SurveysListComponent.openSurvey(SurveysListComponent.testUrl, row.id),
       color: (row) => undefined,
     },
     {
       title: '',
       position: 'end',
       label: (row) => 'Live',
-      callback: (row) => SurveysListComponent.openSurvey(row.url),
+      callback: (row) => SurveysListComponent.openSurvey(row.url, row.id),
       color: (row) => 'warn',
       disabled: (row) => !row.url,
     },
@@ -63,7 +63,7 @@ export class SurveysListComponent {
       title: '',
       position: 'end',
       label: (row) => 'Event',
-      callback: (row) => SurveysListComponent.openSurvey(row.url, true),
+      callback: (row) => SurveysListComponent.openSurvey(row.url, row.id, true),
       color: (row) => 'accent',
       disabled: (row) => !row.url,
     }
@@ -214,7 +214,7 @@ export class SurveysListComponent {
       this.isProcessing = false;
     }, () => this.isProcessing = false);
   }
-  private static openSurvey(baseUrl: string, reload?: boolean): void {
-    window.open(`https://${baseUrl}${reload ? '?reload=true' : ''}`, '_blank')
+  private static openSurvey(baseUrl: string, surveyId: string, reload?: boolean): void {
+    window.open(`https://${baseUrl}/survey/${surveyId}${reload ? '?reload=true' : ''}`, '_blank')
   }
 }
