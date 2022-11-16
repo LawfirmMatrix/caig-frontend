@@ -17,7 +17,7 @@ export class SelectSurveyComponent extends HandsetComponent {
     options: this.route.data.pipe(map((data) => data['survey'].locations)),
     itemKey: 'id',
     displayField: 'name',
-    onChange: (locationId) => this.router.navigate(['/survey', this.route.snapshot.data['survey'].id, locationId]),
+    onChange: (locationId) => this.router.navigate(['/survey', this.route.snapshot.data['survey'].id, locationId], {queryParamsHandling: 'preserve'}),
   });
   constructor(
     protected override breakpointObserver: BreakpointObserver,

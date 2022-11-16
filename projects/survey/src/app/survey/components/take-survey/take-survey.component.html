@@ -10,7 +10,7 @@
       </ng-template>
     </div>
     <ng-template #surveyContent>
-      <mat-card *ngIf="!isCompleted && survey.locations && survey.locations.length > 1" [ngClass]="{'full-body': !(isHandset$ | async)}" class="btn-card" fxLayout="row" fxLayoutAlign="start center" routerLink="/">
+      <mat-card *ngIf="!isCompleted && survey.locations && survey.locations.length > 1" [ngClass]="{'full-body': !(isHandset$ | async)}" class="btn-card" fxLayout="row" fxLayoutAlign="start center" routerLink="/" queryParamsHandling="preserve">
         <mat-icon fxFlexOffset="16px" aria-label="Go back">arrow_back_ios</mat-icon>
         <h1>Select a different facility location</h1>
       </mat-card>
