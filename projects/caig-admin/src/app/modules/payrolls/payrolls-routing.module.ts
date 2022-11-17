@@ -8,18 +8,16 @@ import {PreviewResolver} from './services/preview-resolver';
 const routes: Routes = [
   {
     path: '',
-    component: PayrollsListComponent,
-    resolve: { payrolls: PayrollsResolver }
-  },
-  {
-    path: 'add',
-    pathMatch: 'full',
-    redirectTo: '/',
-  },
-  {
-    path: 'add/:batchId',
-    component: AddToPayrollComponent,
-    resolve: { preview: PreviewResolver },
+    resolve: { payrolls: PayrollsResolver },
+    children: [
+      { path: '', component: PayrollsListComponent },
+      { path: 'add', pathMatch: 'full', redirectTo: '/' },
+      {
+        path: 'add/:batchId',
+        component: AddToPayrollComponent,
+        resolve: { preview: PreviewResolver }
+      },
+    ],
   },
 ];
 

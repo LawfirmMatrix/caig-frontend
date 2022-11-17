@@ -7,6 +7,8 @@ import {AddToPayrollComponent} from './components/add-to-payroll/add-to-payroll.
 import {CommonModule} from '@angular/common';
 import {PreviewResolver} from './services/preview-resolver';
 import {VsTableModule} from 'vs-table';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {DynamicFormModule} from 'dynamic-form';
 
 @NgModule({
   imports: [
@@ -14,6 +16,8 @@ import {VsTableModule} from 'vs-table';
     PayrollsMaterialModule,
     CommonModule,
     VsTableModule,
+    FlexLayoutModule,
+    DynamicFormModule,
   ],
   declarations: [
     PayrollsListComponent,

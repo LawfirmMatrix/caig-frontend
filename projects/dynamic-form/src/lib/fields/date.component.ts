@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Moment} from 'moment';
 import {DateFilterFn, MatCalendarView, MatDatepicker} from '@angular/material/datepicker';
-import {noop, filter} from 'rxjs';
-import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-base';
+import {noop, filter, startWith} from 'rxjs';
+import {FieldBaseComponent, FieldBase, ControlType, BaseOptions, FieldPosition} from './field-base';
 
 @Component({
   selector: 'dynamic-form-datepicker',
   template: `
-    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+    <div fxLayout="row" [fxLayoutAlign]="field.position + ' center'" fxLayoutGap="8px">
       <mat-form-field [formGroup]="form" [appearance]="field.appearance" [color]="field.color">
         <mat-label>{{field.label}}</mat-label>
         <input autocomplete="off"
@@ -38,8 +38,8 @@ export class DateComponent extends FieldBaseComponent<DateField> implements OnIn
     const ctrl = this.control;
     if (ctrl) {
       ctrl.valueChanges
-        .pipe(filter((value) => !!(value && value.format)))
-        .subscribe((value) => ctrl.setValue(value.format('YYYY-MM-DD'), {emitEvent: false}));
+        .pipe(filter((value) => !!(value && value.format)), startWith(ctrl.value))
+        .subscribe((value) => ctrl.setValue(value?.format('YYYY-MM-DD'), {emitEvent: false}));
     }
   }
 }
@@ -53,6 +53,7 @@ export class DateField extends FieldBase<Moment> {
   public max: Moment | undefined;
   public dateFilter: DateFilterFn<Moment | null | undefined>;
   public openButton: boolean;
+  public position: FieldPosition;
   constructor(options: DateOptions) {
     super(options);
     this.placeholder = options.placeholder || '';
@@ -63,6 +64,7 @@ export class DateField extends FieldBase<Moment> {
     this.max = options.max;
     this.dateFilter = options.dateFilter || ( () => true );
     this.openButton = !!options.openButton;
+    this.position = options.position || 'start';
   }
 }
 
@@ -74,4 +76,5 @@ export interface DateOptions extends BaseOptions<Moment> {
   max?: Moment;
   dateFilter?: DateFilterFn<Moment | null | undefined>;
   openButton?: boolean;
+  position?: FieldPosition;
 }

@@ -85,7 +85,7 @@ export interface ButtonColumn<T> {
   position: 'start' | 'end';
   title: string;
   label: (row: T) => string | number;
-  callback: (row: T) => void;
+  callback: (row: T, index: number) => void;
   color?: (row: T) => ThemePalette;
   disabled?: (row: T) => boolean;
 }

@@ -242,7 +242,7 @@
           <td *ngFor="let column of buttonColumnsStart" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
             <button mat-raised-button
                     [color]="column.color && column.color(row)"
-                    (click)="buttonColumnClick($event, column, row)"
+                    (click)="buttonColumnClick($event, column, row, i)"
                     [disabled]="column.disabled && column.disabled(row)">
               {{ column.label(row) }}
             </button>
@@ -290,7 +290,7 @@
           <td *ngFor="let column of buttonColumnsEnd" [style.width.px]="columnWidth" fxLayoutAlign="center center" (click)="$event.stopPropagation()">
             <button mat-raised-button
                     [color]="column.color && column.color(row)"
-                    (click)="buttonColumnClick($event, column, row)"
+                    (click)="buttonColumnClick($event, column, row, i)"
                     [disabled]="column.disabled && column.disabled(row)">
               {{ column.label(row) }}
             </button>

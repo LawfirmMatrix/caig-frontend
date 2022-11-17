@@ -1,0 +1,20 @@
+mat-stepper {
+  height: 100%;
+}
+
+::ng-deep .mat-horizontal-stepper-wrapper {
+  height: 100%;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  flex-direction: column;
+  flex: 1 1 0;
+}
+
+::ng-deep .mat-horizontal-stepper-content {
+  height: 100%;
+}
+
+mat-card {
+  margin: 24px;
+}

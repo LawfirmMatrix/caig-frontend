@@ -307,9 +307,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.saveCache(['columns']);
   }
 
-  public buttonColumnClick(event: MouseEvent, column: ButtonColumn<T>, row: T): void {
+  public buttonColumnClick(event: MouseEvent, column: ButtonColumn<T>, row: T, index: number): void {
     event.stopPropagation();
-    column.callback(row);
+    column.callback(row, index);
   }
 
   public clearAllFilters(): void {
