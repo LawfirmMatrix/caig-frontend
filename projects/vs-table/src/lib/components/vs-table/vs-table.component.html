@@ -253,8 +253,10 @@
               [fxLayoutAlign]="column.fxLayoutAlign"
               [style.minWidth.px]="columnWidth"
               [ngSwitch]="column.dataType"
+              [style.backgroundColor]="column.backgroundColor ? column.backgroundColor(row) : ''"
+              [style.color]="column.color ? column.color(row) : ''"
               style="border-radius: 5px;">
-            <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign" [style.color]="column.color ? column.color(row) : ''">
+            <div fxLayout="row" [fxLayoutAlign]="column.fxLayoutAlign">
               <div [matBadge]="column.badge ? column.badge.value(row) : undefined"
                    class="stretch-badge"
                    [matBadgeColor]="column.badge ? column.badge.color : undefined"

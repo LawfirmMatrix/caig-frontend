@@ -6,6 +6,7 @@ export abstract class BaseColumn<T> {
   public hide: boolean;
   public fxLayoutAlign: ColumnAlign;
   public color: ((row: T) => string) | undefined;
+  public backgroundColor: ((row: T) => string) | undefined;
   public tooltip: ((row: T) => string) | undefined;
   public badge: BadgeConfig<T> | undefined;
   public fxFlex: number;
@@ -21,5 +22,6 @@ export abstract class BaseColumn<T> {
     this.tooltip = config.tooltip;
     this.badge = config.badge;
     this.fxFlex = config.fxFlex || 0;
+    this.backgroundColor = config.backgroundColor;
   }
 }

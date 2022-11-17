@@ -12,6 +12,7 @@ import {AdminGuard} from './core/guards/admin-guard';
 import {CaigCallCenterPortalGuard} from './core/guards/caig-call-center-portal.guard';
 import {CallCenterPortalGuard} from './core/guards/call-center-portal.guard';
 import {SurveyPortalGuard} from './core/guards/survey-portal.guard';
+import {CaigPortalGuard} from './core/guards/caig-portal.guard';
 
 export const loginRoute = 'login';
 
@@ -65,6 +66,12 @@ const routes: Routes = [
             loadChildren: () => import('./modules/surveys/surveys.module').then(m => m.SurveysModule),
             data: { animation: 'surveys' },
             canActivate: [ SurveyPortalGuard ],
+          },
+          {
+            path: 'payrolls',
+            loadChildren: () => import('./modules/payrolls/payrolls.module').then(m => m.PayrollsModule),
+            data: { animation: 'payrolls' },
+            canActivate: [ CaigPortalGuard ],
           }
         ],
       },

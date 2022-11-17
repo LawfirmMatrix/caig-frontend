@@ -68,6 +68,7 @@ export interface TableColumn<T> {
   hide?: boolean;
   fxLayoutAlign?: ColumnAlign;
   color?: (row: T) => string;
+  backgroundColor?: (row: T) => string;
   tooltip?: (row: T) => string;
   badge?: BadgeConfig<T>;
   calculate?: (row: T) => string;
