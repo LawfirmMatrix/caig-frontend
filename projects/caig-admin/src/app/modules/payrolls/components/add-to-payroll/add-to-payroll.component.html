@@ -82,8 +82,8 @@
             </div>
 
             <div *ngIf="last" fxLayout="row" fxLayoutAlign="end center" style="overflow: hidden">
-              <mat-chip-list *ngIf="(warningPayments$ | async)?.length as warnings">
-                <mat-chip selected color="warn">{{warnings}} warning{{warnings === 1 ? '' : 's'}}</mat-chip>
+              <mat-chip-list>
+                <mat-chip *ngIf="(warningPayments$ | async)?.length as warnings" selected color="warn">{{warnings}} warning{{warnings === 1 ? '' : 's'}}</mat-chip>
                 <mat-chip selected color="primary">{{totalSum$ | async | currency:'USD':'$'}} total payroll</mat-chip>
               </mat-chip-list>
             </div>

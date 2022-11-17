@@ -91,6 +91,9 @@ export class AddToPayrollComponent implements OnInit {
       callback: (row, index) => {
         this.payments$.value.splice(index, 1);
         this.payments$.next([...this.payments$.value]);
+        if (this.payments$.value.length === 1) {
+          this.buttonColumns = [];
+        }
       },
       title: '',
       disabled: () => this.isProcessing,
