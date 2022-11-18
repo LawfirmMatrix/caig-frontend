@@ -82,8 +82,10 @@ export class ServiceWorkerService {
         first(),
         tap(() => console.log('initialized$')),
         switchMap(() =>
-          from(this.updates.checkForUpdate())
-            .pipe(catchError(errorHandler))
+          from(this.updates.checkForUpdate().then((x) => {
+            console.log('then', x);
+            return x;
+          }).catch((x) => console.log('catch', x)))
         ),
         tap((x) => console.log('check for update resolved', x)),
         switchMap((updateFound) =>
