@@ -161,7 +161,7 @@ export class AddToPayrollComponent implements OnInit, OnDestroy {
     this.route.data.subscribe((data) => {
       const preview = data[AddToPayrollComponent.PREVIEW_PARAM];
       this.payments$.next(preview?.payments || []);
-      if (preview) {
+      if (preview && this.formFields.length === 1) {
         this.formFields.unshift([
           new AutocompleteField({
             key: AddToPayrollComponent.PAYROLL_ID_KEY,
