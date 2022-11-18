@@ -1,6 +1,6 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, Subject} from 'rxjs';
+import {concat, filter, from, interval, Observable, of, throwError, ReplaySubject} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
 export class ServiceWorkerService {
   private static readonly NOTIFY_STORAGE_KEY = 'SW_UPDATE';
   private static readonly APP_DATA_STORAGE_KEY = 'SW_UPDATE_APP_DATA';
-  private initialized$ = new Subject<void>();
+  private initialized$ = new ReplaySubject<void>();
   public isUpdating = false;
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
@@ -74,6 +74,7 @@ export class ServiceWorkerService {
     console.log('checking for update');
     return this.initialized$
       .pipe(
+        first(),
         switchMap(() => from(this.updates.checkForUpdate())),
         tap((x) => console.log('check for update resolved', x)),
         switchMap((updateFound) =>
