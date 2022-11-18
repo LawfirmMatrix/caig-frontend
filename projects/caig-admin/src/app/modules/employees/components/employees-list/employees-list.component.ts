@@ -228,14 +228,22 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
   public isProcessing = true;
   public tableMenuItems: TableMenuItem<Employee>[] = [
     {
-      name: () => 'Bulk Assign',
+      name: () => 'Bulk assign',
       callback: (rows) => this.assignUser(rows),
     },
+    {
+      name: () => 'Bulk add to payroll',
+      callback: (rows) => this.addToPayroll(rows),
+    }
   ];
   public rowMenuItems: RowMenuItem<Employee>[] = [
     {
       name: () => 'Assign',
       callback: (row) => this.assignUser([row]),
+    },
+    {
+      name: () => 'Add to payroll',
+      callback: (row) => this.addToPayroll([row]),
     },
     {
       name: () => 'View',
@@ -369,6 +377,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
   }
   public applyFilters(): void {
     this.router.navigate([], {queryParams: sanitizeModel(this.form.value), replaceUrl: true});
+  }
+  private addToPayroll(employees: Employee[]): void {
+    this.employeeService.createBatch(employees.map((e) => e.id))
+      .subscribe(({batchId}) => this.router.navigate(['/payrolls', 'add', batchId]));
   }
 }
 

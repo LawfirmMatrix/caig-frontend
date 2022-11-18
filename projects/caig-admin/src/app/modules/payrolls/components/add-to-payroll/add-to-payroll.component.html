@@ -1,0 +1,43 @@
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z8">
+    <div>Add to Payroll</div>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="disableSave$ | async">Save</button>
+  </mat-toolbar>
+
+  <div *ngIf="asyncAction$ | async as actions" fxLayout="row">
+    <div *ngIf="actions.isProcessing && actions.isSaving" style="margin: 16px 16px 0 0" fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <div fxFlexOffset="16px" style="white-space: nowrap; font-size: 20px">Saving payroll...</div>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </div>
+
+  <mat-card class="mat-elevation-z6" style="overflow: auto" [style.minHeight.px]="formFields.length * 100">
+    <mat-card-header>
+      <mat-card-title>Payroll Info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="form-container">
+      <dynamic-form [form]="form" [fields]="formFields" [model]="formModel"></dynamic-form>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card fxFlex fxLayout="column" class="mat-elevation-z6">
+    <mat-card-header>
+      <mat-card-title>Payments</mat-card-title>
+      <mat-chip-list>
+        <mat-chip *ngIf="warningsCount$ | async as warnings" selected color="warn">{{warnings}} warning{{warnings === 1 ? '' : 's'}}</mat-chip>
+        <mat-chip selected color="primary">{{totalSum$ | async | currency:'USD':'$'}} total payroll</mat-chip>
+      </mat-chip-list>
+    </mat-card-header>
+    <mat-card-content *ngIf="payments$ | async as payments" class="table-container" fxFlex>
+      <vs-table
+        id="add-payroll"
+        [disableRowClick]="true"
+        [rowMenuItems]="rowMenuItems"
+        [tableMenuItems]="tableMenuItems"
+        [data]="payments"
+        [columns]="columns">
+      </vs-table>
+    </mat-card-content>
+  </mat-card>
+</div>

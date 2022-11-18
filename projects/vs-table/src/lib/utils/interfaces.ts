@@ -68,6 +68,7 @@ export interface TableColumn<T> {
   hide?: boolean;
   fxLayoutAlign?: ColumnAlign;
   color?: (row: T) => string;
+  backgroundColor?: (row: T) => string;
   tooltip?: (row: T) => string;
   badge?: BadgeConfig<T>;
   calculate?: (row: T) => string;
@@ -84,7 +85,7 @@ export interface ButtonColumn<T> {
   position: 'start' | 'end';
   title: string;
   label: (row: T) => string | number;
-  callback: (row: T) => void;
+  callback: (row: T, index: number) => void;
   color?: (row: T) => ThemePalette;
   disabled?: (row: T) => boolean;
 }

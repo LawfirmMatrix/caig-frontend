@@ -1,0 +1,42 @@
+<div fxFlexFill fxLayout="column" *ngIf="payroll$ | async as payroll">
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z8">
+    <div>View Payroll</div>
+  </mat-toolbar>
+
+  <mat-card class="mat-elevation-z6">
+    <mat-card-header>
+      <mat-card-title>Payroll Info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row">
+        <div fxFlex fxLayoutAlign="center center" fxLayout="column">
+          <h3>Memo</h3>
+          <div>{{payroll.memo}}</div>
+        </div>
+        <div fxFlex fxLayoutAlign="center center" fxLayout="column">
+          <h3>Status</h3>
+          <div>{{payroll.status}}</div>
+        </div>
+        <div fxFlex fxLayoutAlign="center center" fxLayout="column">
+          <h3>Date</h3>
+          <div>{{payroll.date | date:'shortDate'}}</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex fxLayout="column" class="mat-elevation-z6">
+    <mat-card-header>
+      <mat-card-title>Payments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="table-container" fxFlex>
+      <vs-table
+        id="view-payroll"
+        [disableRowClick]="true"
+        [disableSelection]="true"
+        [data]="payroll.payments"
+        [columns]="columns">
+      </vs-table>
+    </mat-card-content>
+  </mat-card>
+</div>

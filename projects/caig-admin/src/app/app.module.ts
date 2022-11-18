@@ -33,6 +33,8 @@ const runtimeChecks = {
   strictStateSerializability: true,
 };
 
+const compareBy = (field: string) => (a: any, b: any) => a[field] - b[field];
+
 @NgModule({
   declarations: [
     AppComponent
@@ -50,9 +52,10 @@ const runtimeChecks = {
     EffectsModule.forRoot([]),
     EntityDataModule.forRoot({
       entityMetadata: {
-        Employee: { entityDispatcherOptions, sortComparer: (a, b) => a.id - b.id },
-        User: { entityDispatcherOptions, sortComparer: (a, b) => a.username - b.username },
-        Survey: { entityDispatcherOptions, sortComparer: (a, b) => a.name - b.name },
+        Employee: { entityDispatcherOptions, sortComparer: compareBy('id') },
+        User: { entityDispatcherOptions, sortComparer: compareBy('username') },
+        Survey: { entityDispatcherOptions, sortComparer: compareBy('name') },
+        Payroll: { entityDispatcherOptions, sortComparer: compareBy('id') }
       }
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
