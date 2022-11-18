@@ -75,6 +75,7 @@ export class ServiceWorkerService {
     return this.initialized$
       .pipe(
         first(),
+        tap(() => console.log('initialized$')),
         switchMap(() => from(this.updates.checkForUpdate())),
         tap((x) => console.log('check for update resolved', x)),
         switchMap((updateFound) =>
