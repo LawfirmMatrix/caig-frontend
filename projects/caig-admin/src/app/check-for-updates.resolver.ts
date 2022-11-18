@@ -7,6 +7,6 @@ import {Observable} from 'rxjs';
 export class CheckForUpdatesResolver implements Resolve<any> {
   constructor(private swService: ServiceWorkerService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    return this.swService.initialize();
+    return this.swService.checkForUpdate();
   }
 }

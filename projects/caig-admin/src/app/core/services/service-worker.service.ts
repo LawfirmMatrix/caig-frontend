@@ -27,15 +27,22 @@ export class ServiceWorkerService {
   ) {
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
+        console.log('no service worker controller');
         // controller is stuck with null value if browser is hard refreshed
         // service worker needs to be re-registered
-        navigator.serviceWorker.register('ngsw-worker.js');
+        navigator.serviceWorker.register('ngsw-worker.js')
+          .finally(() => this.initialize());
+      } else {
+        this.initialize();
       }
-      this.checkIfUpdated();
-      this.pollForUpdates();
-      this.handleUnrecoverableState();
-      this.handleUpdateError();
     }
+  }
+  private initialize(): void {
+    console.log('sw service init');
+    this.checkIfUpdated();
+    this.pollForUpdates();
+    this.handleUnrecoverableState();
+    this.handleUpdateError();
   }
   private static isVersionReady(event: VersionEvent): event is VersionReadyEvent {
     return event.type === 'VERSION_READY';
@@ -58,7 +65,7 @@ export class ServiceWorkerService {
       });
     }
   }
-  public initialize(): Observable<any> {
+  public checkForUpdate(): Observable<any> {
     if (!this.updates.isEnabled) {
       return of(null);
     }
