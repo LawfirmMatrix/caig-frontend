@@ -9,6 +9,8 @@ import {PreviewResolver} from './services/preview-resolver';
 import {VsTableModule} from 'vs-table';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DynamicFormModule} from 'dynamic-form';
+import {ViewPayrollComponent} from './components/view-payroll/view-payroll.component';
+import {SinglePayrollResolver} from './services/single-payroll-resolver';
 
 @NgModule({
   imports: [
@@ -22,10 +24,12 @@ import {DynamicFormModule} from 'dynamic-form';
   declarations: [
     PayrollsListComponent,
     AddToPayrollComponent,
+    ViewPayrollComponent,
   ],
   providers: [
     PayrollsResolver,
     PreviewResolver,
+    SinglePayrollResolver,
   ]
 })
 export class PayrollsModule { }

@@ -1,106 +1,43 @@
 <div fxFlexFill fxLayout="column">
-  <mat-toolbar fxLayoutAlign="space-between center">
-    <div>Setting up payroll</div>
-    <button *ngIf="canCancel" color="warn" mat-stroked-button (click)="location.back()">Cancel</button>
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z8">
+    <div>Add to Payroll</div>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="disableSave$ | async">Save</button>
   </mat-toolbar>
-  <div fxFlex fxLayout="column">
-    <mat-stepper linear orientation="horizontal" #stepper>
-      <mat-step *ngFor="let step of steps; index as i; first as first; last as last;" [completed]="step.completed">
-        <ng-template matStepLabel>{{step.label}}</ng-template>
-        <ng-template matStepContent>
-          <div fxFlex fxLayout="column" fxLayoutGap="24px" [ngSwitch]="i">
 
-            <mat-card *ngSwitchCase="0" fxFlex fxLayout="column" class="mat-elevation-z10">
-              <div fxFlex fxLayoutAlign="center center">
-                <button mat-raised-button
-                        style="transform: scale(1.5)"
-                        color="primary"
-                        [disabled]="isProcessing"
-                        (click)="newOrMerged(step, stepper, false)">
-                  Create New Payroll
-                </button>
-              </div>
-              <div *ngIf="(dataService.entities$ | async)?.length" fxFlex fxLayout="column">
-                <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
-                  <div fxFlex="16">
-                    <mat-divider></mat-divider>
-                  </div>
-                  <div style="font-size: 20px">OR</div>
-                  <div fxFlex="16">
-                    <mat-divider></mat-divider>
-                  </div>
-                </div>
-                <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="36px">
-                  <h2>Select an existing payroll</h2>
-                  <dynamic-form
-                    submitLabel="Continue"
-                    submitPosition="center"
-                    (submitted)="newOrMerged(step, stepper, true)"
-                    [showSubmit]="true"
-                    [form]="pendingForm"
-                    [fields]="[[pendingField]]">
-                  </dynamic-form>
-                </div>
-              </div>
-            </mat-card>
-
-            <mat-card *ngSwitchCase="1"
-                      fxFlex
-                      fxLayout="column"
-                      fxLayoutAlign="center center"
-                      fxLayoutGap="48px"
-                      class="mat-elevation-z10">
-              <h1>{{selectedPayroll ? 'Merging' : 'New'}} Payroll</h1>
-              <dynamic-form
-                [form]="payrollForm"
-                [fields]="payrollFields"
-                [model]="selectedPayroll">
-              </dynamic-form>
-            </mat-card>
-
-            <mat-card *ngSwitchCase="2" fxFlex fxLayout="column" class="mat-elevation-z10">
-              <mat-card-header>
-                <mat-card-title>{{selectedPayroll ? 'Merging' : 'New'}} {{payrollForm.value['status']}} Payroll</mat-card-title>
-                <mat-card-subtitle>{{payrollForm.value['memo']}}</mat-card-subtitle>
-                <div style="position: absolute; right: 32px; font-size: 18px;">{{payrollForm.value['date'] | date:'shortDate'}}</div>
-              </mat-card-header>
-              <mat-card-content fxFlex>
-                <vs-table
-                  id="add-payroll"
-                  [disableSelection]="true"
-                  [disableRowClick]="true"
-                  [rowMenuItems]="rowMenuItems"
-                  [buttonColumns]="buttonColumns"
-                  [data]="payments$.value"
-                  [columns]="columns">
-                </vs-table>
-              </mat-card-content>
-            </mat-card>
-
-            <div>
-              <mat-divider></mat-divider>
-            </div>
-
-            <div *ngIf="last" fxLayout="row" fxLayoutAlign="end center" style="overflow: hidden">
-              <mat-chip-list>
-                <mat-chip *ngIf="(warningPayments$ | async)?.length as warnings" selected color="warn">{{warnings}} warning{{warnings === 1 ? '' : 's'}}</mat-chip>
-                <mat-chip selected color="primary">{{totalSum$ | async | currency:'USD':'$'}} total payroll</mat-chip>
-              </mat-chip-list>
-            </div>
-
-            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-              <button *ngIf="!first" mat-button matStepperPrevious>Back</button>
-              <button *ngIf="!last" mat-button [disabled]="!step.completed" matStepperNext>Next</button>
-              <button *ngIf="last" mat-raised-button color="primary" (click)="save()" [disabled]="isProcessing">Save</button>
-            </div>
-
-            <div *ngIf="isProcessing" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
-              <div style="white-space: nowrap; font-size: 20px">Saving payroll...</div>
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
-          </div>
-        </ng-template>
-      </mat-step>
-    </mat-stepper>
+  <div *ngIf="asyncAction$ | async as actions" fxLayout="row">
+    <div *ngIf="actions.isProcessing && actions.isSaving" style="margin: 16px 16px 0 0" fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <div fxFlexOffset="16px" style="white-space: nowrap; font-size: 20px">Saving payroll...</div>
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
   </div>
+
+  <mat-card class="mat-elevation-z6" style="overflow: auto" [style.minHeight.px]="formFields.length * 100">
+    <mat-card-header>
+      <mat-card-title>Payroll Info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="form-container">
+      <dynamic-form [form]="form" [fields]="formFields" [model]="formModel"></dynamic-form>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card fxFlex fxLayout="column" class="mat-elevation-z6">
+    <mat-card-header>
+      <mat-card-title>Payments</mat-card-title>
+      <mat-chip-list>
+        <mat-chip *ngIf="warningsCount$ | async as warnings" selected color="warn">{{warnings}} warning{{warnings === 1 ? '' : 's'}}</mat-chip>
+        <mat-chip selected color="primary">{{totalSum$ | async | currency:'USD':'$'}} total payroll</mat-chip>
+      </mat-chip-list>
+    </mat-card-header>
+    <mat-card-content *ngIf="payments$ | async as payments" class="table-container" fxFlex>
+      <vs-table
+        id="add-payroll"
+        [disableRowClick]="true"
+        [rowMenuItems]="rowMenuItems"
+        [tableMenuItems]="tableMenuItems"
+        [data]="payments"
+        [columns]="columns">
+      </vs-table>
+    </mat-card-content>
+  </mat-card>
 </div>

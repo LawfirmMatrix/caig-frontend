@@ -1,13 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from '@angular/router';
-import {Observable, catchError, throwError} from 'rxjs';
+import {Observable, catchError, throwError, of} from 'rxjs';
 import {PayrollEntityService} from './payroll-entity.service';
-import {Payroll} from '../../../models/payroll.model';
 
 @Injectable()
-export class PreviewResolver implements Resolve<Payroll> {
+export class PreviewResolver implements Resolve<{ payments: any[] }> {
   constructor(private dataService: PayrollEntityService, private router: Router) { }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payroll> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<{ payments: any[] }> {
     return this.dataService.getPreview(route.params['batchId'])
       .pipe(
         catchError((err) => {

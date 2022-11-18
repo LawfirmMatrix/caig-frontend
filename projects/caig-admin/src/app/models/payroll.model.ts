@@ -3,13 +3,12 @@ export interface Payroll {
   memo: string;
   status: PayrollStatus;
   date: string;
+  created: string;
   submitted: string;
   paymentCount: number;
   totalNet: number;
   payments: Payment[];
 }
-
-export type PayrollStatus = 'Pending' | 'Processed';
 
 export interface Payment {
   spotBp: number;
@@ -44,4 +43,9 @@ export interface Payment {
   amountPending: number;
   message: string;
   okToPay: boolean;
+}
+
+export enum PayrollStatus {
+  Pending = 'Pending',
+  Processed = 'Processed',
 }
