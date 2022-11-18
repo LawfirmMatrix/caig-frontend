@@ -71,12 +71,20 @@ export class ServiceWorkerService {
     if (!this.updates.isEnabled) {
       return of(null);
     }
+    const errorHandler = (err: any) => {
+      console.log('an error has occurred');
+      location.reload();
+      return throwError(err);
+    };
     console.log('checking for update');
     return this.initialized$
       .pipe(
         first(),
         tap(() => console.log('initialized$')),
-        switchMap(() => from(this.updates.checkForUpdate())),
+        switchMap(() =>
+          from(this.updates.checkForUpdate())
+            .pipe(catchError(errorHandler))
+        ),
         tap((x) => console.log('check for update resolved', x)),
         switchMap((updateFound) =>
           updateFound ? this.updates.versionUpdates.pipe(
@@ -93,10 +101,7 @@ export class ServiceWorkerService {
           ) : of(updateFound)
         ),
         filter((updateFound) => !updateFound),
-        catchError((err) => {
-          location.reload();
-          return throwError(err);
-        }),
+        catchError(errorHandler),
       );
   }
   private pollForUpdates(): void {
