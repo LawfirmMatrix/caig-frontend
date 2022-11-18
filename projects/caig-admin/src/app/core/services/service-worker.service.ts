@@ -69,8 +69,10 @@ export class ServiceWorkerService {
     if (!this.updates.isEnabled) {
       return of(null);
     }
+    console.log('checking for update');
     return from(this.updates.checkForUpdate())
       .pipe(
+        tap((x) => console.log('check for update resolved', x)),
         switchMap((updateFound) =>
           updateFound ? this.updates.versionUpdates.pipe(
             first(),
