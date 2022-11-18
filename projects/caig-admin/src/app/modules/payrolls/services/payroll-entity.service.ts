@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EntityCollectionServiceBase, EntityCollectionServiceElementsFactory} from '@ngrx/data';
+import {EntityCollectionServiceBase, EntityCollectionServiceElementsFactory, MergeStrategy} from '@ngrx/data';
 import {Payroll} from '../../../models/payroll.model';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
@@ -11,7 +11,7 @@ export class PayrollEntityService extends EntityCollectionServiceBase<Payroll> {
   }
   public patch(payload: {id: number}): Observable<void> {
     return this.http.patch<void>(`api/payroll/${payload.id}`, payload)
-      .pipe(tap(() => this.updateOneInCache(payload)));
+      .pipe(tap(() => this.getByKey(payload.id)));
   }
   public getPreview(batchId: string): Observable<Payroll> {
     return this.http.get<Payroll>(`api/payroll/preview/${batchId}`);

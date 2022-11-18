@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs';
 import {Payroll, Payment} from '../../../../models/payroll.model';
@@ -9,7 +9,6 @@ import {TableColumn, TextColumn, CurrencyColumn} from 'vs-table';
   selector: 'app-view-payroll',
   templateUrl: './view-payroll.component.html',
   styleUrls: ['./view-payroll.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewPayrollComponent {
   public payroll$: Observable<Payroll> = this.route.data.pipe(

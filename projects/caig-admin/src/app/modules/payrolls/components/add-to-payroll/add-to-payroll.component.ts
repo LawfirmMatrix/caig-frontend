@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, takeUntil} from 'rxjs/operators';
 import {TableColumn, TextColumn, CurrencyColumn, CalculateColumn, RowMenuItem, TableMenuItem} from 'vs-table';
@@ -17,7 +17,6 @@ import * as moment from 'moment';
   selector: 'app-add-to-payroll',
   templateUrl: './add-to-payroll.component.html',
   styleUrls: ['./add-to-payroll.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddToPayrollComponent implements OnInit, OnDestroy {
   private static PREVIEW_PARAM = 'preview';

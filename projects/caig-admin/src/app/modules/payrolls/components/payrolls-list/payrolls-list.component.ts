@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {PayrollEntityService} from '../../services/payroll-entity.service';
 import {TableColumn, TextColumn, DateColumn, NumberColumn, CurrencyColumn} from 'vs-table';
 import {Payroll, PayrollStatus} from '../../../../models/payroll.model';
@@ -9,7 +9,6 @@ import {Router, ActivatedRoute} from '@angular/router';
   selector: 'app-payrolls-list',
   templateUrl: './payrolls-list.component.html',
   styleUrls: ['./payrolls-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PayrollsListComponent {
   public payrolls$ = this.dataService.entities$;
