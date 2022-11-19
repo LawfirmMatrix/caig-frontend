@@ -12,6 +12,7 @@ import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
 export class ServiceWorkerService {
   private static readonly NOTIFY_STORAGE_KEY = 'SW_UPDATE';
   private static readonly APP_DATA_STORAGE_KEY = 'SW_UPDATE_APP_DATA';
+  private static readonly NO_SW_CONTROLLER = 'NO_SW_CONTROLLER';
   public isUpdating = false;
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
@@ -27,8 +28,13 @@ export class ServiceWorkerService {
   ) {
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
-        location.reload();
+        const alreadyReloaded = localStorage.getItem(ServiceWorkerService.NO_SW_CONTROLLER);
+        if (!alreadyReloaded) {
+          localStorage.setItem(ServiceWorkerService.NO_SW_CONTROLLER, 'true');
+          location.reload();
+        }
       }
+      localStorage.removeItem(ServiceWorkerService.NO_SW_CONTROLLER);
       this.initialize();
     }
   }
@@ -64,7 +70,6 @@ export class ServiceWorkerService {
       return of(null);
     }
     return from(this.updates.checkForUpdate()).pipe(
-      tap((checkForUpdate) => console.log('check for update', checkForUpdate)),
       switchMap((updateFound) => {
         if (updateFound) {
           return this.updates.versionUpdates.pipe(
