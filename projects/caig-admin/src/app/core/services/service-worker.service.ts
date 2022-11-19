@@ -26,6 +26,9 @@ export class ServiceWorkerService {
     private dialog: MatDialog,
   ) {
     if (updates.isEnabled) {
+      if (!navigator.serviceWorker.controller) {
+        location.reload();
+      }
       this.initialize();
     }
   }
@@ -56,29 +59,29 @@ export class ServiceWorkerService {
       });
     }
   }
-  public checkForUpdate(): Observable<any> {
+  public checkForUpdate(): Observable<boolean | null> {
     if (!this.updates.isEnabled) {
       return of(null);
     }
-    const register$: Observable<ServiceWorkerRegistration | null> = navigator.serviceWorker.controller ?
-      of(null) : from(navigator.serviceWorker.register('ngsw-worker.js'));
-    const versionReady = (installUpdate: boolean) => this.updates.versionUpdates.pipe(
-      first(),
-      tap((event) => {
-        if (ServiceWorkerService.isVersionReady(event)) {
-          ServiceWorkerService.storeAppData(event);
-        }
-        if (installUpdate) {
-          this.installUpdate(false);
-        }
-      }),
-      map(() => installUpdate),
-    );
-    return register$.pipe(
-      tap((register) => console.log('register$', register)),
-      switchMap(() => from(this.updates.checkForUpdate())),
+    return from(this.updates.checkForUpdate()).pipe(
       tap((checkForUpdate) => console.log('check for update', checkForUpdate)),
-      switchMap((updateFound) => updateFound ? versionReady(updateFound) : of(updateFound)),
+      switchMap((updateFound) => {
+        if (updateFound) {
+          return this.updates.versionUpdates.pipe(
+            first(),
+            tap((event) => {
+              if (ServiceWorkerService.isVersionReady(event)) {
+                ServiceWorkerService.storeAppData(event);
+              }
+              if (updateFound) {
+                this.installUpdate(false);
+              }
+            }),
+            map(() => updateFound),
+          );
+        }
+        return of(updateFound);
+      }),
       catchError((err) => {
         location.reload();
         return throwError(err);
