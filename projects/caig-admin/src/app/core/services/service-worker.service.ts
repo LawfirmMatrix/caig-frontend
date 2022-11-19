@@ -1,6 +1,6 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, ReplaySubject} from 'rxjs';
+import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
@@ -12,7 +12,6 @@ import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
 export class ServiceWorkerService {
   private static readonly NOTIFY_STORAGE_KEY = 'SW_UPDATE';
   private static readonly APP_DATA_STORAGE_KEY = 'SW_UPDATE_APP_DATA';
-  private initialized$ = new ReplaySubject<void>();
   public isUpdating = false;
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
@@ -27,24 +26,14 @@ export class ServiceWorkerService {
     private dialog: MatDialog,
   ) {
     if (updates.isEnabled) {
-      if (!navigator.serviceWorker.controller) {
-        console.log('no service worker controller');
-        // controller is stuck with null value if browser is hard refreshed
-        // service worker needs to be re-registered
-        navigator.serviceWorker.register('ngsw-worker.js')
-          .finally(() => this.initialize());
-      } else {
-        this.initialize();
-      }
+      this.initialize();
     }
   }
   private initialize(): void {
-    console.log('sw service init');
     this.checkIfUpdated();
     this.pollForUpdates();
     this.handleUnrecoverableState();
     this.handleUpdateError();
-    this.initialized$.next(void 0);
   }
   private static isVersionReady(event: VersionEvent): event is VersionReadyEvent {
     return event.type === 'VERSION_READY';
@@ -71,40 +60,30 @@ export class ServiceWorkerService {
     if (!this.updates.isEnabled) {
       return of(null);
     }
-    const errorHandler = (err: any) => {
-      console.log('an error has occurred');
-      location.reload();
-      return throwError(err);
-    };
-    console.log('checking for update');
-    return this.initialized$
-      .pipe(
-        first(),
-        tap(() => console.log('initialized$')),
-        switchMap(() =>
-          from(this.updates.checkForUpdate().then((x) => {
-            console.log('then', x);
-            return x;
-          }).catch((x) => console.log('catch', x)))
-        ),
-        tap((x) => console.log('check for update resolved', x)),
-        switchMap((updateFound) =>
-          updateFound ? this.updates.versionUpdates.pipe(
-            first(),
-            tap((event) => {
-              if (ServiceWorkerService.isVersionReady(event)) {
-                ServiceWorkerService.storeAppData(event);
-              }
-              if (updateFound) {
-                this.installUpdate(false);
-              }
-            }),
-            map(() => updateFound),
-          ) : of(updateFound)
-        ),
-        filter((updateFound) => !updateFound),
-        catchError(errorHandler),
-      );
+    const register$: Observable<ServiceWorkerRegistration | null> = navigator.serviceWorker.controller ?
+      of(null) : from(navigator.serviceWorker.register('ngsw-worker.js'));
+    const versionReady = (installUpdate: boolean) => this.updates.versionUpdates.pipe(
+      first(),
+      tap((event) => {
+        if (ServiceWorkerService.isVersionReady(event)) {
+          ServiceWorkerService.storeAppData(event);
+        }
+        if (installUpdate) {
+          this.installUpdate(false);
+        }
+      }),
+      map(() => installUpdate),
+    );
+    return register$.pipe(
+      tap((register) => console.log('register$', register)),
+      switchMap(() => from(this.updates.checkForUpdate())),
+      tap((checkForUpdate) => console.log('check for update', checkForUpdate)),
+      switchMap((updateFound) => updateFound ? versionReady(updateFound) : of(updateFound)),
+      catchError((err) => {
+        location.reload();
+        return throwError(err);
+      })
+    );
   }
   private pollForUpdates(): void {
     const appIsStable$ = this.appRef.isStable.pipe(first((isStable) => isStable));
