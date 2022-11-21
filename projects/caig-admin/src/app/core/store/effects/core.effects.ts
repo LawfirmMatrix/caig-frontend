@@ -15,7 +15,9 @@ export class CoreEffects {
     this.actions$.pipe(
       ofType(CoreActions.sessionInitialized),
       map((action) => {
-        const settlementId = AuthService.settlementId || action.session.settlements[0]?.id;
+        const storedSettlementId = AuthService.settlementId;
+        const defaultSettlementId = action.session.settlements[0]?.id;
+        const settlementId = (storedSettlementId && action.session.settlements.find((s) => s.id === storedSettlementId)?.id) || defaultSettlementId;
         return CoreActions.initializeSettlementContext({settlementId});
       }),
     )
