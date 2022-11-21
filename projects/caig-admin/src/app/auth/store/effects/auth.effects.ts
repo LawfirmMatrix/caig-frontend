@@ -8,11 +8,6 @@ import {LOGIN_REDIRECT} from '../../auth.module';
 import {Session} from '../../../models/session.model';
 import {HttpClient} from '@angular/common/http';
 import {CoreActions} from '../../../core/store/actions/action-types';
-import {
-  ChangePasswordComponent,
-  ChangePasswordData
-} from '../../../core/components/change-password/change-password.component';
-import {MatDialog} from '@angular/material/dialog';
 import {throwError} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers';
@@ -31,12 +26,6 @@ export class AuthEffects {
           })
         )
       ),
-      tap((session) => {
-        if (session.mustChangePassword) {
-          const data: ChangePasswordData = { userId: session.user.id, self: true, copyAuthPassword: true };
-          this.dialog.open(ChangePasswordComponent, { data , disableClose: true});
-        }
-      }),
       map((session) => CoreActions.sessionInitialized({session}))
     ),
   );
@@ -56,7 +45,6 @@ export class AuthEffects {
     private actions$: Actions,
     private router: Router,
     private http: HttpClient,
-    private dialog: MatDialog,
     private store: Store<AppState>,
     @Inject(LOGIN_REDIRECT) private loginRedirect: string,
   ) { }
