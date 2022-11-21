@@ -81,7 +81,7 @@ export class ServiceWorkerService {
               }
               if (updateFound) {
                 this.installUpdate(false);
-                throw new Error('New version detected');
+                throw new Error('New version detected, reloading app');
               }
             }),
             map(() => updateFound),
