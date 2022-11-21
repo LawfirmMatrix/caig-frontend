@@ -4,12 +4,9 @@
     <h1>{{change.key}}</h1>
     <div *ngFor="let category of change.value | keyvalue">
       <h3>{{category.key}}</h3>
-      <div *ngIf="category.value.length > 1; else singleItem">
-        <p *ngFor="let change of category.value; let i = index;"> {{i + 1}}. {{change}}</p>
-      </div>
-      <ng-template #singleItem>
-        <p *ngIf="category.value[0] as change">{{change}}</p>
-      </ng-template>
+      <mat-list>
+        <mat-list-item *ngFor="let change of category.value">{{change}}</mat-list-item>
+      </mat-list>
     </div>
   </div>
 </mat-dialog-content>

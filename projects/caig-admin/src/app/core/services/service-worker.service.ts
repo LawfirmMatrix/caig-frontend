@@ -5,7 +5,7 @@ import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/op
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
-import {AppData, AppDataChanges, AppDataChangePortal} from '../../models/app-data.model';
+import {AppData, AppDataChangePortal} from '../../models/app-data.model';
 import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
 import {some} from 'lodash-es';
 import {Portal} from '../../models/session.model';
@@ -51,7 +51,6 @@ export class ServiceWorkerService {
   }
   private static storeAppData(event: VersionReadyEvent): void {
     const appData = event.latestVersion.appData as AppData | undefined;
-    console.log('appData', appData);
     if (appData) {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
@@ -78,9 +77,7 @@ export class ServiceWorkerService {
           return this.updates.versionUpdates.pipe(
             first(),
             tap((event) => {
-              console.log('versionUpdates', event);
               if (ServiceWorkerService.isVersionReady(event)) {
-                console.log('storing app data');
                 ServiceWorkerService.storeAppData(event);
               }
               if (updateFound) {
