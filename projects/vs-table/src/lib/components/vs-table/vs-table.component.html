@@ -103,8 +103,8 @@
           close
         </mat-icon>
         <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
-        <mat-menu #columnFilterMenu="matMenu">
-          <div fxLayout="column" class="column-filter-viewport mat-app-background" (keydown.tab)="$event.stopPropagation()" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
+        <mat-menu #columnFilterMenu="matMenu" classList="mat-app-background">
+          <div fxLayout="column" class="column-filter-viewport" (keydown.tab)="$event.stopPropagation()" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
             <mat-form-field color="accent" [style.display]="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes ? 'initial' : 'none'">
               <input autocomplete="off"
                      matInput

@@ -30,6 +30,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ExportDataComponent} from './components/export-data/export-data.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import {FilterTogglesComponent} from './components/column-filter/filter-toggles/filter-toggles.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     ChangesFilterComponent,
     ExportDataComponent,
     AccountingPipe,
+    FilterTogglesComponent,
   ],
   imports: [
     CommonModule,

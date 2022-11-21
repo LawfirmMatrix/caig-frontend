@@ -1,0 +1,4 @@
+<div fxLayout="column" fxLayoutAlign="center end">
+  <mat-slide-toggle labelPosition="before" (change)="inverseFilter.emit($event.checked)">Inverse filter</mat-slide-toggle>
+  <mat-slide-toggle labelPosition="before" (change)="filterOptions.emit($event.checked)">Filter options</mat-slide-toggle>
+</div>

@@ -439,16 +439,24 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       const filter = columnFilter.filter.toLowerCase();
       const changesFilter = (row: any) => !!row.changes?.find((change: any) =>
         `${change.oldValue}`.toLowerCase().includes(filter) || `${change.newValue}`.toLowerCase().includes(filter));
+      const inverseChangesFilter = (row: any) => !row.changes?.find((change: any) =>
+        `${change.oldValue}`.toLowerCase().includes(filter) || `${change.newValue}`.toLowerCase().includes(filter));
       const filterFunc = columnFilter.column.calculate ?
         ((row: any) => (columnFilter.column as CalculateColumn<T>).calculate(row).includes(filter)) :
         columnFilter.column.dataType === this.columnDataTypes.changes ? changesFilter :
         ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase().includes(filter));
-      this.filteredData = this.filteredData.filter(filterFunc);
+      const inverseFilterFunc = columnFilter.column.calculate ?
+        ((row: any) => !(columnFilter.column as CalculateColumn<T>).calculate(row).includes(filter)) :
+        columnFilter.column.dataType === this.columnDataTypes.changes ? inverseChangesFilter :
+          ((row: any) => !`${row[columnFilter.column.field]}`.toLowerCase().includes(filter));
+      this.filteredData = this.filteredData.filter(columnFilter.invert ? inverseFilterFunc : filterFunc);
     }
 
     if (columnFilter.noValue) {
-      this.filteredData = this.filteredData.filter((row: any) =>
-        ['', null, undefined].indexOf(row[columnFilter.column.field]) > -1);
+      const noValue = ['', null, undefined];
+      const filterFunc = (row: any) => noValue.indexOf(row[columnFilter.column.field]) > -1;
+      const inverseFilterFunc = (row: any) => noValue.indexOf(row[columnFilter.column.field]) === -1;
+      this.filteredData = this.filteredData.filter(columnFilter.invert ? inverseFilterFunc : filterFunc);
     }
 
     if (columnFilter.range.value.start || columnFilter.range.value.end) {
@@ -489,7 +497,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         columnFilter.column.calculate ? ((row: any) =>
             columnFilter.selection.selected.indexOf((columnFilter.column as CalculateColumn<T>).calculate(row)) > -1) :
           ((row: any) => columnFilter.selection.selected.indexOf(`${row[columnFilter.column.field]}`) > -1);
-      this.filteredData = this.filteredData.filter(filterFunc);
+      const inverseFilterFunc = columnFilter.column.dataType === this.columnDataTypes.changes ?
+        ((row: any) => !(row.changes &&
+          intersection(row.changes.map((change: any) => change.field), columnFilter.selection.selected).length)) :
+        columnFilter.column.calculate ? ((row: any) =>
+            columnFilter.selection.selected.indexOf((columnFilter.column as CalculateColumn<T>).calculate(row)) === -1) :
+          ((row: any) => columnFilter.selection.selected.indexOf(`${row[columnFilter.column.field]}`) === -1);
+      this.filteredData = this.filteredData.filter(columnFilter.invert ? inverseFilterFunc : filterFunc);
     }
   }
 

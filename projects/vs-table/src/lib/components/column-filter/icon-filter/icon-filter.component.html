@@ -1,7 +1,5 @@
 <div fxLayout="column">
-  <div fxLayoutAlign="end center">
-    <mat-slide-toggle labelPosition="before" (change)="filterOptionsToggle($event.checked)">Filter options</mat-slide-toggle>
-  </div>
+  <app-filter-toggles (filterOptions)="filterOptionsToggle($event)" (inverseFilter)="invertFilter($event)"></app-filter-toggles>
   <div class="icon-filter" [style.height.px]="viewportHeight">
     <mat-grid-list [cols]="columns" [rowHeight]="rowHeight">
       <mat-grid-tile *ngFor="let value of uniqueColumnValues">

@@ -5,6 +5,7 @@ import {TableColumn} from '../../utils/interfaces';
 export class ColumnFilter {
   public filter: string = '';
   public noValue: boolean = false;
+  public invert: boolean = false;
   public selection = new SelectionModel<string>(true, []);
   public range = new FormGroup({
     start: new FormControl<any | null>(null),
