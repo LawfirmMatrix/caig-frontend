@@ -30,29 +30,12 @@
   "appData": {
     "changes": {
       "CAIG": {
-        "Category 1": ["Change 1", "Change 2", "Change 3"],
-        "Category 2": ["Only 1 change"]
+
       },
       "Call Center": {
-        "Single": [ "1" ]
       },
       "Survey": {
-        "Misc": [
-          "Change A",
-          "Change B",
-          "Change C",
-          "Change D",
-          "Change E",
-          "Change F",
-          "Change G",
-          "Change H",
-          "Change I",
-          "Change J",
-          "Change K",
-          "Change L",
-          "Change M",
-          "Change N"
-        ]
+        
       }
     },
     "forceReloadDuration": 0,
