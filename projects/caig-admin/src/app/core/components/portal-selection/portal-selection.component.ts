@@ -28,7 +28,7 @@ export class PortalSelectionComponent {
   public portalSelection = new SelectField({
     key: 'portal',
     label: 'Portal',
-    options: of([{name: Portal.CAIG}, {name: Portal.CallCenter}, {name: Portal.Survey}]),
+    options: of(Object.values(Portal).map((name) => ({name}))),
     itemKey: 'name',
     displayField: 'name',
     onChange: (portal) => {

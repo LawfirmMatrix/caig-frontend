@@ -26,7 +26,7 @@ export class WhatsNewComponent implements OnInit {
     const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
     this.changes$ = combineLatest([isSuperAdmin$, portal$])
       .pipe(
-        map(([isSuperAdmin, portal]) => isSuperAdmin ? this.data : pick(this.data, portal)),
+        map(([isSuperAdmin, portal]) => isSuperAdmin ? this.data : pick(this.data, ['General', portal])),
       );
   }
 }

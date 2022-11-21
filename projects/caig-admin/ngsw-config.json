@@ -29,6 +29,9 @@
   ],
   "appData": {
     "changes": {
+      "General": {
+        "Table": [ "A new toggle has been added to most column filters which inversely applies filtering" ]
+      },
       "CAIG": {
 
       },

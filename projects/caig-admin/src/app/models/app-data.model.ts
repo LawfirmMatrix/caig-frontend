@@ -6,6 +6,8 @@ export interface AppData {
   clearLocalStorage?: boolean;
 }
 
-export type AppDataChanges = { [key in Portal]?: AppDataChangePortal };
+export type AppDataChanges = { [key in Portals]?: AppDataChangePortal };
 
 export type AppDataChangePortal = { [category: string]: string[] };
+
+export type Portals = Portal | 'General';
