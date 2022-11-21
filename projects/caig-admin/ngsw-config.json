@@ -30,25 +30,12 @@
   "appData": {
     "changes": {
       "General": {
-        "Table": [
-          "A new toggle has been added to most column filters which inversely applies filtering"
-        ],
-        "Misc.": [
-          "Various bug fixes and improvements"
-        ]
       },
       "CAIG": {
-        "Payrolls": [
-          "A new page has been added to the main menu - \"Payrolls\"",
-          "A new menu option has been added to the Employees table called \"Add to payroll\""
-        ]
       },
       "Call Center": {
       },
       "Survey": {
-        "Surveys": [
-          "The \"Test\" button by each survey now opens the correct survey in a new tab"
-        ]
       }
     },
     "forceReloadDuration": 0,

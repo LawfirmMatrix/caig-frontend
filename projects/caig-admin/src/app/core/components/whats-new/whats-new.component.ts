@@ -22,6 +22,7 @@ export class WhatsNewComponent implements OnInit {
     private store: Store<AppState>,
   ) { }
   public ngOnInit() {
+    // @TODO - what if user is not logged in? maybe have a separate initialize to get portal value.
     const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
     const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
     this.changes$ = combineLatest([isSuperAdmin$, portal$])
