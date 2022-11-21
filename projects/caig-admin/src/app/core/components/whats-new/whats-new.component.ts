@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers';
 import {isSuperAdmin, portal} from '../../store/selectors/core.selectors';
 import {combineLatest, Observable, filter} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {isNotUndefined} from '../../util/functions';
 import {pick} from 'lodash-es';
 
@@ -26,7 +26,8 @@ export class WhatsNewComponent implements OnInit {
     const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
     this.changes$ = combineLatest([isSuperAdmin$, portal$])
       .pipe(
-        map(([isSuperAdmin, portal]) => isSuperAdmin ? this.data : pick(this.data, portal))
+        map(([isSuperAdmin, portal]) => isSuperAdmin ? this.data : pick(this.data, portal)),
+        tap((changes) => console.log('DATA , CHANGES', this.data, changes)),
       );
   }
 }
