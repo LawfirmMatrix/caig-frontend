@@ -8,7 +8,7 @@ export interface CoreState {
   user: User | undefined;
   settlements: UserSettlement[] | undefined;
   settlementId: number | undefined;
-  mustPasswordChange: boolean | undefined;
+  mustChangePassword: boolean | undefined;
   portal: Portal | undefined;
 }
 
@@ -16,7 +16,7 @@ export const initialCoreState: CoreState = {
   user: undefined,
   settlements: undefined,
   settlementId: undefined,
-  mustPasswordChange: undefined,
+  mustChangePassword: undefined,
   portal: undefined,
 };
 
