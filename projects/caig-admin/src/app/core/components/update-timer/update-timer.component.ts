@@ -15,7 +15,6 @@ export class UpdateTimerComponent implements OnInit {
   @Input() public disabled!: boolean;
   @Output() public installUpdate = new EventEmitter<void>();
 
-  public showSeconds = false;
   public duration!: number;
 
   private readonly onDestroy$ = new Subject<void>();

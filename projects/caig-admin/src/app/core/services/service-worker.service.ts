@@ -5,8 +5,10 @@ import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/op
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
-import {AppData} from '../../models/app-data.model';
+import {AppData, AppDataChanges, AppDataChangePortal} from '../../models/app-data.model';
 import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
+import {some} from 'lodash-es';
+import {Portal} from '../../models/session.model';
 
 @Injectable({providedIn: 'root'})
 export class ServiceWorkerService {
@@ -115,8 +117,12 @@ export class ServiceWorkerService {
         if (appData.clearLocalStorage) {
           localStorage.clear();
         }
-        if (appData.changes && Object.keys(appData.changes).length) {
-          this.dialog.open(WhatsNewComponent, {data: appData.changes});
+        if (appData.changes) {
+          const changes = appData.changes;
+          const portals = Object.keys(appData.changes) as Portal[];
+          if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
+            this.dialog.open(WhatsNewComponent, {data: appData.changes});
+          }
         }
       }
     }

@@ -29,7 +29,28 @@
   ],
   "appData": {
     "changes": {
-
+      "CAIG": [
+        "Change 1", "Change 2", "Change 3"
+      ],
+      "Call Center": [
+        "Only 1 change"
+      ],
+      "Survey": [
+        "Change A",
+        "Change B",
+        "Change C",
+        "Change D",
+        "Change E",
+        "Change F",
+        "Change G",
+        "Change H",
+        "Change I",
+        "Change J",
+        "Change K",
+        "Change L",
+        "Change M",
+        "Change N"
+      ]
     },
     "forceReloadDuration": 0,
     "clearLocalStorage": false
