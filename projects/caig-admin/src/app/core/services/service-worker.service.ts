@@ -55,15 +55,15 @@ export class ServiceWorkerService {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
   }
-  public installUpdate(notify = true): void {
+  public installUpdate(notifyAndReload = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
         this.isUpdating = false;
-        if (notify) {
+        if (notifyAndReload) {
           localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
+          location.reload();
         }
-        location.reload();
       });
     }
   }
@@ -82,6 +82,7 @@ export class ServiceWorkerService {
               }
               if (updateFound) {
                 this.installUpdate(false);
+                throw new Error('New version detected');
               }
             }),
             map(() => updateFound),
