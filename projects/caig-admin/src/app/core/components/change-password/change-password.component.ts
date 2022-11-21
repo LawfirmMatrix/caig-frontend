@@ -17,7 +17,7 @@ import {UntypedFormGroup} from '@angular/forms';
       <div *ngIf="dialogRef.disableClose" mat-dialog-title>
         Please create a new password
       </div>
-      <div>Password requirements:</div>
+      <h2>Password requirements:</h2>
       <app-password-requirements [form]="form" (isValid)="validPassword$.next($event)"></app-password-requirements>
       <dynamic-form [fields]="fields" [form]="form"></dynamic-form>
       <button mat-raised-button color="primary" [disabled]="disableSave$ | async" (click)="save()">Save</button>
