@@ -30,8 +30,10 @@
   "appData": {
     "changes": {
       "General": {
+        "test": ["a", "b", "c"]
       },
       "CAIG": {
+        "abc": ["123"]
       },
       "Call Center": {
       },
