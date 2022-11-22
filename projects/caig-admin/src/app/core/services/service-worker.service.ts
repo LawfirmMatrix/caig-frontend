@@ -54,8 +54,10 @@ export class ServiceWorkerService {
     return event.type === 'VERSION_READY';
   }
   private static storeAppData(event: VersionReadyEvent): void {
+    console.log('store app data');
     const appData = event.latestVersion.appData as AppData | undefined;
     if (appData) {
+      console.log(appData);
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
   }
@@ -81,6 +83,7 @@ export class ServiceWorkerService {
           return this.updates.versionUpdates.pipe(
             first(),
             tap((event) => {
+              console.log('update found', event);
               if (ServiceWorkerService.isVersionReady(event)) {
                 ServiceWorkerService.storeAppData(event);
               }
@@ -111,6 +114,7 @@ export class ServiceWorkerService {
   private checkIfUpdated(): void {
     const notify = localStorage.getItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
     const cachedData = localStorage.getItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
+    console.log(cachedData);
     if (notify) {
       localStorage.removeItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
       this.notifications.showSimpleInfoMessage('The update has been installed successfully!');
@@ -118,6 +122,7 @@ export class ServiceWorkerService {
     if (cachedData) {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
       const appData: AppData = JSON.parse(cachedData);
+      console.log(appData);
       if (appData) {
         if (appData.clearLocalStorage) {
           localStorage.clear();
