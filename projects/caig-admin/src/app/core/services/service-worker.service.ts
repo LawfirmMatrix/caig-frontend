@@ -124,14 +124,19 @@ export class ServiceWorkerService {
         }
         if (appData.changes) {
           const changes = appData.changes;
+          console.log(changes);
           const portals = Object.keys(appData.changes) as Portals[];
+          console.log(portals);
           if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
             const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
             const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
             combineLatest([isSuperAdmin$, portal$])
               .pipe(first())
               .subscribe(([isSuperAdmin, portal]) => {
-                const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, ['General', portal]);
+                console.log(isSuperAdmin, portal);
+                const nonAdminKeys: Portals[] = ['General', portal];
+                const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, nonAdminKeys);
+                console.log(data);
                 this.dialog.open(WhatsNewComponent, {data});
               });
           }
