@@ -78,7 +78,7 @@ export class ServiceWorkerService {
       switchMap((updateFound) => {
         console.log('update found', updateFound);
         if (updateFound) {
-          // @TODO - fix this, app hangsss
+          // @TODO - fix this, app hangs
 
           return this.versionReady().pipe(
             first(),
