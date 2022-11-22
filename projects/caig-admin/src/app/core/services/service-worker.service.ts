@@ -79,16 +79,12 @@ export class ServiceWorkerService {
     }
     return from(this.updates.checkForUpdate()).pipe(
       switchMap((updateFound) => {
+        console.log('update found', updateFound);
         if (updateFound) {
-          return this.updates.versionUpdates.pipe(
+          return this.isUpdateAvailable$.pipe(
             first(),
-            tap((event) => {
-              console.log('update found', event);
-              if (ServiceWorkerService.isVersionReady(event)) {
-                ServiceWorkerService.storeAppData(event);
-              }
-              this.installUpdate(false);
-            }),
+            tap((x) => console.log('update available', x)),
+            tap(() => this.installUpdate(false)),
             map(() => updateFound),
             delay(10000),
           );
