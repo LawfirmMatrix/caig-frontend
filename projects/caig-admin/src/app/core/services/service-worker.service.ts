@@ -1,6 +1,6 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, combineLatest} from 'rxjs';
+import {concat, filter, from, interval, Observable, of, throwError, combineLatest, delay} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
@@ -61,15 +61,15 @@ export class ServiceWorkerService {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
   }
-  public installUpdate(notifyAndReload = true): void {
+  public installUpdate(notify = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
         this.isUpdating = false;
-        if (notifyAndReload) {
+        if (notify) {
           localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
-          location.reload();
         }
+        location.reload();
       });
     }
   }
@@ -87,12 +87,10 @@ export class ServiceWorkerService {
               if (ServiceWorkerService.isVersionReady(event)) {
                 ServiceWorkerService.storeAppData(event);
               }
-              if (updateFound) {
-                this.installUpdate(false);
-                throw new Error('New version detected, reloading app');
-              }
+              this.installUpdate(false);
             }),
             map(() => updateFound),
+            delay(10000),
           );
         }
         return of(updateFound);
@@ -114,7 +112,7 @@ export class ServiceWorkerService {
   private checkIfUpdated(): void {
     const notify = localStorage.getItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
     const cachedData = localStorage.getItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
-    console.log(cachedData);
+    console.log('cached data', cachedData);
     if (notify) {
       localStorage.removeItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
       this.notifications.showSimpleInfoMessage('The update has been installed successfully!');
