@@ -19,12 +19,7 @@ export class ServiceWorkerService {
   private static readonly APP_DATA_STORAGE_KEY = 'SW_UPDATE_APP_DATA';
   private static readonly NO_SW_CONTROLLER = 'NO_SW_CONTROLLER';
   public isUpdating = false;
-  public isUpdateAvailable$ = this.updates.versionUpdates
-    .pipe(
-      filter(ServiceWorkerService.isVersionReady),
-      tap(ServiceWorkerService.storeAppData),
-      shareReplay(1),
-    );
+  public isUpdateAvailable$ = this.versionReady().pipe(shareReplay(1));
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -83,8 +78,9 @@ export class ServiceWorkerService {
       switchMap((updateFound) => {
         console.log('update found', updateFound);
         if (updateFound) {
-          // @TODO - fix this, app hangs
-          return this.isUpdateAvailable$.pipe(
+          // @TODO - fix this, app hangsss
+
+          return this.versionReady().pipe(
             first(),
             tap((x) => console.log('update available', x)),
             tap(() => this.installUpdate(false)),
@@ -169,5 +165,12 @@ export class ServiceWorkerService {
         console.log('An error occurred while updating', event);
         location.reload();
       });
+  }
+  private versionReady(): Observable<VersionReadyEvent> {
+    return this.updates.versionUpdates
+      .pipe(
+        filter(ServiceWorkerService.isVersionReady),
+        tap(ServiceWorkerService.storeAppData),
+      );
   }
 }
