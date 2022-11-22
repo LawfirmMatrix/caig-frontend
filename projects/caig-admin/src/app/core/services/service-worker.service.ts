@@ -32,6 +32,7 @@ export class ServiceWorkerService {
     private dialog: MatDialog,
     private store: Store<AppState>,
   ) {
+    // @TODO - remove
     this.updates.versionUpdates.subscribe((x) => console.log('version update', x));
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
@@ -82,6 +83,7 @@ export class ServiceWorkerService {
       switchMap((updateFound) => {
         console.log('update found', updateFound);
         if (updateFound) {
+          // @TODO - fix this, app hangs
           return this.isUpdateAvailable$.pipe(
             first(),
             tap((x) => console.log('update available', x)),
