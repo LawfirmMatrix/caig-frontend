@@ -1,13 +1,17 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError} from 'rxjs';
+import {concat, filter, from, interval, Observable, of, throwError, combineLatest} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
-import {AppData, AppDataChangePortal, Portals} from '../../models/app-data.model';
+import {AppData, AppDataChangePortal, Portals, AppDataChanges} from '../../models/app-data.model';
 import {WhatsNewComponent} from '../components/whats-new/whats-new.component';
-import {some} from 'lodash-es';
+import {some, pick} from 'lodash-es';
+import {isSuperAdmin, portal} from '../store/selectors/core.selectors';
+import {isNotUndefined} from '../util/functions';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/reducers';
 
 @Injectable({providedIn: 'root'})
 export class ServiceWorkerService {
@@ -26,6 +30,7 @@ export class ServiceWorkerService {
     private notifications: NotificationsService,
     private appRef: ApplicationRef,
     private dialog: MatDialog,
+    private store: Store<AppState>,
   ) {
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
@@ -121,7 +126,14 @@ export class ServiceWorkerService {
           const changes = appData.changes;
           const portals = Object.keys(appData.changes) as Portals[];
           if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
-            this.dialog.open(WhatsNewComponent, {data: appData.changes});
+            const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
+            const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
+            combineLatest([isSuperAdmin$, portal$])
+              .pipe(first())
+              .subscribe(([isSuperAdmin, portal]) => {
+                const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, ['General', portal]);
+                this.dialog.open(WhatsNewComponent, {data});
+              });
           }
         }
       }
