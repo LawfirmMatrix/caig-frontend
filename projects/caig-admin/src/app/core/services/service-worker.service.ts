@@ -32,6 +32,7 @@ export class ServiceWorkerService {
     private dialog: MatDialog,
     private store: Store<AppState>,
   ) {
+    this.updates.versionUpdates.subscribe((x) => console.log('version update', x));
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
         const alreadyReloaded = localStorage.getItem(ServiceWorkerService.NO_SW_CONTROLLER);
