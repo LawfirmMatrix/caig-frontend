@@ -16,7 +16,6 @@ import {QuillModule} from 'ngx-quill';
 import {msalClient, guardConfig, interceptorConfig} from './msal.config';
 import {NotificationsModule} from 'notifications';
 import {CoreModule} from './core/core.module';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const entityDispatcherOptions = {
   optimisticDelete: false,
@@ -44,7 +43,6 @@ const compareBy = (field: string) => (a: any, b: any) => a[field] - b[field];
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    MatProgressSpinnerModule,
     CoreModule.forRoot(),
     NotificationsModule.forRoot(),
     AuthModule.forRoot(loginRoute),

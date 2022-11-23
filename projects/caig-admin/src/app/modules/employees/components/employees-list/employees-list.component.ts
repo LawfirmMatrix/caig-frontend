@@ -37,6 +37,7 @@ import {
 import {QueryParams} from '@ngrx/data';
 import {usersForSettlement} from '../../../users/store/selectors/user.selectors';
 import {yesOrNo$} from '../../../../core/util/consts';
+import {LoadingService} from '../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-employees-list',
@@ -322,6 +323,7 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     private notifications: NotificationsService,
     private themeService: ThemeService,
     private store: Store<AppState>,
+    private loadingService: LoadingService,
   ) {
   }
   public ngOnInit() {
@@ -387,7 +389,7 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
       .subscribe(({batchId}) => this.router.navigate(['/payrolls', 'add', batchId]));
   }
   private bulkEmail(employees: Employee[]): void {
-    this.employeeService.createBatch(employees.map((e) => e.id))
+    this.loadingService.load(this.employeeService.createBatch(employees.map((e) => e.id)))
       .subscribe(({batchId}) => this.router.navigate(['batch-email', batchId], {relativeTo: this.route}));
   }
 }

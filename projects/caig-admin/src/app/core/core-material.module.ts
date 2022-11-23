@@ -13,6 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   exports: [
@@ -30,6 +31,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     MatSelectModule,
     MatCardModule,
     MatBadgeModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class CoreMaterialModule { }

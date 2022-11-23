@@ -1,0 +1,28 @@
+import {Injectable} from '@angular/core';
+import {Observable, tap, catchError, throwError} from 'rxjs';
+import {Overlay} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {LoadingOverlayComponent} from '../components/loading-overlay/loading-overlay.component';
+
+@Injectable({providedIn: 'root'})
+export class LoadingService {
+  private overlayRef = this.overlay.create();
+  private portal = new ComponentPortal(LoadingOverlayComponent);
+  constructor(private overlay: Overlay) { }
+  public load(obs$: Observable<any>): Observable<any> {
+    this.attach();
+    return obs$.pipe(
+      tap(() => this.detach()),
+      catchError((err) => {
+        this.detach()
+        return throwError(err);
+      })
+    )
+  }
+  public attach(): void {
+    this.overlayRef.attach(this.portal);
+  }
+  public detach(): void {
+    this.overlayRef.detach();
+  }
+}

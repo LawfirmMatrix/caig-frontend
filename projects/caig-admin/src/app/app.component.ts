@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from './store/reducers';
-import {Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError} from '@angular/router';
 import {ThemeService} from './theme/theme.service';
 import {map} from 'rxjs/operators';
 import {AuthService} from './auth/services/auth.service';
 import {AuthActions} from './auth/store/actions/action-types';
+import {LoadingService} from './core/services/loading.service';
+import {NavigationStart, NavigationEnd, NavigationCancel, NavigationError, Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -13,34 +14,34 @@ import {AuthActions} from './auth/store/actions/action-types';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public isLoading = true;
   public isDarkTheme$ = this.theme.currentTheme$.pipe(map((theme) => theme.isDark));
   constructor(
     private store: Store<AppState>,
-    private router: Router,
     private theme: ThemeService,
+    private router: Router,
+    private loadingService: LoadingService,
   ) { }
   public ngOnInit() {
-    this.applyCachedToken();
-    this.listenToLoadingEvents();
+    this.loginWithStoredToken();
+    this.loadOnRouterNavigation();
   }
-  private applyCachedToken(): void {
+  private loginWithStoredToken(): void {
     const token = AuthService.token;
     if (token) {
       this.store.dispatch(AuthActions.login({token}));
     }
   }
-  private listenToLoadingEvents(): void {
+  private loadOnRouterNavigation(): void {
     this.router.events.subscribe((event) => {
       switch (true) {
         case event instanceof NavigationStart: {
-          this.isLoading = true;
+          this.loadingService.attach();
           break;
         }
         case event instanceof NavigationEnd:
         case event instanceof NavigationCancel:
         case event instanceof NavigationError: {
-          this.isLoading = false;
+          this.loadingService.detach();
           break;
         }
         default: {
