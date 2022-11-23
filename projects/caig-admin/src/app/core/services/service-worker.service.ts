@@ -81,6 +81,7 @@ export class ServiceWorkerService {
         tap(([updateFound, versionUpdates]) => {
           if (updateFound && ServiceWorkerService.isVersionReady(versionUpdates)) {
             ServiceWorkerService.storeAppData(versionUpdates);
+            this.installUpdate(false);
           }
         }),
         map(([updateFound, ]) => updateFound),
