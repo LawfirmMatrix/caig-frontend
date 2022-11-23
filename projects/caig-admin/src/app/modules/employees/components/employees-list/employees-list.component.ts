@@ -234,6 +234,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     {
       name: () => 'Bulk add to payroll',
       callback: (rows) => this.addToPayroll(rows),
+    },
+    {
+      name: () => 'Bulk email',
+      callback: (rows) => this.bulkEmail(rows),
     }
   ];
   public rowMenuItems: RowMenuItem<Employee>[] = [
@@ -381,6 +385,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
   private addToPayroll(employees: Employee[]): void {
     this.employeeService.createBatch(employees.map((e) => e.id))
       .subscribe(({batchId}) => this.router.navigate(['/payrolls', 'add', batchId]));
+  }
+  private bulkEmail(employees: Employee[]): void {
+    this.employeeService.createBatch(employees.map((e) => e.id))
+      .subscribe(({batchId}) => this.router.navigate(['batch-email', batchId], {relativeTo: this.route}));
   }
 }
 

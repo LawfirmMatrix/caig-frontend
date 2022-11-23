@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TableColumn, RowMenuItem, TableMenuItem, TextColumn, CalculateColumn} from 'vs-table';
 import {ActivatedRoute, Router} from '@angular/router';
-import {cloneDeep, chunk, flatten, isEqual, omit, pick} from 'lodash-es';
+import {chunk, flatten, isEqual, omit, pick} from 'lodash-es';
 import {distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, combineLatest, Observable, of, ReplaySubject} from 'rxjs';
-import {Employee, ParticipationStatus} from '../../../../models/employee.model';
+import {Employee, ParticipationStatus, EmployeeEvent} from '../../../../models/employee.model';
 import {isNotUndefined, participationRowPainter, zeroPad} from '../../../../core/util/functions';
 import {AssignUserComponent} from '../../../../core/components/assign-user/assign-user.component';
 import {EmployeeEntityService} from '../../../employees/services/employee-entity.service';
@@ -80,10 +80,11 @@ export class CallListComponent implements OnInit, OnDestroy {
       title: 'BUE Location',
       field: 'bueLocation',
     }),
-    new TextColumn({
+    new CalculateColumn({
       title: 'Last Event',
       field: 'lastEvent',
       fxFlex: 25,
+      calculate: (row) => row.lastEvent ? `${row.lastEvent.description} (${row.lastEvent.code}) - ${row.lastEvent.message}` : '',
     }),
     new TextColumn({
       title: 'Participation',
@@ -259,7 +260,7 @@ export class CallListComponent implements OnInit, OnDestroy {
     if (!entities) {
       return entities;
     }
-    let employees = cloneDeep(entities);
+    let employees = [...entities];
     switch (removed) {
       case 'ignore':
         employees = employees.filter((e) => !!e.participationStatus);
@@ -268,13 +269,12 @@ export class CallListComponent implements OnInit, OnDestroy {
         employees = employees.filter((e) => !e.participationStatus);
         break;
     }
-    const callListEmployees = employees.map((e) => ({...e, lastEvent: e.events[0] ? `${e.events[0].description} (${e.events[0].code}) - ${e.events[0].message}` : ''}));
-    return statuses.length ? callListEmployees.filter((e) => statuses.indexOf(e.participationStatus) > -1) : callListEmployees;
+    return statuses.length ? employees.filter((e) => statuses.indexOf(e.participationStatus) > -1) : employees;
   }
 }
 
 interface CallListEmployee extends Employee {
-  lastEvent: string;
+  lastEvent: EmployeeEvent;
 }
 
 interface CallListStatuses {

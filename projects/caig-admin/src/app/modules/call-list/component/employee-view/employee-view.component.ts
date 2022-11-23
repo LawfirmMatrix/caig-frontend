@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
   debounceTime,
-  distinctUntilChanged,
   filter,
   first,
   map,
@@ -85,7 +84,7 @@ export class EmployeeViewComponent implements OnInit, OnDestroy {
   };
   private emailButton: (alt?: boolean) => InputButton[] = (alt?: boolean) => [{
     icon: 'send',
-    callback: () => this.router.navigate(['../email'], {queryParams: {alt: !!alt}, relativeTo: this.route, queryParamsHandling: 'merge'}),
+    callback: () => this.router.navigate(['../email'], {queryParams: {address: this.form.value[alt ? 'emailAlt' : 'email']}, relativeTo: this.route, queryParamsHandling: 'merge'}),
     color: 'primary',
     tooltip: 'Send Email',
     disabled: (value: string) => !value,
