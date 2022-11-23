@@ -125,7 +125,9 @@ export class ServiceWorkerService {
               .subscribe(([isSuperAdmin, portal]) => {
                 const nonAdminKeys: Portals[] = ['General', portal];
                 const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, nonAdminKeys);
-                this.dialog.open(WhatsNewComponent, {data});
+                if (Object.keys(data).length) {
+                  this.dialog.open(WhatsNewComponent, {data});
+                }
               });
           }
         }
