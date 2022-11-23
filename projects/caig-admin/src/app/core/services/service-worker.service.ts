@@ -32,9 +32,6 @@ export class ServiceWorkerService {
     private dialog: MatDialog,
     private store: Store<AppState>,
   ) {
-    // @TODO - remove
-    console.log('CONSTRUCTOR');
-    this.updates.versionUpdates.subscribe((x) => console.log('version update', x));
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
         const alreadyReloaded = localStorage.getItem(ServiceWorkerService.NO_SW_CONTROLLER);
@@ -57,10 +54,8 @@ export class ServiceWorkerService {
     return event.type === 'VERSION_READY';
   }
   private static storeAppData(event: VersionReadyEvent): void {
-    console.log('store app data');
     const appData = event.latestVersion.appData as AppData | undefined;
     if (appData) {
-      console.log(appData);
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
     }
   }
@@ -84,7 +79,6 @@ export class ServiceWorkerService {
       .pipe(
         withLatestFrom(this.updates.versionUpdates),
         tap(([updateFound, versionUpdates]) => {
-          console.log('tap', updateFound, versionUpdates);
           if (updateFound && ServiceWorkerService.isVersionReady(versionUpdates)) {
             ServiceWorkerService.storeAppData(versionUpdates);
           }
@@ -108,7 +102,6 @@ export class ServiceWorkerService {
   private checkIfUpdated(): void {
     const notify = localStorage.getItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
     const cachedData = localStorage.getItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
-    console.log('cached data', cachedData);
     if (notify) {
       localStorage.removeItem(ServiceWorkerService.NOTIFY_STORAGE_KEY);
       this.notifications.showSimpleInfoMessage('The update has been installed successfully!');
@@ -116,26 +109,21 @@ export class ServiceWorkerService {
     if (cachedData) {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
       const appData: AppData = JSON.parse(cachedData);
-      console.log(appData);
       if (appData) {
         if (appData.clearLocalStorage) {
           localStorage.clear();
         }
         if (appData.changes) {
           const changes = appData.changes;
-          console.log(changes);
           const portals = Object.keys(appData.changes) as Portals[];
-          console.log(portals);
           if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
             const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
             const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
             combineLatest([isSuperAdmin$, portal$])
               .pipe(first())
               .subscribe(([isSuperAdmin, portal]) => {
-                console.log(isSuperAdmin, portal);
                 const nonAdminKeys: Portals[] = ['General', portal];
                 const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, nonAdminKeys);
-                console.log(data);
                 this.dialog.open(WhatsNewComponent, {data});
               });
           }
