@@ -1,6 +1,6 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, combineLatest, delay} from 'rxjs';
+import {concat, filter, from, interval, Observable, of, throwError, combineLatest, delay, timer} from 'rxjs';
 import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
@@ -74,27 +74,23 @@ export class ServiceWorkerService {
     if (!this.updates.isEnabled) {
       return of(null);
     }
-    return from(this.updates.checkForUpdate()).pipe(
-      switchMap((updateFound) => {
-        console.log('update found', updateFound);
-        if (updateFound) {
-          // @TODO - fix this, app hangs
-
-          return this.versionReady().pipe(
-            first(),
-            tap((x) => console.log('update available', x)),
-            tap(() => this.installUpdate(false)),
-            map(() => updateFound),
-            delay(10000),
-          );
-        }
-        return of(updateFound);
-      }),
-      catchError((err) => {
-        location.reload();
-        return throwError(err);
-      })
-    );
+    const versionReady$ = this.versionReady();
+    return combineLatest([versionReady$, from(this.updates.checkForUpdate())])
+      .pipe(
+        tap(([versionReady, updateFound]) => {
+          console.log(versionReady, updateFound);
+          if (updateFound) {
+            this.installUpdate(false);
+          }
+        }),
+        switchMap(([versionReady, updateFound]) => updateFound ?
+          timer(10000).pipe(map(() => updateFound)) : of(updateFound)
+        ),
+        catchError((err) => {
+          location.reload();
+          return throwError(err);
+        })
+      );
   }
   private pollForUpdates(): void {
     const appIsStable$ = this.appRef.isStable.pipe(first((isStable) => isStable));
