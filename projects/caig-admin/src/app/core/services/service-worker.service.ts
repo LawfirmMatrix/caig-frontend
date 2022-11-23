@@ -1,7 +1,7 @@
 import {ApplicationRef, Injectable} from '@angular/core';
 import {SwUpdate, VersionReadyEvent, VersionEvent} from '@angular/service-worker';
-import {concat, filter, from, interval, Observable, of, throwError, combineLatest, delay, timer} from 'rxjs';
-import {catchError, first, shareReplay, skip, switchMap, tap, map} from 'rxjs/operators';
+import {concat, filter, from, interval, Observable, of, throwError, combineLatest, timer, delayWhen} from 'rxjs';
+import {catchError, first, shareReplay, skip, switchMap, tap, map, withLatestFrom} from 'rxjs/operators';
 import {NotificationsService} from 'notifications';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
@@ -19,7 +19,12 @@ export class ServiceWorkerService {
   private static readonly APP_DATA_STORAGE_KEY = 'SW_UPDATE_APP_DATA';
   private static readonly NO_SW_CONTROLLER = 'NO_SW_CONTROLLER';
   public isUpdating = false;
-  public isUpdateAvailable$ = this.versionReady().pipe(shareReplay(1));
+  public isUpdateAvailable$ = this.updates.versionUpdates
+    .pipe(
+      filter(ServiceWorkerService.isVersionReady),
+      tap(ServiceWorkerService.storeAppData),
+      shareReplay(1),
+    );
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -28,6 +33,7 @@ export class ServiceWorkerService {
     private store: Store<AppState>,
   ) {
     // @TODO - remove
+    console.log('CONSTRUCTOR');
     this.updates.versionUpdates.subscribe((x) => console.log('version update', x));
     if (updates.isEnabled) {
       if (!navigator.serviceWorker.controller) {
@@ -74,22 +80,21 @@ export class ServiceWorkerService {
     if (!this.updates.isEnabled) {
       return of(null);
     }
-    const versionReady$ = this.versionReady();
-    return combineLatest([versionReady$, from(this.updates.checkForUpdate())])
+    return from(this.updates.checkForUpdate())
       .pipe(
-        tap(([versionReady, updateFound]) => {
-          console.log(versionReady, updateFound);
-          if (updateFound) {
-            this.installUpdate(false);
+        withLatestFrom(this.updates.versionUpdates),
+        tap(([updateFound, versionUpdates]) => {
+          console.log('tap', updateFound, versionUpdates);
+          if (updateFound && ServiceWorkerService.isVersionReady(versionUpdates)) {
+            ServiceWorkerService.storeAppData(versionUpdates);
           }
         }),
-        switchMap(([versionReady, updateFound]) => updateFound ?
-          timer(10000).pipe(map(() => updateFound)) : of(updateFound)
-        ),
+        map(([updateFound, ]) => updateFound),
+        delayWhen((updateFound) => timer(updateFound ? 10000 : 0)),
         catchError((err) => {
           location.reload();
           return throwError(err);
-        })
+        }),
       );
   }
   private pollForUpdates(): void {
@@ -161,12 +166,5 @@ export class ServiceWorkerService {
         console.log('An error occurred while updating', event);
         location.reload();
       });
-  }
-  private versionReady(): Observable<VersionReadyEvent> {
-    return this.updates.versionUpdates
-      .pipe(
-        filter(ServiceWorkerService.isVersionReady),
-        tap(ServiceWorkerService.storeAppData),
-      );
   }
 }
