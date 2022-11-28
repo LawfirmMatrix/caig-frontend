@@ -146,7 +146,7 @@ export class AutocompleteInputComponent<T> implements OnChanges, ControlValueAcc
   }
 
   public get errorState(): boolean {
-    return this.required && this.empty && this.touched;
+    return this.required && this.empty && this.touched && !this.disabled;
   }
 
   constructor(

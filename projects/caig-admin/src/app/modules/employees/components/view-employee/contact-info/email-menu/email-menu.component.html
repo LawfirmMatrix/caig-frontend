@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutGap="8px">
-  <a [disabled]="!email" matTooltip="Compose Email" mat-icon-button color="primary" routerLink="../email" [queryParams]="{address: email}">
+  <a [disabled]="!email" matTooltip="Compose Email" mat-icon-button color="primary" routerLink="../email" [queryParams]="{toEmail: email}">
     <mat-icon>send</mat-icon>
   </a>
 </div>

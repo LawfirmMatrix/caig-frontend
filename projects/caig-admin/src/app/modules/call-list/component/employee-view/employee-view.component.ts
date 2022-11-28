@@ -84,7 +84,7 @@ export class EmployeeViewComponent implements OnInit, OnDestroy {
   };
   private emailButton: (alt?: boolean) => InputButton[] = (alt?: boolean) => [{
     icon: 'send',
-    callback: () => this.router.navigate(['../email'], {queryParams: {address: this.form.value[alt ? 'emailAlt' : 'email']}, relativeTo: this.route, queryParamsHandling: 'merge'}),
+    callback: () => this.router.navigate(['../email'], {queryParams: {toEmail: this.form.value[alt ? 'emailAlt' : 'email']}, relativeTo: this.route, queryParamsHandling: 'merge'}),
     color: 'primary',
     tooltip: 'Send Email',
     disabled: (value: string) => !value,

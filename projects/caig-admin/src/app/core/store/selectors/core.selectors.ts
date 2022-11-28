@@ -14,6 +14,11 @@ export const settlements = createSelector(
   core => core.settlements,
 );
 
+export const currentSettlement = createSelector(
+  selectCoreState,
+  core => core.settlementId && core.settlements ? core.settlements.find((s) => s.id === core.settlementId) : undefined,
+);
+
 export const user = createSelector(
   selectCoreState,
   core => core.user,

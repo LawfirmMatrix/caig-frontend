@@ -9,12 +9,25 @@ import {EmployeeResolver} from './services/employee-resolver';
 import {CommonModule} from '@angular/common';
 import {BatchResolver} from './services/batch-resolver';
 import {BatchEmailComponent} from './components/batch-email/batch-email.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {DynamicFormModule} from 'dynamic-form';
+import {TagSelectorComponent} from './components/tag-selector/tag-selector.component';
+import {StoreModule} from '@ngrx/store';
+import {emailReducer} from './store/reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {EmailEffects} from './store/effects/email.effects';
+import {QuillModule} from 'ngx-quill';
 
 @NgModule({
   imports: [
     EmailRoutingModule,
     EmailMaterialModule,
     CommonModule,
+    FlexLayoutModule,
+    DynamicFormModule,
+    StoreModule.forFeature('email', emailReducer),
+    EffectsModule.forFeature([EmailEffects]),
+    QuillModule,
   ],
   declarations: [
     ComposeEmailComponent,
@@ -22,6 +35,7 @@ import {BatchEmailComponent} from './components/batch-email/batch-email.componen
     EmailPreviewComponent,
     TemplateSelectionComponent,
     BatchEmailComponent,
+    TagSelectorComponent,
   ],
   providers: [
     EmployeeResolver,

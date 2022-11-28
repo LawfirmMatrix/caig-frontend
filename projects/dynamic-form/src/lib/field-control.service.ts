@@ -16,6 +16,9 @@ export class FieldControlService {
       if (onChange) {
         control.valueChanges.subscribe((value) => onChange(value, form));
       }
+      if (field.disabled) {
+        control.disable({emitEvent: false});
+      }
       form.setControl(field.key, control, {emitEvent: false});
     });
   }

@@ -12,7 +12,7 @@ export class BatchResolver implements Resolve<Employee[]> {
       .pipe(
         tap((loaded) => {
           if (!loaded) {
-            this.employeeService.getAll().subscribe();
+            this.employeeService.getAll();
           }
         }),
         filter((loaded) => loaded),

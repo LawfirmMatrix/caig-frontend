@@ -1,0 +1,15 @@
+<div fxFlex fxLayout="row" fxLayoutGap="12px">
+  <app-tag-selector></app-tag-selector>
+  <div fxFlex fxLayout="column">
+    <dynamic-form [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
+    <div fxFlex>
+      <div class="quill-container">
+        <quill-editor></quill-editor>
+      </div>
+    </div>
+    <div class="bot-form" fxLayout="row" fxLayoutGap="12px">
+      <dynamic-form fxFlex [fields]="eventFields" [form]="eventForm"></dynamic-form>
+      <button mat-raised-button color="primary">Preview & Send</button>
+    </div>
+  </div>
+</div>
