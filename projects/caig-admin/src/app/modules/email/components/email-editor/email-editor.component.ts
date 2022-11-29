@@ -9,6 +9,7 @@ import {emailTemplates} from '../../store/selectors/email.selectors';
 import {EmailActions} from '../../store/actions/action-types';
 import {eventTypes} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
+import {SidenavStackService} from 'sidenav-stack';
 
 @Component({
   selector: 'app-email-editor',
@@ -40,7 +41,7 @@ export class EmailEditorComponent implements OnInit {
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onAddItem: () => console.log('add new'),
+        onAddItem: () => this.sidenavService.open({}),
       }),
     ]
   ];
@@ -84,7 +85,10 @@ export class EmailEditorComponent implements OnInit {
       })
     ]
   ];
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private sidenavService: SidenavStackService,
+  ) {
   }
   public ngOnInit() {
 

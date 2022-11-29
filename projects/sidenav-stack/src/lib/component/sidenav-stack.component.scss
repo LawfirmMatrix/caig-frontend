@@ -1,0 +1,15 @@
+mat-sidenav-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  background-color: transparent !important;
+  transition: transform 0.3s;
+}
+
+mat-sidenav {
+  height: 100%;
+  width: 75%;
+}

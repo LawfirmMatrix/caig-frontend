@@ -1,0 +1,19 @@
+<mat-sidenav-container #background>
+  <mat-sidenav
+    #aside
+    [opened]="opened"
+    (closedStart)="sidenavClosing()"
+    (closed)="sidenavClosed()"
+    mode="over"
+    position="end">
+  </mat-sidenav>
+  <div>a</div>
+  <div>a</div>
+  <div>a</div>
+  <div>a</div>
+  <div>a</div>
+  <div>a</div>
+<!--  <div style="height: 100%; width: 100%; background: purple;">-->
+<!--    <div>Test</div>-->
+<!--  </div>-->
+</mat-sidenav-container>
