@@ -41,7 +41,9 @@ export class EmailEditorComponent implements OnInit {
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onAddItem: () => this.sidenavService.open({}),
+        onAddItem: () => {
+          this.sidenavService.open({});
+        },
       }),
     ]
   ];

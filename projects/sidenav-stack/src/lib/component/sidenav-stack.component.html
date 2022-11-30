@@ -1,19 +1,31 @@
-<mat-sidenav-container #background>
+<mat-sidenav-container #container>
   <mat-sidenav
-    #aside
+    #sidenav
     [opened]="opened"
     (closedStart)="sidenavClosing()"
     (closed)="sidenavClosed()"
+    (opened)="createContent()"
     mode="over"
-    position="end">
+    position="end"
+    [style.width.%]="(isHandset$ | async) ? 100 : 75">
+    <mat-sidenav-content fxLayout="column">
+      <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" class="mat-elevation-z6">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <button mat-icon-button type="button" (click)="sidenav.close()" tabindex="-1">
+            <mat-icon>close</mat-icon>
+          </button>
+          <div>Title</div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="8px">
+          <div>Buttons</div>
+<!--          <button mat-raised-button tabindex="-1">Test</button>-->
+<!--          <button mat-raised-button tabindex="-1">Test</button>-->
+<!--          <button mat-raised-button tabindex="-1" color="primary" (click)="save(sidenav)">Save</button>-->
+        </div>
+      </mat-toolbar>
+      <div fxFlex class="component-container">
+        <div>COMPONENT</div>
+      </div>
+    </mat-sidenav-content>
   </mat-sidenav>
-  <div>a</div>
-  <div>a</div>
-  <div>a</div>
-  <div>a</div>
-  <div>a</div>
-  <div>a</div>
-<!--  <div style="height: 100%; width: 100%; background: purple;">-->
-<!--    <div>Test</div>-->
-<!--  </div>-->
 </mat-sidenav-container>

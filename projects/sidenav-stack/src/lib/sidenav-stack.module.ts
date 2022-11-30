@@ -3,14 +3,22 @@ import { SidenavStackComponent } from './component/sidenav-stack.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SidenavStackService} from './sidenav-stack.service';
+import {MatButtonModule} from '@angular/material/button';
+import {CommonModule} from '@angular/common';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
     SidenavStackComponent
   ],
   imports: [
+    CommonModule,
     FlexLayoutModule,
     MatSidenavModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
   ],
 })
 export class SidenavStackModule {
