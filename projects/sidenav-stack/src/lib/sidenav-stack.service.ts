@@ -39,12 +39,22 @@ export class SidenavStackService {
     return sidenav$;
   }
 
+  public closeLast(): void {
+    if (this.sidenavs.length) {
+      this.sidenavs[this.sidenavs.length - 1].instance.close();
+    }
+  }
+
+  public closeAll(): void {
+    this.sidenavs = this.sidenavs.reverse();
+    this.sidenavs.forEach((sidenavRef) => sidenavRef.instance.close());
+  }
+
   private popSidenav(): void {
     this.sidenavs.pop();
     if (this.sidenavs.length) {
       this.sidenavs[this.sidenavs.length - 1].instance.open();
     }
-    console.log(this.sidenavs);
   }
 
   private pushSidenav(sidenavRef: ComponentRef<SidenavStackComponent<any>>): void {
@@ -52,7 +62,6 @@ export class SidenavStackService {
       this.sidenavs[this.sidenavs.length - 1].instance.defer();
     }
     this.sidenavs.push(sidenavRef);
-    console.log(this.sidenavs);
   }
 }
 
