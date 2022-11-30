@@ -1,8 +1,9 @@
-import {Injectable, ComponentRef} from '@angular/core';
+import {Injectable, ComponentRef, Type, EventEmitter} from '@angular/core';
 import {Observable, noop} from 'rxjs';
 import {SidenavStackComponent} from './component/sidenav-stack.component';
 import {Overlay} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
+import {ThemePalette} from '@angular/material/core';
 
 @Injectable()
 export class SidenavStackService {
@@ -10,10 +11,13 @@ export class SidenavStackService {
 
   constructor(private overlay: Overlay) { }
 
-  public open<T>(config: SidenavStackSettings<T>): Observable<T | void> {
+  public open<T>(title: string, component: Type<SidenavComponent>, locals?: {[key: string]: any}): Observable<T> {
     const overlayRef = this.overlay.create({width: '100%', height: '100%'});
     const portal = new ComponentPortal(SidenavStackComponent<T>);
     const sidenavRef = overlayRef.attach(portal);
+
+    sidenavRef.instance.title = title;
+    sidenavRef.instance.content = { component, locals };
 
     sidenavRef.instance.sidenavClosing = () => this.popSidenav();
     sidenavRef.instance.sidenavClosed = () => {
@@ -22,11 +26,11 @@ export class SidenavStackService {
     };
     sidenavRef.instance.sidenavSaved = noop;
 
-    const sidenav$ = new Observable<T | void>((subscriber) => {
+    const sidenav$ = new Observable<T>((subscriber) => {
       sidenavRef.instance.sidenavClosed = () => {
         sidenavRef.destroy();
         overlayRef.detach();
-        subscriber.error();
+        subscriber.complete();
       };
       sidenavRef.instance.sidenavSaved = (data) => {
         subscriber.next(data);
@@ -65,6 +69,36 @@ export class SidenavStackService {
   }
 }
 
-export interface SidenavStackSettings<T> {
+export interface SidenavStackContent {
+  component: Type<SidenavComponent>;
+  locals?: { [key: string]: any };
+}
 
+export interface SidenavComponent {
+  controlMsg: EventEmitter<SidenavComponentMessage>;
+}
+
+export type SidenavComponentMessage = TitleMessage | MenuMessage | ProcessingMessage | CloseMessage<any>;
+
+export class TitleMessage {
+  constructor(public title: string) { }
+}
+
+export class MenuMessage {
+  constructor(public menu: SidenavComponentMenuItem[]) { }
+}
+
+export class ProcessingMessage {
+  constructor(public isProcessing: boolean) { }
+}
+
+export class CloseMessage<T> {
+  constructor(public saveResult: T) { }
+}
+
+export interface SidenavComponentMenuItem {
+  name: string;
+  callback: () => void;
+  disabled?: boolean;
+  color?: ThemePalette;
 }

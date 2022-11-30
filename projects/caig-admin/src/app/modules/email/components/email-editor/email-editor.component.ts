@@ -10,6 +10,8 @@ import {EmailActions} from '../../store/actions/action-types';
 import {eventTypes} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {SidenavStackService} from 'sidenav-stack';
+import {TemplateEditorComponent} from '../template-editor/template-editor.component';
+import {EmailTemplate} from '../../../../core/services/email.service';
 
 @Component({
   selector: 'app-email-editor',
@@ -41,9 +43,9 @@ export class EmailEditorComponent implements OnInit {
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onAddItem: () => {
-          this.sidenavService.open({});
-        },
+        onAddItem: () => this.sidenavService.open<EmailTemplate>('New Template', TemplateEditorComponent).subscribe((template) => {
+          this.subjectForm.patchValue({templateId: template.id});
+        }),
       }),
     ]
   ];

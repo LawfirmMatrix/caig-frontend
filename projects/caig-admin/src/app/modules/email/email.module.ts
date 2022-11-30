@@ -17,6 +17,7 @@ import {emailReducer} from './store/reducers';
 import {EffectsModule} from '@ngrx/effects';
 import {EmailEffects} from './store/effects/email.effects';
 import {QuillModule} from 'ngx-quill';
+import {TemplateEditorComponent} from './components/template-editor/template-editor.component';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import {QuillModule} from 'ngx-quill';
     TemplateSelectionComponent,
     BatchEmailComponent,
     TagSelectorComponent,
+    TemplateEditorComponent,
   ],
   providers: [
     EmployeeResolver,
