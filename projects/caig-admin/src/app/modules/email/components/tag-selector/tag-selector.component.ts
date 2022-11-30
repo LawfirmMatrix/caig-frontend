@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {fields} from '../../store/selectors/email.selectors';
@@ -11,6 +11,7 @@ import {EmailActions} from '../../store/actions/action-types';
   styleUrls: ['./tag-selector.component.scss']
 })
 export class TagSelectorComponent {
+  @Output() public selected = new EventEmitter<string>();
   public tags$ = this.store.select(fields).pipe(
     tap((fields) => {
       if (!fields) {
@@ -18,6 +19,5 @@ export class TagSelectorComponent {
       }
     }),
   );
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) { }
 }

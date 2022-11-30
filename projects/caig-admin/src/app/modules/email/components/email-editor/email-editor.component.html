@@ -1,15 +1,27 @@
 <div fxFlex fxLayout="row" fxLayoutGap="12px">
-  <app-tag-selector></app-tag-selector>
+  <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
   <div fxFlex fxLayout="column">
     <dynamic-form [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
     <div fxFlex>
       <div class="quill-container">
-        <quill-editor></quill-editor>
+        <quill-editor
+          [sanitize]="true"
+          [(ngModel)]="emailBody"
+          (onBlur)="quillEditorFocused = false"
+          (onFocus)="quillEditorFocused = true"
+          (onEditorCreated)="quillEditor = $event">
+        </quill-editor>
       </div>
     </div>
     <div class="bot-form" fxLayout="row" fxLayoutGap="12px">
       <dynamic-form fxFlex [fields]="eventFields" [form]="eventForm"></dynamic-form>
-      <button mat-raised-button color="primary">Preview & Send</button>
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="./preview"
+        [disabled]="!emailBody || addressForm.invalid || subjectForm.invalid || eventForm.invalid">
+        Preview & Send
+      </button>
     </div>
   </div>
 </div>

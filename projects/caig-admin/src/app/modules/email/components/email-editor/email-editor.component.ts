@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, Inject} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {filter, tap} from 'rxjs';
@@ -11,14 +11,20 @@ import {eventTypes} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {SidenavStackService} from 'sidenav-stack';
 import {TemplateEditorComponent} from '../template-editor/template-editor.component';
-import {EmailTemplate} from '../../../../core/services/email.service';
+import {EmailTemplate, EmailService} from '../../../../core/services/email.service';
+import Quill from 'quill';
+import {DOCUMENT} from '@angular/common';
+import {LoadingService} from '../../../../core/services/loading.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-email-editor',
   templateUrl: './email-editor.component.html',
   styleUrls: ['./email-editor.component.scss'],
 })
-export class EmailEditorComponent implements OnInit {
+export class EmailEditorComponent {
+  private static readonly SUBJECT_ID = 'subjectInput';
+  @Input() public addressForm!: UntypedFormGroup;
   public subjectForm = new UntypedFormGroup({});
   public eventForm = new UntypedFormGroup({});
   public subjectFields: FieldBase<any>[][] = [
@@ -28,6 +34,7 @@ export class EmailEditorComponent implements OnInit {
         label: 'Subject',
         type: 'text',
         required: true,
+        id: EmailEditorComponent.SUBJECT_ID,
       }),
       new AutocompleteField({
         key: 'templateId',
@@ -43,9 +50,11 @@ export class EmailEditorComponent implements OnInit {
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onAddItem: () => this.sidenavService.open<EmailTemplate>('New Template', TemplateEditorComponent).subscribe((template) => {
-          this.subjectForm.patchValue({templateId: template.id});
-        }),
+        onAddItem: () => {
+          this.sidenavService.open<EmailTemplate>('New Template', TemplateEditorComponent).subscribe((template) => {
+            this.subjectForm.patchValue({templateId: template.id});
+          })
+        },
       }),
     ]
   ];
@@ -89,12 +98,33 @@ export class EmailEditorComponent implements OnInit {
       })
     ]
   ];
+  public quillEditor: Quill | undefined;
+  public quillEditorFocused = false;
+  public emailBody = '';
   constructor(
     private store: Store<AppState>,
     private sidenavService: SidenavStackService,
+    @Inject(DOCUMENT) private document: Document,
   ) {
   }
-  public ngOnInit() {
-
+  public insertTag(tag: string): void {
+    const placeholder = `{{${tag}}} `;
+    if (this.quillEditorFocused) {
+      if (this.quillEditor) {
+        const selection = this.quillEditor.getSelection(true);
+        this.quillEditor.insertText(selection.index, placeholder, 'user');
+        this.quillEditor.setSelection({index: selection.index + placeholder.length, length: 0}, 'user');
+      }
+    } else {
+      const inputEl = this.document.getElementById(EmailEditorComponent.SUBJECT_ID) as HTMLInputElement;
+      const selectionStart = inputEl.selectionStart || 0;
+      const selectionOffset = selectionStart + placeholder.length;
+      const subject = selectionStart < inputEl.value.length - 1 ?
+        `${inputEl.value.slice(0, selectionStart)}${placeholder}${inputEl.value.slice(selectionStart)}` :
+        `${inputEl.value}${placeholder}`;
+      this.subjectForm.patchValue({ subject });
+      inputEl.focus();
+      inputEl.setSelectionRange(selectionOffset, selectionOffset);
+    }
   }
 }
