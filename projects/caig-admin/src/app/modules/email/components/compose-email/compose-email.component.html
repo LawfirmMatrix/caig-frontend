@@ -10,7 +10,7 @@
     <app-email-editor
       *ngIf="employee$ | async as emp"
       [addressForm]="form"
-      [toName]="emp.name">
+      [employee]="emp">
     </app-email-editor>
   </div>
 </div>

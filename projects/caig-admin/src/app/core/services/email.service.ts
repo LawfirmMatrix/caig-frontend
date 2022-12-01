@@ -15,7 +15,7 @@ export class EmailService {
     return this.http.get<EmailTemplate>(`${EmailService.baseUrl}/template/${templateId}`);
   }
 
-  public getEmployeeTemplate(templateId: string, employeeId: number): Observable<EmployeeEmailTemplate> {
+  public getEmployeeTemplate(templateId: string, employeeId: string | number): Observable<EmployeeEmailTemplate> {
     return this.http.get<EmployeeEmailTemplate>(`${EmailService.baseUrl}/template/${templateId}/forEmployee/${employeeId}`);
   }
 

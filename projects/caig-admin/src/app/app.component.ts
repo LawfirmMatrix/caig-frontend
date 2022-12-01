@@ -6,7 +6,14 @@ import {map} from 'rxjs/operators';
 import {AuthService} from './auth/services/auth.service';
 import {AuthActions} from './auth/store/actions/action-types';
 import {LoadingService} from './core/services/loading.service';
-import {NavigationStart, NavigationEnd, NavigationCancel, NavigationError, Router} from '@angular/router';
+import {
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError,
+  Router,
+  RouteConfigLoadStart, ActivationStart, ResolveStart
+} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -34,19 +41,16 @@ export class AppComponent {
   private loadOnRouterNavigation(): void {
     this.router.events.subscribe((event) => {
       switch (true) {
-        case event instanceof NavigationStart: {
+        case event instanceof RouteConfigLoadStart:
+        case event instanceof ActivationStart:
+        case event instanceof ResolveStart:
           this.loadingService.attach();
           break;
-        }
         case event instanceof NavigationEnd:
         case event instanceof NavigationCancel:
-        case event instanceof NavigationError: {
+        case event instanceof NavigationError:
           this.loadingService.detach();
           break;
-        }
-        default: {
-          break;
-        }
       }
     });
   }

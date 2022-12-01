@@ -218,6 +218,7 @@ export class AutocompleteInputComponent<T> implements OnChanges, ControlValueAcc
       this._onChange(item);
       this.filteredItems = value ? this.options.filter((item ) =>
         String(item[this.displayField]).toLowerCase().includes(value)) : this.options;
+      setTimeout(() => this.autocompleteTrigger.closePanel());
     }
   }
 

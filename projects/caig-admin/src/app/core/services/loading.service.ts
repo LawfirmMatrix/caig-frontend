@@ -20,7 +20,9 @@ export class LoadingService {
     )
   }
   public attach(): void {
-    this.overlayRef.attach(this.portal);
+    if (!this.overlayRef.hasAttached()) {
+      this.overlayRef.attach(this.portal);
+    }
   }
   public detach(): void {
     this.overlayRef.detach();

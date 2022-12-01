@@ -5,10 +5,6 @@
   box-sizing: border-box;
 }
 
-.quill-container {
-  height: calc(100% - 64px);
-}
-
 ::ng-deep .mat-checkbox-label {
   span {
     white-space: nowrap !important;

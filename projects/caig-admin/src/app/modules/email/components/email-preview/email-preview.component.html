@@ -1,5 +1,7 @@
 <div mat-dialog-title>
-  <mat-icon *ngIf="data.eventCode" color="warn" matTooltip="Overriding default event">warning</mat-icon>
+  <div style="position: relative">
+    <mat-icon *ngIf="data.eventCode" color="warn" matTooltip="Overriding default event">warning</mat-icon>
+  </div>
   <h1 fxLayoutAlign="center center">Email Preview</h1>
   <mat-divider></mat-divider>
   <div fxLayout="column" fxLayoutGap="16px">

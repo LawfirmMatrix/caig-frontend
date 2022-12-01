@@ -1,7 +1,17 @@
 <div fxFlex fxLayout="row" fxLayoutGap="12px">
   <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
   <div fxFlex fxLayout="column">
-    <dynamic-form [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
+      <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 16px 16px 0" fxLayout="row" fxLayoutGap="8px">
+        <button mat-icon-button color="accent" (click)="openTemplate(templateId)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteTemplate()">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
     <div fxFlex>
       <div class="quill-container">
         <quill-editor

@@ -1,7 +1,7 @@
-import {Component, Input, Inject} from '@angular/core';
+import {Component, Input, Inject, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {filter, tap} from 'rxjs';
+import {filter, tap, distinctUntilChanged, debounceTime} from 'rxjs';
 import {isNotUndefined} from '../../../../core/util/functions';
 import {FieldBase, InputField, AutocompleteField, CheckboxField} from 'dynamic-form';
 import {UntypedFormGroup} from '@angular/forms';
@@ -12,35 +12,30 @@ import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {SidenavStackService} from 'sidenav-stack';
 import {TemplateEditorComponent} from '../template-editor/template-editor.component';
 import {EmailTemplate, EmailService} from '../../../../core/services/email.service';
-import Quill from 'quill';
 import {DOCUMENT} from '@angular/common';
 import {LoadingService} from '../../../../core/services/loading.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, map} from 'rxjs/operators';
 import {EmailPreviewComponent, EmailPreviewData} from '../email-preview/email-preview.component';
 import {NotificationsService} from 'notifications';
+import {EmailEditor} from '../email-editor';
+import {ConfirmDialogComponent} from 'shared-components';
+import {EmployeesActions} from '../../../shared/employee/store/actions/action-types';
+import {Employee} from '../../../../models/employee.model';
 
 @Component({
   selector: 'app-email-editor',
   templateUrl: './email-editor.component.html',
   styleUrls: ['./email-editor.component.scss'],
 })
-export class EmailEditorComponent {
-  private static readonly SUBJECT_ID = 'subjectInput';
+export class EmailEditorComponent extends EmailEditor implements OnInit {
   @Input() public addressForm!: UntypedFormGroup;
-  @Input() public toName!: string;
-  public subjectForm = new UntypedFormGroup({});
+  @Input() public employee!: Employee;
   public eventForm = new UntypedFormGroup({});
   public subjectFields: FieldBase<any>[][] = [
     [
-      new InputField({
-        key: 'subject',
-        label: 'Subject',
-        type: 'text',
-        required: true,
-        id: EmailEditorComponent.SUBJECT_ID,
-      }),
+      this.subjectField,
       new AutocompleteField({
         key: 'templateId',
         label: 'Template',
@@ -55,11 +50,8 @@ export class EmailEditorComponent {
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onAddItem: () => {
-          this.sidenavService.open<EmailTemplate>('New Template', TemplateEditorComponent).subscribe((template) => {
-            this.subjectForm.patchValue({templateId: template.id});
-          })
-        },
+        onChange: (value) => this.router.navigate([], {queryParams: {templateId: value}, queryParamsHandling: 'merge'}),
+        onAddItem: () => this.openTemplate(),
       }),
     ]
   ];
@@ -103,13 +95,10 @@ export class EmailEditorComponent {
       })
     ]
   ];
-  public quillEditor: Quill | undefined;
-  public quillEditorFocused = false;
-  public emailBody = '';
   constructor(
+    @Inject(DOCUMENT) protected override document: Document,
     private store: Store<AppState>,
     private sidenavService: SidenavStackService,
-    @Inject(DOCUMENT) private document: Document,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private loadingService: LoadingService,
@@ -117,32 +106,28 @@ export class EmailEditorComponent {
     private router: Router,
     private notifications: NotificationsService,
   ) {
+    super(document);
   }
-  public insertTag(tag: string): void {
-    const placeholder = `{{${tag}}} `;
-    if (this.quillEditorFocused) {
-      if (this.quillEditor) {
-        const selection = this.quillEditor.getSelection(true);
-        this.quillEditor.insertText(selection.index, placeholder, 'user');
-        this.quillEditor.setSelection({index: selection.index + placeholder.length, length: 0}, 'user');
-      }
-    } else {
-      const inputEl = this.document.getElementById(EmailEditorComponent.SUBJECT_ID) as HTMLInputElement;
-      const selectionStart = inputEl.selectionStart || 0;
-      const selectionOffset = selectionStart + placeholder.length;
-      const subject = selectionStart < inputEl.value.length - 1 ?
-        `${inputEl.value.slice(0, selectionStart)}${placeholder}${inputEl.value.slice(selectionStart)}` :
-        `${inputEl.value}${placeholder}`;
-      this.subjectForm.patchValue({ subject });
-      inputEl.focus();
-      inputEl.setSelectionRange(selectionOffset, selectionOffset);
-    }
+  public ngOnInit() {
+    this.route.queryParams
+      .pipe(
+        map((qp) => qp['templateId']),
+        filter(isNotUndefined),
+        distinctUntilChanged(),
+        debounceTime(100),
+        switchMap((templateId) => this.loadingService.load(
+          this.emailService.getEmployeeTemplate(templateId, this.employee.id)
+        ))
+      )
+      .subscribe((template) => {
+        this.emailBody = template.body;
+        this.subjectForm.patchValue({subject: template.subject, templateId: template.id});
+      });
   }
   public preview(): void {
-    const employeeId = this.route.snapshot.params['employeeId'];
     const toAddress = this.addressForm.value['toAddress'];
     this.loadingService.load(this.emailService.renderEmail(
-      employeeId,
+      this.employee.id,
       this.subjectForm.value['subject'],
       this.emailBody,
     )).pipe(
@@ -161,13 +146,13 @@ export class EmailEditorComponent {
           .pipe(
             filter((confirm) => !!confirm),
             switchMap(() => this.loadingService.load(this.emailService.sendEmail({
-              toName: this.toName,
+              toName: this.employee.name,
               fromAddress: data.fromAddress,
               toAddress: data.toAddress[0],
               ccAddress: data.ccAddress,
               body: preview.bodyRendered,
               subject: preview.subjectRendered,
-              employeeId,
+              employeeId: this.employee.id,
             })))
           );
       }),
@@ -175,5 +160,31 @@ export class EmailEditorComponent {
       this.notifications.showSimpleInfoMessage(`Successfully sent email to ${toAddress}`);
       this.router.navigate(['../view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
     });
+  }
+  public openTemplate(templateId?: string): void {
+    const title = `${templateId ? 'Edit' : 'New'} Email Template`;
+    const locals = templateId ? { templateId, employeeId: this.employee.id } : undefined;
+    this.sidenavService.open<EmailTemplate>(title, TemplateEditorComponent, locals).subscribe((template) => {
+      this.subjectForm.patchValue({templateId: template.id});
+      this.emailBody = template.body;
+    });
+  }
+  public deleteTemplate(): void {
+    const title = 'Confirm Delete';
+    const text = 'Are you sure you want to delete the selected email template?';
+    const templateId = this.subjectForm.value['templateId'];
+    this.dialog.open(ConfirmDialogComponent, {data: {title, text}})
+      .afterClosed()
+      .pipe(
+        filter((res) => !!res),
+        switchMap(() => this.loadingService.load(this.emailService.deleteTemplate(templateId)))
+      )
+      .subscribe(() => {
+        this.store.dispatch(EmployeesActions.removeEmailTemplate({templateId}))
+        this.notifications.showSimpleInfoMessage('Successfully delete email template');
+        this.subjectForm.reset();
+        this.emailBody = '';
+        this.router.navigate([], {queryParams: {templateId: null}, queryParamsHandling: 'merge'});
+      });
   }
 }

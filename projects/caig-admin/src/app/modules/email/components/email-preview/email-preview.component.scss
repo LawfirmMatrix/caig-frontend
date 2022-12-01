@@ -32,7 +32,8 @@ cdk-virtual-scroll-viewport {
 }
 
 mat-icon {
-  float: right;
+  position: absolute;
+  right: 0;
 }
 
 mat-dialog-content {
