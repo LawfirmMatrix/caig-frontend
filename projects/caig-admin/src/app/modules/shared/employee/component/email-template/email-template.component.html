@@ -1,24 +1,24 @@
-<div fxFlexFill fxLayout="column" fxLayoutGap="10px" style="padding: 16px">
-  <div fxLayout="row" style="overflow: auto">
-    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>
-  </div>
-  <mat-card fxFlex fxLayout="column" class="mat-elevation-z4">
-    <div fxLayoutAlign="space-between center" fxLayout="row">
-      <mat-card-title>{{route.snapshot.params['templateId'] ? 'Edit' : 'New'}} Email Template</mat-card-title>
-      <div fxLayoutGap="10px" fxLayoutAlign="start center">
-        <mat-slide-toggle #toggle (change)="togglePreview($event.checked)" [disabled]="isLoading">Preview</mat-slide-toggle>
-        <button mat-raised-button color="primary" [disabled]="isLoading || (invalidForm$ | async) || !template[bodyField]" (click)="save()">Save</button>
-      </div>
-    </div>
-    <dynamic-form [fields]="fields" [form]="form" [model]="template"></dynamic-form>
-    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>
-    <div fxFlex style="overflow: auto">
-      <app-email-body-editor
-        [template]="template"
-        [field]="bodyField"
-        (placeholderClick)="insertPlaceholder($event)"
-        [disableEditor]="isLoading"
-        [disablePlaceholders]="toggle.checked"></app-email-body-editor>
-    </div>
-  </mat-card>
-</div>
+<!--<div fxFlexFill fxLayout="column" fxLayoutGap="10px" style="padding: 16px">-->
+<!--  <div fxLayout="row" style="overflow: auto">-->
+<!--    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>-->
+<!--  </div>-->
+<!--  <mat-card fxFlex fxLayout="column" class="mat-elevation-z4">-->
+<!--    <div fxLayoutAlign="space-between center" fxLayout="row">-->
+<!--      <mat-card-title>{{route.snapshot.params['templateId'] ? 'Edit' : 'New'}} Email Template</mat-card-title>-->
+<!--      <div fxLayoutGap="10px" fxLayoutAlign="start center">-->
+<!--        <mat-slide-toggle #toggle (change)="togglePreview($event.checked)" [disabled]="isLoading">Preview</mat-slide-toggle>-->
+<!--        <button mat-raised-button color="primary" [disabled]="isLoading || (invalidForm$ | async) || !template[bodyField]" (click)="save()">Save</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <dynamic-form [fields]="fields" [form]="form" [model]="template"></dynamic-form>-->
+<!--    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>-->
+<!--    <div fxFlex style="overflow: auto">-->
+<!--      <app-email-body-editor-->
+<!--        [template]="template"-->
+<!--        [field]="bodyField"-->
+<!--        (placeholderClick)="insertPlaceholder($event)"-->
+<!--        [disableEditor]="isLoading"-->
+<!--        [disablePlaceholders]="toggle.checked"></app-email-body-editor>-->
+<!--    </div>-->
+<!--  </mat-card>-->
+<!--</div>-->

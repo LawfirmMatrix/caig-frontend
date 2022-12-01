@@ -7,5 +7,4 @@ import {Component, Input} from '@angular/core';
 })
 export class EmailMenuComponent {
   @Input() public email: string | undefined;
-  @Input() public alt: boolean | undefined;
 }

@@ -1,0 +1,33 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="12px">
+  <mat-toolbar class="mat-elevation-z6" fxLayoutAlign="center center">
+    Bulk Email
+  </mat-toolbar>
+  <div fxFlex fxLayout="column" fxLayoutGap="12px">
+    <mat-card fxLayout="row" fxLayoutGap="12px">
+      <div fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div style="font-size: larger">To:</div>
+          <mat-chip-list>
+            <mat-chip>{{employees?.length}} addresses</mat-chip>
+            <mat-chip *ngIf="invalidEmployees" [selected]="!!invalidEmployees.length" color="warn" [ngClass]="{'pointer': !!invalidEmployees.length}" (click)="scrollToNextInvalid(viewport)">
+              {{invalidEmployees.length ? invalidEmployees.length + ' invalid' : 'All valid'}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+        <cdk-virtual-scroll-viewport #viewport itemSize="32">
+          <div *cdkVirtualFor="let emp of employees" class="address" fxLayoutAlign="start center" [ngClass]="{'selected': invalidEmployee === emp}">
+            <div *ngIf="emp.email || emp.emailAlt as email; else noEmail">{{email}}</div>
+            <ng-template #noEmail>
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                <mat-icon (click)="getEmailForEmployee(emp)" class="pointer" color="accent" matTooltip="Add email address for {{emp.name}}">add</mat-icon>
+                <b>{{emp.name}} has no valid email</b>
+              </div>
+            </ng-template>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+      <dynamic-form fxFlex [fields]="fields" [form]="form" [model]="model$ | async"></dynamic-form>
+    </mat-card>
+    <app-email-editor *ngIf="employees" [addressForm]="form" [employee]="employees[0]" [employees]="employees"></app-email-editor>
+  </div>
+</div>

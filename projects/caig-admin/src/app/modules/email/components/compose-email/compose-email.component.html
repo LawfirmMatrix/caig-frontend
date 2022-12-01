@@ -1,0 +1,16 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="12px">
+  <mat-toolbar class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
+    <div style="font-size: 26px">Compose Email</div>
+    <div style="font-size: 16px">{{(employee$ | async)?.name}}</div>
+  </mat-toolbar>
+  <div fxFlex fxLayout="column" fxLayoutGap="12px">
+    <mat-card>
+      <dynamic-form [fields]="fields" [form]="form" [model]="model$ | async"></dynamic-form>
+    </mat-card>
+    <app-email-editor
+      *ngIf="employee$ | async as emp"
+      [addressForm]="form"
+      [employee]="emp">
+    </app-email-editor>
+  </div>
+</div>

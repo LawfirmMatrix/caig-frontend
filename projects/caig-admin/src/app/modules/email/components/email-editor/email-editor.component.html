@@ -1,0 +1,37 @@
+<div fxFlex fxLayout="row" fxLayoutGap="12px">
+  <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
+  <div fxFlex fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
+      <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 16px 16px 0" fxLayout="row" fxLayoutGap="8px">
+        <button mat-icon-button color="accent" (click)="openTemplate(templateId)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteTemplate()">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div fxFlex>
+      <div class="quill-container">
+        <quill-editor
+          [sanitize]="true"
+          [(ngModel)]="emailBody"
+          (onBlur)="quillEditorFocused = false"
+          (onFocus)="quillEditorFocused = true"
+          (onEditorCreated)="quillEditor = $event">
+        </quill-editor>
+      </div>
+    </div>
+    <div class="bot-form" fxLayout="row" fxLayoutGap="12px">
+      <dynamic-form fxFlex [fields]="eventFields" [form]="eventForm"></dynamic-form>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="preview()"
+        [disabled]="!emailBody || addressForm.invalid || subjectForm.invalid || eventForm.invalid">
+        Preview & Send
+      </button>
+    </div>
+  </div>
+</div>

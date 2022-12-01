@@ -1,0 +1,37 @@
+<mat-sidenav-container #container>
+  <mat-sidenav
+    #sidenav
+    [opened]="false"
+    (closedStart)="sidenavClosing()"
+    (closed)="sidenavClosed()"
+    (opened)="createContent()"
+    mode="over"
+    position="end"
+    [style.width.%]="sidenavWidth$ | async">
+    <mat-sidenav-content fxLayout="column">
+      <div *ngIf="isProcessing$ | async" class="loading-container">
+        <mat-spinner diameter="100"></mat-spinner>
+      </div>
+      <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" class="mat-elevation-z6">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <button mat-icon-button type="button" (click)="sidenav.close()" tabindex="-1">
+            <mat-icon>close</mat-icon>
+          </button>
+          <div>{{title$ | async}}</div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="8px">
+          <button *ngFor="let button of menu$ | async"
+                  [color]="button.color"
+                  [disabled]="button.disabled"
+                  (click)="button.callback()"
+                  mat-raised-button>
+            {{button.name}}
+          </button>
+        </div>
+      </mat-toolbar>
+      <div fxFlex class="component-container" [@state]="contentRef ? 'visible' : 'hidden'">
+        <ng-container #content></ng-container>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav>
+</mat-sidenav-container>

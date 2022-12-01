@@ -23,6 +23,7 @@ import {EmployeeEnumsResolver} from './services/employee-enums.resolver';
 import {SettlementStatesResolver} from './services/settlement-states.resolver';
 import {EmployeeStatusResolver} from './services/employee-status.resolver';
 import {EditEmployeeComponent} from './components/edit-employee/edit-employee.component';
+import {EmailModule} from '../email/email.module';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import {EditEmployeeComponent} from './components/edit-employee/edit-employee.co
     SharedEmployeeModule,
     DynamicFormModule,
     VsTableModule,
+    EmailModule,
   ],
   declarations: [
     EmployeesListComponent,

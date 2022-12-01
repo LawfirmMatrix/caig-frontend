@@ -37,6 +37,9 @@
       "shared-components": [
         "dist/shared-components"
       ],
+      "sidenav-stack": [
+        "dist/sidenav-stack"
+      ],
       "vs-table": [
         "dist/vs-table"
       ]
