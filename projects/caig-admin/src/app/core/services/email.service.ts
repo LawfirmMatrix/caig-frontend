@@ -38,12 +38,16 @@ export class EmailService {
     return this.http.post<ComposedEmail>(`${EmailService.baseUrl}`, email);
   }
 
+  public bulkSendEmail(email: BulkComposedEmail): Observable<void> {
+    return this.http.post<void>(`${EmailService.baseUrl}/bulk`, email);
+  }
+
   public getEmail(emailId: string): Observable<ComposedEmail> {
     return this.http.get<ComposedEmail>(`${EmailService.baseUrl}/${emailId}`);
   }
 
   public renderEmail(employeeId: number, subject: string, body: string): Observable<RenderedEmail> {
-    return this.http.post<RenderedEmail>(`${EmailService.baseUrl}/template/forEmployee/${employeeId}`, { subject, body });
+    return this.http.post<RenderedEmail>(`${EmailService.baseUrl}/template/forEmployee/${employeeId}`, {subject, body});
   }
 }
 
@@ -62,14 +66,21 @@ export interface EmployeeEmailTemplate extends EmailTemplate {
   bodyRendered: string;
 }
 
-export interface ComposedEmail {
-  toAddress: string;
+export interface ComposedEmail extends Email {
   toName: string;
+  toAddress: string;
+  employeeId: number;
+}
+
+export interface BulkComposedEmail extends Email {
+  batchId: string;
+}
+
+export interface Email {
   fromAddress: string;
   ccAddress?: string;
   subject: string;
   body: string;
-  employeeId: number;
   eventCode?: number;
   eventMessage?: string;
 }

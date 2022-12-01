@@ -1,7 +1,7 @@
 import {Component, Input, Inject, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {filter, tap, distinctUntilChanged, debounceTime} from 'rxjs';
+import {filter, tap, distinctUntilChanged, debounceTime, Observable} from 'rxjs';
 import {isNotUndefined} from '../../../../core/util/functions';
 import {FieldBase, InputField, AutocompleteField, CheckboxField} from 'dynamic-form';
 import {UntypedFormGroup} from '@angular/forms';
@@ -11,7 +11,7 @@ import {eventTypes} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {SidenavStackService} from 'sidenav-stack';
 import {TemplateEditorComponent} from '../template-editor/template-editor.component';
-import {EmailTemplate, EmailService} from '../../../../core/services/email.service';
+import {EmailTemplate, EmailService, Email} from '../../../../core/services/email.service';
 import {DOCUMENT} from '@angular/common';
 import {LoadingService} from '../../../../core/services/loading.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -32,6 +32,7 @@ import {Employee} from '../../../../models/employee.model';
 export class EmailEditorComponent extends EmailEditor implements OnInit {
   @Input() public addressForm!: UntypedFormGroup;
   @Input() public employee!: Employee;
+  @Input() public employees: Employee[] | undefined;
   public eventForm = new UntypedFormGroup({});
   public subjectFields: FieldBase<any>[][] = [
     [
@@ -125,7 +126,6 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
       });
   }
   public preview(): void {
-    const toAddress = this.addressForm.value['toAddress'];
     this.loadingService.load(this.emailService.renderEmail(
       this.employee.id,
       this.subjectForm.value['subject'],
@@ -133,7 +133,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
     )).pipe(
       switchMap((preview) => {
         const data: EmailPreviewData = {
-          toAddress: [toAddress],
+          toAddress: this.employees ? this.employees.map((e) => e.email || e.emailAlt) : [this.addressForm.value['toAddress']],
           fromAddress: this.addressForm.value['fromAddress'],
           ccAddress: this.addressForm.getRawValue()['ccAddress'],
           subjectRendered: preview.subjectRendered,
@@ -141,23 +141,30 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
           eventCode: this.eventForm.value['eventCode'],
           eventMessage: this.eventForm.value['eventMessage'],
         };
+        const basePayload: Email = {
+          fromAddress: data.fromAddress,
+          ccAddress: data.ccAddress,
+          body: preview.bodyRendered,
+          subject: preview.subjectRendered,
+        };
+        const request$: Observable<any> = this.employees ? this.emailService.bulkSendEmail({
+          ...basePayload,
+          batchId: this.route.snapshot.params['batchId'],
+        }) : this.emailService.sendEmail({
+          ...basePayload,
+          toAddress: data.toAddress[0],
+          toName: this.employee.name,
+          employeeId: this.employee.id,
+        });
         return this.dialog.open<EmailPreviewComponent, EmailPreviewData, boolean>(EmailPreviewComponent, {data})
           .afterClosed()
           .pipe(
             filter((confirm) => !!confirm),
-            switchMap(() => this.loadingService.load(this.emailService.sendEmail({
-              toName: this.employee.name,
-              fromAddress: data.fromAddress,
-              toAddress: data.toAddress[0],
-              ccAddress: data.ccAddress,
-              body: preview.bodyRendered,
-              subject: preview.subjectRendered,
-              employeeId: this.employee.id,
-            })))
+            switchMap(() => this.loadingService.load(request$))
           );
       }),
     ).subscribe(() => {
-      this.notifications.showSimpleInfoMessage(`Successfully sent email to ${toAddress}`);
+      this.notifications.showSimpleInfoMessage('Successfully sent email');
       this.router.navigate(['../view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
     });
   }

@@ -8,6 +8,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   exports: [
@@ -19,6 +20,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatMenuModule,
     MatIconModule,
     MatTooltipModule,
+    MatChipsModule,
     ScrollingModule,
   ],
 })

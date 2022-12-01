@@ -35,6 +35,7 @@ import {UpdateTimerComponent} from './components/update-timer/update-timer.compo
 import {SharedComponentsModule} from 'shared-components';
 import {PortalSelectionComponent} from './components/portal-selection/portal-selection.component';
 import {LoadingOverlayComponent} from './components/loading-overlay/loading-overlay.component';
+import {FormDialogComponent} from './components/form-dialog/form-dialog.component';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {LoadingOverlayComponent} from './components/loading-overlay/loading-over
     UpdateTimerComponent,
     PortalSelectionComponent,
     LoadingOverlayComponent,
+    FormDialogComponent,
   ],
   providers: [ NavMenuService ],
 })

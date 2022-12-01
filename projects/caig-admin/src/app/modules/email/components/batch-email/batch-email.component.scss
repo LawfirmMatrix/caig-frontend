@@ -1,0 +1,20 @@
+cdk-virtual-scroll-viewport {
+  height: 150px;
+  width: 350px;
+  margin: 8px 0 0 8px;
+}
+
+.address {
+  height: 32px;
+  max-height: 32px;
+  width: 100%;
+}
+
+.selected {
+  border: 1px solid red;
+  border-radius: 4px;
+}
+
+.pointer {
+  cursor: pointer;
+}

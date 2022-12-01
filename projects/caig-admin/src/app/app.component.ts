@@ -7,7 +7,6 @@ import {AuthService} from './auth/services/auth.service';
 import {AuthActions} from './auth/store/actions/action-types';
 import {LoadingService} from './core/services/loading.service';
 import {
-  NavigationStart,
   NavigationEnd,
   NavigationCancel,
   NavigationError,
