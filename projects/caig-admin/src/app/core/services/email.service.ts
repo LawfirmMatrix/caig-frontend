@@ -64,9 +64,9 @@ export interface EmployeeEmailTemplate extends EmailTemplate {
 
 export interface ComposedEmail {
   toAddress: string;
+  toName: string;
   fromAddress: string;
   ccAddress?: string;
-  toName: string;
   subject: string;
   body: string;
   employeeId: number;

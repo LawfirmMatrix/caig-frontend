@@ -41,14 +41,6 @@ export class ComposeEmailComponent implements OnInit {
     this.fields = [
       [
         new SelectField({
-          key: 'fromAddress',
-          label: 'From:',
-          options: fromEmails$,
-          itemKey: 'value',
-          displayField: 'value',
-          required: true,
-        }),
-        new SelectField({
           key: 'toAddress',
           label: 'To:',
           options: employeeEmails$.pipe(
@@ -62,7 +54,15 @@ export class ComposeEmailComponent implements OnInit {
           key: 'ccAddress',
           label: 'Cc:',
           disabled: true,
-        })
+        }),
+        new SelectField({
+          key: 'fromAddress',
+          label: 'From:',
+          options: fromEmails$,
+          itemKey: 'value',
+          displayField: 'value',
+          required: true,
+        }),
       ]
     ];
 

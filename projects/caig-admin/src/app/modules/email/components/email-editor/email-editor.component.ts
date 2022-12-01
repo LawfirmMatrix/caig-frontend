@@ -15,7 +15,11 @@ import {EmailTemplate, EmailService} from '../../../../core/services/email.servi
 import Quill from 'quill';
 import {DOCUMENT} from '@angular/common';
 import {LoadingService} from '../../../../core/services/loading.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {switchMap} from 'rxjs/operators';
+import {EmailPreviewComponent, EmailPreviewData} from '../email-preview/email-preview.component';
+import {NotificationsService} from 'notifications';
 
 @Component({
   selector: 'app-email-editor',
@@ -25,6 +29,7 @@ import {ActivatedRoute} from '@angular/router';
 export class EmailEditorComponent {
   private static readonly SUBJECT_ID = 'subjectInput';
   @Input() public addressForm!: UntypedFormGroup;
+  @Input() public toName!: string;
   public subjectForm = new UntypedFormGroup({});
   public eventForm = new UntypedFormGroup({});
   public subjectFields: FieldBase<any>[][] = [
@@ -105,6 +110,12 @@ export class EmailEditorComponent {
     private store: Store<AppState>,
     private sidenavService: SidenavStackService,
     @Inject(DOCUMENT) private document: Document,
+    private emailService: EmailService,
+    private route: ActivatedRoute,
+    private loadingService: LoadingService,
+    private dialog: MatDialog,
+    private router: Router,
+    private notifications: NotificationsService,
   ) {
   }
   public insertTag(tag: string): void {
@@ -126,5 +137,43 @@ export class EmailEditorComponent {
       inputEl.focus();
       inputEl.setSelectionRange(selectionOffset, selectionOffset);
     }
+  }
+  public preview(): void {
+    const employeeId = this.route.snapshot.params['employeeId'];
+    const toAddress = this.addressForm.value['toAddress'];
+    this.loadingService.load(this.emailService.renderEmail(
+      employeeId,
+      this.subjectForm.value['subject'],
+      this.emailBody,
+    )).pipe(
+      switchMap((preview) => {
+        const data: EmailPreviewData = {
+          toAddress: [toAddress],
+          fromAddress: this.addressForm.value['fromAddress'],
+          ccAddress: this.addressForm.getRawValue()['ccAddress'],
+          subjectRendered: preview.subjectRendered,
+          bodyRendered: preview.bodyRendered,
+          eventCode: this.eventForm.value['eventCode'],
+          eventMessage: this.eventForm.value['eventMessage'],
+        };
+        return this.dialog.open<EmailPreviewComponent, EmailPreviewData, boolean>(EmailPreviewComponent, {data})
+          .afterClosed()
+          .pipe(
+            filter((confirm) => !!confirm),
+            switchMap(() => this.loadingService.load(this.emailService.sendEmail({
+              toName: this.toName,
+              fromAddress: data.fromAddress,
+              toAddress: data.toAddress[0],
+              ccAddress: data.ccAddress,
+              body: preview.bodyRendered,
+              subject: preview.subjectRendered,
+              employeeId,
+            })))
+          );
+      }),
+    ).subscribe(() => {
+      this.notifications.showSimpleInfoMessage(`Successfully sent email to ${toAddress}`);
+      this.router.navigate(['../view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
+    });
   }
 }

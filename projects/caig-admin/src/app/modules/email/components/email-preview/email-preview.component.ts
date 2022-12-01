@@ -1,8 +1,5 @@
-import {Component} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Employee} from '../../../../models/employee.model';
-import {map} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-email-preview',
@@ -10,9 +7,15 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./email-preview.component.scss']
 })
 export class EmailPreviewComponent {
-  public employee$: Observable<Employee> = this.route.data.pipe(
-    map((data) => data['employee'])
-  );
-  constructor(private route: ActivatedRoute) {
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: EmailPreviewData) { }
+}
+
+export interface EmailPreviewData {
+  toAddress: string[];
+  fromAddress: string;
+  subjectRendered: string;
+  bodyRendered: string;
+  ccAddress?: string;
+  eventCode?: number;
+  eventMessage?: string;
 }

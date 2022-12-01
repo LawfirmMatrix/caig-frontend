@@ -19,6 +19,7 @@ import {EmailEffects} from './store/effects/email.effects';
 import {QuillModule} from 'ngx-quill';
 import {TemplateEditorComponent} from './components/template-editor/template-editor.component';
 import {FormsModule} from '@angular/forms';
+import {PipesModule} from 'pipes';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import {FormsModule} from '@angular/forms';
     EffectsModule.forFeature([EmailEffects]),
     QuillModule,
     FormsModule,
+    PipesModule,
   ],
   declarations: [
     ComposeEmailComponent,

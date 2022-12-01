@@ -9,7 +9,7 @@ export class LoadingService {
   private overlayRef = this.overlay.create();
   private portal = new ComponentPortal(LoadingOverlayComponent);
   constructor(private overlay: Overlay) { }
-  public load(obs$: Observable<any>): Observable<any> {
+  public load<T>(obs$: Observable<T>): Observable<T> {
     this.attach();
     return obs$.pipe(
       tap(() => this.detach()),

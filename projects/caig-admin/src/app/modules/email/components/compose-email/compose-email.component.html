@@ -7,6 +7,10 @@
     <mat-card>
       <dynamic-form [fields]="fields" [form]="form" [model]="model$ | async"></dynamic-form>
     </mat-card>
-    <app-email-editor [addressForm]="form"></app-email-editor>
+    <app-email-editor
+      *ngIf="employee$ | async as emp"
+      [addressForm]="form"
+      [toName]="emp.name">
+    </app-email-editor>
   </div>
 </div>

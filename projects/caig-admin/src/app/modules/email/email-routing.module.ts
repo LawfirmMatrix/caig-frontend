@@ -4,7 +4,6 @@ import {EmployeeResolver} from './services/employee-resolver';
 import {ComposeEmailComponent} from './components/compose-email/compose-email.component';
 import {BatchResolver} from './services/batch-resolver';
 import {BatchEmailComponent} from './components/batch-email/batch-email.component';
-import {EmailPreviewComponent} from './components/email-preview/email-preview.component';
 
 const routes: Routes = [
   {
@@ -28,16 +27,7 @@ const routes: Routes = [
     data: { animation: 'email' },
     resolve: { employee: EmployeeResolver },
     children: [
-      {
-        path: 'email',
-        component: ComposeEmailComponent,
-        data: { animation: 'email' },
-      },
-      {
-        path: 'email/preview',
-        component: EmailPreviewComponent,
-        data: { animation: 'preview' },
-      },
+      { path: 'email', component: ComposeEmailComponent }
     ],
   },
 ];

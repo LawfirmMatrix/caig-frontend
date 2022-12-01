@@ -1,3 +1,40 @@
-mat-toolbar {
-  line-height: 28px;
+h1 {
+  margin: 0;
+}
+
+mat-divider {
+  margin: 8px 0 16px 0;
+}
+
+.subtitle {
+  font-size: 12px;
+  line-height: 4px;
+}
+
+.mat-menu-trigger {
+  padding: 0 8px;
+}
+
+.mat-menu-item {
+  cursor: text;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+cdk-virtual-scroll-viewport {
+  width: 240px;
+  max-height: 288px;
+}
+
+.addresses {
+  overflow: auto;
+  padding-top: 6px;
+}
+
+mat-icon {
+  float: right;
+}
+
+mat-dialog-content {
+  margin-top: 6px;
 }

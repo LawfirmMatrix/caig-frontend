@@ -1,9 +1,46 @@
-<div fxFlexFill fxLayout="column" fxLayoutGap="12px">
-  <mat-toolbar class="mat-elevation-z6" fxLayout="column" fxLayoutAlign="center center">
-    <div style="font-size: 26px">Send Email</div>
-    <div style="font-size: 16px">{{(employee$ | async)?.name}}</div>
-  </mat-toolbar>
-  <div fxFlex fxLayout="column" fxLayoutAlign="center center">
-    <h1>Currently under construction...</h1>
+<div mat-dialog-title>
+  <mat-icon *ngIf="data.eventCode" color="warn" matTooltip="Overriding default event">warning</mat-icon>
+  <h1 fxLayoutAlign="center center">Email Preview</h1>
+  <mat-divider></mat-divider>
+  <div fxLayout="column" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="32px" class="addresses">
+      <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+        <div class="subtitle">To:</div>
+        <div fxLayout="row" fxLayoutGap="4px">
+          <div>{{data.toAddress[0]}}</div>
+          <div *ngIf="data.toAddress.length === 2">, {{data.toAddress[1]}}</div>
+          <button *ngIf="data.toAddress.length > 2" mat-button color="accent" [matMenuTriggerFor]="toAddresses">and {{data.toAddress.length - 1}} more</button>
+          <mat-menu #toAddresses="matMenu">
+            <cdk-virtual-scroll-viewport itemSize="48" minBufferPx="288" maxBufferPx="288" [style.height.px]="(data.toAddress.length - 1) * 48">
+              <div *cdkVirtualFor="let address of data.toAddress | slice:1"
+                   mat-menu-item
+                   disableRipple
+                   (click)="$event.stopPropagation()">
+                {{address}}
+              </div>
+            </cdk-virtual-scroll-viewport>
+          </mat-menu>
+        </div>
+      </div>
+      <div *ngIf="data.ccAddress" fxFlex fxLayout="column" fxLayoutAlign="start start">
+        <div class="subtitle">Cc:</div>
+        <div>{{data.ccAddress}}</div>
+      </div>
+      <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+        <div class="subtitle">From:</div>
+        <div>{{data.fromAddress}}</div>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <div class="subtitle">Subject:</div>
+      <div [innerHTML]="data.subjectRendered | safe:'html'"></div>
+    </div>
   </div>
 </div>
+<div class="subtitle">Body:</div>
+<mat-dialog-content [innerHTML]="data.bodyRendered | safe:'html'"></mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Send</button>
+</mat-dialog-actions>
