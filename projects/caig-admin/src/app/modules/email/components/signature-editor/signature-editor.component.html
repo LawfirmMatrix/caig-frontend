@@ -1,0 +1,10 @@
+<div fxFlexFill fxLayout="column">
+  <dynamic-form [fields]="fields" [form]="form"></dynamic-form>
+  <div class="quill-container">
+    <quill-editor
+      [sanitize]="true"
+      [(ngModel)]="signature"
+      (ngModelChange)="signatureChange$.next()">
+    </quill-editor>
+  </div>
+</div>

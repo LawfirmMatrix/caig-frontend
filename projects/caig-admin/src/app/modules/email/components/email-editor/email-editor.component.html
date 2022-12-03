@@ -4,10 +4,10 @@
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
       <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
       <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 16px 16px 0" fxLayout="row" fxLayoutGap="8px">
-        <button mat-icon-button color="accent" (click)="openTemplate(templateId)">
+        <button mat-icon-button color="accent" (click)="openTemplate(templateId)" matTooltip="Edit email template">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" (click)="deleteTemplate()">
+        <button mat-icon-button color="warn" (click)="deleteTemplate()" matTooltip="Delete email template">
           <mat-icon>delete_forever</mat-icon>
         </button>
       </div>
@@ -24,12 +24,20 @@
       </div>
     </div>
     <div class="bot-form" fxLayout="row" fxLayoutGap="12px">
+      <div *ngIf="eventForm.value['signatureId'] as signatureId" style="padding: 8px 0 0 0" fxLayout="row" fxLayoutGap="8px">
+        <button mat-icon-button color="warn" (click)="deleteSignature()" matTooltip="Delete email signature">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="openSignature(signatureId)" matTooltip="Edit email signature">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
       <dynamic-form fxFlex [fields]="eventFields" [form]="eventForm"></dynamic-form>
       <button
         mat-raised-button
         color="primary"
         (click)="preview()"
-        [disabled]="!emailBody || addressForm.invalid || subjectForm.invalid || eventForm.invalid">
+        [disabled]="!employee || !emailBody || addressForm.invalid || subjectForm.invalid || eventForm.invalid">
         Preview & Send
       </button>
     </div>

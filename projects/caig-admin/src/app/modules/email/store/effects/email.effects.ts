@@ -4,6 +4,7 @@ import {concatMap, map} from 'rxjs/operators';
 import {EmailActions} from '../actions/action-types';
 import {EmailService} from '../../../../core/services/email.service';
 import {tap} from 'rxjs';
+import {SignatureBlockService} from '../../../../core/services/signature-block.service';
 
 @Injectable()
 export class EmailEffects {
@@ -12,6 +13,13 @@ export class EmailEffects {
       ofType(EmailActions.loadEmailTemplates),
       concatMap(() => this.emailService.getTemplates()),
       map((templates) => EmailActions.emailTemplatesLoaded({templates}))
+    )
+  );
+  public loadEmailSignatures$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmailActions.loadEmailSignatures),
+      concatMap(() => this.signatureService.get()),
+      map((signatures) => EmailActions.emailSignaturesLoaded({signatures}))
     )
   );
   public loadFields$ = createEffect(() =>
@@ -25,6 +33,7 @@ export class EmailEffects {
   constructor(
     private actions$: Actions,
     private emailService: EmailService,
+    private signatureService: SignatureBlockService,
   ) {
   }
 }

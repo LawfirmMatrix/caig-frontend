@@ -8,6 +8,11 @@ export const emailTemplates = createSelector(
   state => state.emailTemplates,
 );
 
+export const emailSignatures = createSelector(
+  selectEmailState,
+  state => state.emailSignatures,
+);
+
 export const fields = createSelector(
   selectEmailState,
   state => state.fields,

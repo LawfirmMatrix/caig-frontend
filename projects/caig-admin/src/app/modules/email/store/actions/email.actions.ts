@@ -1,5 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {EmailTemplateShort} from '../../../../core/services/email.service';
+import {SignatureBlock} from '../../../../models/signature.model';
 
 export const loadEmailTemplates = createAction('[Compose Email] Load Email Templates');
 
@@ -12,6 +13,19 @@ export const removeEmailTemplate = createAction('[Compose Email] Remove Email Te
 export const emailTemplatesLoaded = createAction(
   '[Load Email Templates Effect] Email Templates Loaded',
   props<{templates: EmailTemplateShort[]}>(),
+);
+
+export const loadEmailSignatures = createAction('[Compose Email] Load Email Signatures');
+
+export const addEmailSignature = createAction('[Email Signature Editor] Add Email Signature', props<{signature: SignatureBlock}>());
+
+export const updateEmailSignature = createAction('[Email Signature Editor] Update Email Signature', props<{signature: SignatureBlock}>());
+
+export const removeEmailSignature = createAction('[Compose Email] Remove Email Signature', props<{signatureId: string}>());
+
+export const emailSignaturesLoaded = createAction(
+  '[Load Email Signatures Effect] Email Signatures Loaded',
+  props<{signatures: SignatureBlock[]}>(),
 );
 
 export const loadFields = createAction('[Email Template Editor] Load Fields');

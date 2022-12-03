@@ -4,12 +4,12 @@ import {FieldBase, InputField} from 'dynamic-form';
 import {EmailEditor} from '../email-editor';
 import {DOCUMENT} from '@angular/common';
 import {saveMenuButton} from '../../../../core/util/consts';
-import {Subject, combineLatest, BehaviorSubject} from 'rxjs';
-import {EmailService, EmailTemplate, EmployeeEmailTemplate} from '../../../../core/services/email.service';
+import {combineLatest, BehaviorSubject} from 'rxjs';
+import {EmailService, EmailTemplate} from '../../../../core/services/email.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {EmployeesActions} from '../../../shared/employee/store/actions/action-types';
 import {NotificationsService} from 'notifications';
+import {EmailActions} from '../../store/actions/action-types';
 
 @Component({
   selector: 'app-template-editor',
@@ -69,12 +69,12 @@ export class TemplateEditorComponent extends EmailEditor implements SidenavCompo
     this.controlMsg.emit(new ProcessingMessage(true));
     this.emailService.saveTemplate(template).subscribe((res) => {
       if (!template.id) {
-        this.store.dispatch(EmployeesActions.addEmailTemplate({template: res}));
+        this.store.dispatch(EmailActions.addEmailTemplate({template: res}));
       } else {
-        this.store.dispatch(EmployeesActions.updateEmailTemplate({template: res}));
+        this.store.dispatch(EmailActions.updateEmailTemplate({template: res}));
       }
       this.controlMsg.emit(new CloseMessage(res));
       this.notifications.showSimpleInfoMessage(`Successfully ${template.id ? 'updated' : 'created'} email template`);
-    }, () => this.controlMsg.emit(new ProcessingMessage(false)))
+    }, () => this.controlMsg.emit(new ProcessingMessage(false)));
   }
 }

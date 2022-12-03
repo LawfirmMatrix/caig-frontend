@@ -20,6 +20,7 @@ import {QuillModule} from 'ngx-quill';
 import {TemplateEditorComponent} from './components/template-editor/template-editor.component';
 import {FormsModule} from '@angular/forms';
 import {PipesModule} from 'pipes';
+import {SignatureEditorComponent} from './components/signature-editor/signature-editor.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import {PipesModule} from 'pipes';
     BatchEmailComponent,
     TagSelectorComponent,
     TemplateEditorComponent,
+    SignatureEditorComponent,
   ],
   providers: [
     EmployeeResolver,

@@ -28,6 +28,6 @@
       </div>
       <dynamic-form fxFlex [fields]="fields" [form]="form" [model]="model$ | async"></dynamic-form>
     </mat-card>
-    <app-email-editor *ngIf="employees" [addressForm]="form" [employee]="employees[0]" [employees]="employees"></app-email-editor>
+    <app-email-editor *ngIf="employees" [addressForm]="form" [employee]="employee" [employees]="employees"></app-email-editor>
   </div>
 </div>

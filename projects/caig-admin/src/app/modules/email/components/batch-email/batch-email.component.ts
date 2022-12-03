@@ -20,6 +20,7 @@ import {EmployeeEntityService} from '../../../employees/services/employee-entity
 })
 export class BatchEmailComponent extends EmailEditorContainer implements OnInit {
   public employees: Employee[] | undefined;
+  public employee: Employee | undefined;
   public invalidEmployees: Employee[] | undefined;
   public invalidEmployee: Employee | undefined;
   constructor(
@@ -71,6 +72,7 @@ export class BatchEmailComponent extends EmailEditorContainer implements OnInit 
   }
   private initializeEmployees(employees: Employee[]): void {
     this.employees = employees;
+    this.employee = employees.find((e) => !!(e.email || e.emailAlt));
     this.invalidEmployees = employees.filter((e) => !e.email && !e.emailAlt);
   }
 }

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class EmailService {
-  private static readonly baseUrl = '/api/email';
+  private static readonly baseUrl = 'api/email';
   constructor(private http: HttpClient) { }
 
   public getTemplates(): Observable<EmailTemplateShort[]> {
@@ -46,8 +46,8 @@ export class EmailService {
     return this.http.get<ComposedEmail>(`${EmailService.baseUrl}/${emailId}`);
   }
 
-  public renderEmail(employeeId: number, subject: string, body: string): Observable<RenderedEmail> {
-    return this.http.post<RenderedEmail>(`${EmailService.baseUrl}/template/forEmployee/${employeeId}`, {subject, body});
+  public renderEmail(employeeId: number, subject: string, body: string, signatureId?: string): Observable<RenderedEmail> {
+    return this.http.post<RenderedEmail>(`${EmailService.baseUrl}/template/forEmployee/${employeeId}`, {subject, body, signatureId});
   }
 }
 
@@ -83,6 +83,7 @@ export interface Email {
   body: string;
   eventCode?: number;
   eventMessage?: string;
+  signatureId?: string;
 }
 
 export interface RenderedEmail {
