@@ -143,7 +143,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
       [
         new AutocompleteField({
           key: 'signatureId',
-          label: 'Signature',
+          label: 'Template',
           options: signatures$,
           itemKey: 'id',
           displayField: 'title',
