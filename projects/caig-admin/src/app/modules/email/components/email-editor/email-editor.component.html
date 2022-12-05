@@ -19,7 +19,7 @@
                 </button>
               </div>
             </div>
-            <div fxFlex>
+            <div fxFlex style="overflow: auto">
               <div class="quill-container">
                 <quill-editor
                   [sanitize]="true"
@@ -51,7 +51,7 @@
               </button>
             </div>
           </div>
-          <div fxFlex>
+          <div fxFlex style="overflow: auto">
             <div class="quill-container">
               <quill-editor [sanitize]="true" [(ngModel)]="signatureBody"></quill-editor>
             </div>

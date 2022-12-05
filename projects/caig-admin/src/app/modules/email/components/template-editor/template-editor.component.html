@@ -2,7 +2,7 @@
   <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
   <div fxFlex fxLayout="column">
     <dynamic-form [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
-    <div fxFlex>
+    <div fxFlex style="overflow: auto">
       <div class="quill-container">
         <quill-editor
           [sanitize]="true"
