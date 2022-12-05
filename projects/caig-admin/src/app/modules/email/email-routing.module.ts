@@ -4,6 +4,7 @@ import {EmployeeResolver} from './services/employee-resolver';
 import {ComposeEmailComponent} from './components/compose-email/compose-email.component';
 import {BatchResolver} from './services/batch-resolver';
 import {BatchEmailComponent} from './components/batch-email/batch-email.component';
+import {CaigPortalGuard} from '../../core/guards/caig-portal.guard';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     data: {animation: 'batchEmail'},
     resolve: { employees: BatchResolver },
     component: BatchEmailComponent,
+    canActivate: [ CaigPortalGuard ],
   },
   {
     path: ':employeeId',
