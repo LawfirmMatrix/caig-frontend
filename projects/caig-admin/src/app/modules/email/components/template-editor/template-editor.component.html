@@ -2,15 +2,17 @@
   <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
   <div fxFlex fxLayout="column">
     <dynamic-form [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
-    <div class="quill-container">
-      <quill-editor
-        [sanitize]="true"
-        [(ngModel)]="emailBody"
-        (ngModelChange)="emailBodyChange$.next()"
-        (onBlur)="quillEditorFocused = false"
-        (onFocus)="quillEditorFocused = true"
-        (onEditorCreated)="quillEditor = $event">
-      </quill-editor>
+    <div fxFlex>
+      <div class="quill-container">
+        <quill-editor
+          [sanitize]="true"
+          [(ngModel)]="emailBody"
+          (ngModelChange)="emailBodyChange$.next()"
+          (onBlur)="quillEditorFocused = false"
+          (onFocus)="quillEditorFocused = true"
+          (onEditorCreated)="quillEditor = $event">
+        </quill-editor>
+      </div>
     </div>
   </div>
 </div>

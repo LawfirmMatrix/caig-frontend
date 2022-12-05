@@ -1,7 +1,7 @@
 import {Component, Input, Inject, OnInit, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {filter, tap, distinctUntilChanged, debounceTime, Observable, of, ReplaySubject, combineLatest} from 'rxjs';
+import {filter, tap, debounceTime, Observable, of, ReplaySubject, combineLatest} from 'rxjs';
 import {isNotUndefined} from '../../../../core/util/functions';
 import {FieldBase, InputField, AutocompleteField, CheckboxField} from 'dynamic-form';
 import {UntypedFormGroup} from '@angular/forms';
@@ -55,7 +55,6 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         fxFlex: 0,
         onChange: (value) => this.router.navigate([], {queryParams: {templateId: value}, queryParamsHandling: 'merge'}),
         onAddItem: () => this.openTemplate(),
-        appearance: 'standard',
       }),
     ]
   ];
@@ -122,13 +121,11 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
       .pipe(
         map((qp) => qp['signatureId']),
         filter(isNotUndefined),
-        distinctUntilChanged(),
       );
     const templateId$ = this.route.queryParams
       .pipe(
         map((qp) => qp['templateId']),
         filter(isNotUndefined),
-        distinctUntilChanged(),
       );
     const signatures$ = this.store.select(emailSignatures).pipe(
       tap((signatures) => {
@@ -151,7 +148,6 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
           value: this.route.snapshot.queryParams['signatureId'],
           onChange: (value) => this.router.navigate([], {queryParams: {signatureId: value}, queryParamsHandling: 'merge'}),
           onAddItem: () => this.openSignature(),
-          appearance: 'standard',
         }),
       ]
     ];
@@ -240,7 +236,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
       const title = `${templateId ? 'Edit' : 'New'} Email Template`;
       const locals = templateId ? { templateId, employeeId: this.employee.id } : undefined;
       this.sidenavService.open<EmailTemplate>(title, TemplateEditorComponent, locals).subscribe((template) => {
-        this.subjectForm.patchValue({templateId: template.id});
+        this.subjectForm.patchValue({templateId: template.id, subject: template.subject});
         this.emailBody = template.body;
       });
     }

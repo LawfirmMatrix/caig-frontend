@@ -11,10 +11,10 @@
             <div fxLayout="row" fxLayoutAlign="start center">
               <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
               <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 16px 16px 0" fxLayout="row" fxLayoutGap="8px">
-                <button mat-icon-button color="accent" (click)="openTemplate(templateId)" matTooltip="Edit email body template">
+                <button mat-icon-button color="accent" (click)="openTemplate(templateId)" matTooltip="Edit email template">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="deleteTemplate()" matTooltip="Delete email body template">
+                <button mat-icon-button color="warn" (click)="deleteTemplate()" matTooltip="Delete email template">
                   <mat-icon>delete_forever</mat-icon>
                 </button>
               </div>
@@ -43,10 +43,10 @@
           <div fxLayout="row" fxLayoutAlign="end center">
             <dynamic-form [form]="signatureForm" [fields]="signatureFields"></dynamic-form>
             <div *ngIf="signatureForm.value['signatureId'] as signatureId" fxLayout="row" fxLayoutGap="8px">
-              <button mat-icon-button color="accent" (click)="openSignature(signatureId)" matTooltip="Edit email signature template">
+              <button mat-icon-button color="accent" (click)="openSignature(signatureId)" matTooltip="Edit signature template">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteSignature()" matTooltip="Delete email signature template">
+              <button mat-icon-button color="warn" (click)="deleteSignature()" matTooltip="Delete signature template">
                 <mat-icon>delete_forever</mat-icon>
               </button>
             </div>
