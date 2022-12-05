@@ -10,7 +10,7 @@
           <div fxFlex fxLayout="column">
             <div fxLayout="row" fxLayoutAlign="start center">
               <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
-              <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 16px 16px 0" fxLayout="row" fxLayoutGap="8px">
+              <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 0 16px 0" fxLayout="row" fxLayoutGap="8px">
                 <button mat-icon-button color="accent" (click)="openTemplate(templateId)" matTooltip="Edit email template">
                   <mat-icon>edit</mat-icon>
                 </button>
@@ -42,7 +42,7 @@
         <div fxFlex fxLayout="column">
           <div fxLayout="row" fxLayoutAlign="end center">
             <dynamic-form [form]="signatureForm" [fields]="signatureFields"></dynamic-form>
-            <div *ngIf="signatureForm.value['signatureId'] as signatureId" fxLayout="row" fxLayoutGap="8px">
+            <div *ngIf="signatureForm.value['signatureId'] as signatureId" style="padding: 0 0 16px 0" fxLayout="row" fxLayoutGap="8px">
               <button mat-icon-button color="accent" (click)="openSignature(signatureId)" matTooltip="Edit signature template">
                 <mat-icon>edit</mat-icon>
               </button>
