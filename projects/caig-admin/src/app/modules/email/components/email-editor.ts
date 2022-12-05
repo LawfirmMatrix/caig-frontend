@@ -16,6 +16,7 @@ export abstract class EmailEditor {
     type: 'text',
     required: true,
     id: EmailEditor.SUBJECT_INPUT_ID_NAME + EmailEditor.SUBJECT_INPUT_ID++,
+    appearance: 'standard',
   });
   constructor(protected document: Document) { }
   public insertTag(tag: string): void {

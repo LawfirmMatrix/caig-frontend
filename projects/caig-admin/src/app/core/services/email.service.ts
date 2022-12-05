@@ -83,7 +83,6 @@ export interface Email {
   body: string;
   eventCode?: number;
   eventMessage?: string;
-  signatureId?: string;
 }
 
 export interface RenderedEmail {

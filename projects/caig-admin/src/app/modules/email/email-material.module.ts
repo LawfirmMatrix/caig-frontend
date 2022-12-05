@@ -9,6 +9,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   exports: [
@@ -22,6 +23,7 @@ import {MatChipsModule} from '@angular/material/chips';
     MatTooltipModule,
     MatChipsModule,
     ScrollingModule,
+    MatExpansionModule,
   ],
 })
 export class EmailMaterialModule { }

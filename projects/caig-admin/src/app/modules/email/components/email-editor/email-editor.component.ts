@@ -1,7 +1,7 @@
-import {Component, Input, Inject, OnInit} from '@angular/core';
+import {Component, Input, Inject, OnInit, OnDestroy} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {filter, tap, distinctUntilChanged, debounceTime, Observable, of} from 'rxjs';
+import {filter, tap, distinctUntilChanged, debounceTime, Observable, of, ReplaySubject, combineLatest} from 'rxjs';
 import {isNotUndefined} from '../../../../core/util/functions';
 import {FieldBase, InputField, AutocompleteField, CheckboxField} from 'dynamic-form';
 import {UntypedFormGroup} from '@angular/forms';
@@ -16,7 +16,7 @@ import {DOCUMENT} from '@angular/common';
 import {LoadingService} from '../../../../core/services/loading.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {switchMap, map} from 'rxjs/operators';
+import {switchMap, map, takeUntil} from 'rxjs/operators';
 import {EmailPreviewComponent, EmailPreviewData} from '../email-preview/email-preview.component';
 import {NotificationsService} from 'notifications';
 import {EmailEditor} from '../email-editor';
@@ -31,7 +31,7 @@ import {SignatureBlockService} from '../../../../core/services/signature-block.s
   templateUrl: './email-editor.component.html',
   styleUrls: ['./email-editor.component.scss'],
 })
-export class EmailEditorComponent extends EmailEditor implements OnInit {
+export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestroy {
   @Input() public addressForm!: UntypedFormGroup;
   @Input() public employee: Employee | undefined;
   @Input() public employees: Employee[] | undefined;
@@ -55,29 +55,12 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
         fxFlex: 0,
         onChange: (value) => this.router.navigate([], {queryParams: {templateId: value}, queryParamsHandling: 'merge'}),
         onAddItem: () => this.openTemplate(),
+        appearance: 'standard',
       }),
     ]
   ];
   public eventFields: FieldBase<any>[][] = [
     [
-      new AutocompleteField({
-        key: 'signatureId',
-        label: 'Signature',
-        options: this.store.select(emailSignatures).pipe(
-          tap((signatures) => {
-            if (!signatures) {
-              this.store.dispatch(EmailActions.loadEmailSignatures());
-            }
-          }),
-          filter(isNotUndefined),
-        ),
-        itemKey: 'id',
-        displayField: 'title',
-        fxFlex: 0,
-        value: this.route.snapshot.queryParams['signatureId'],
-        onChange: (value) => this.router.navigate([], {queryParams: {signatureId: value}, queryParamsHandling: 'merge'}),
-        onAddItem: () => this.openSignature(),
-      }),
       new AutocompleteField({
         key: 'eventCode',
         label: 'Event',
@@ -110,13 +93,16 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
           } else {
             form.disable({emitEvent: false});
             form.controls['eventOverride'].enable({emitEvent: false});
-            form.controls['signatureId'].enable({emitEvent: false});
           }
         },
         value: false,
       }),
     ]
   ];
+  public signatureBody = '';
+  public signatureForm = new UntypedFormGroup({});
+  public signatureFields!: FieldBase<any>[][];
+  private onDestroy$ = new ReplaySubject<void>();
   constructor(
     @Inject(DOCUMENT) protected override document: Document,
     private store: Store<AppState>,
@@ -132,15 +118,51 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
     super(document);
   }
   public ngOnInit() {
-    this.route.queryParams
+    const signatureId$ = this.route.queryParams
+      .pipe(
+        map((qp) => qp['signatureId']),
+        filter(isNotUndefined),
+        distinctUntilChanged(),
+      );
+    const templateId$ = this.route.queryParams
       .pipe(
         map((qp) => qp['templateId']),
         filter(isNotUndefined),
         distinctUntilChanged(),
+      );
+    const signatures$ = this.store.select(emailSignatures).pipe(
+      tap((signatures) => {
+        if (!signatures) {
+          this.store.dispatch(EmailActions.loadEmailSignatures());
+        }
+      }),
+      filter(isNotUndefined),
+    );
+
+    this.signatureFields = [
+      [
+        new AutocompleteField({
+          key: 'signatureId',
+          label: 'Signature',
+          options: signatures$,
+          itemKey: 'id',
+          displayField: 'title',
+          fxFlex: 0,
+          value: this.route.snapshot.queryParams['signatureId'],
+          onChange: (value) => this.router.navigate([], {queryParams: {signatureId: value}, queryParamsHandling: 'merge'}),
+          onAddItem: () => this.openSignature(),
+          appearance: 'standard',
+        }),
+      ]
+    ];
+
+    templateId$
+      .pipe(
         debounceTime(100),
         switchMap((templateId) => this.employee ? this.loadingService.load(
           this.emailService.getEmployeeTemplate(templateId, this.employee.id)
         ) : of(null)),
+        takeUntil(this.onDestroy$),
       )
       .subscribe((template) => {
         if (template) {
@@ -148,18 +170,32 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
           this.subjectForm.patchValue({subject: template.subject, templateId: template.id});
         }
       });
+
+    combineLatest([signatureId$, signatures$])
+      .pipe(
+        map(([signatureId, signatures]) => signatures.find((s) => s.id === signatureId)),
+        takeUntil(this.onDestroy$)
+      )
+      .subscribe((signature) => {
+        if (signature) {
+          this.signatureBody = signature.signature;
+        }
+      });
+  }
+  public ngOnDestroy() {
+    this.onDestroy$.next(void 0);
   }
   public preview(): void {
     if (this.employee) {
       const employee: Employee = this.employee;
-      const signatureId = this.eventForm.value['signatureId'];
       this.loadingService.load(this.emailService.renderEmail(
         employee.id,
         this.subjectForm.value['subject'],
         this.emailBody,
-        signatureId,
       )).pipe(
         switchMap((preview) => {
+          const bodyRendered = this.signatureBody ?
+            (preview.bodyRendered + '<br/>'.repeat(3) + this.signatureBody) : preview.bodyRendered;
           const data: EmailPreviewData = {
             toAddress: this.employees ?
               this.employees.map((e) => e.email || e.emailAlt).filter((email) => !!email) :
@@ -167,16 +203,15 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
             fromAddress: this.addressForm.value['fromAddress'],
             ccAddress: this.addressForm.getRawValue()['ccAddress'],
             subjectRendered: preview.subjectRendered,
-            bodyRendered: preview.bodyRendered,
+            bodyRendered,
             eventCode: this.eventForm.value['eventCode'],
             eventMessage: this.eventForm.value['eventMessage'],
           };
           const basePayload: Email = {
             fromAddress: data.fromAddress,
             ccAddress: data.ccAddress,
-            body: preview.bodyRendered,
+            body: bodyRendered,
             subject: preview.subjectRendered,
-            signatureId,
           };
           const request$: Observable<any> = this.employees ? this.emailService.bulkSendEmail({
             ...basePayload,
@@ -196,7 +231,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
         }),
       ).subscribe(() => {
         this.notifications.showSimpleInfoMessage('Successfully sent email');
-        this.router.navigate(['../view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
+        this.router.navigate([this.employees ? '/employees' : '../view'], {relativeTo: this.route, queryParamsHandling: 'preserve'});
       });
     }
   }
@@ -214,7 +249,8 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
     const title = `${signatureId ? 'Edit' : 'New'} Email Signature`;
     const locals = signatureId ? { signatureId } : undefined;
     this.sidenavService.open<SignatureBlock>(title, SignatureEditorComponent, locals).subscribe((signature) => {
-      this.eventForm.patchValue({signatureId: signature.id});
+      this.signatureForm.patchValue({signatureId: signature.id});
+      this.signatureBody = signature.signature;
     });
   }
   public deleteTemplate(): void {
@@ -238,7 +274,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
   public deleteSignature(): void {
     const title = 'Confirm Delete';
     const text = 'Are you sure you want to delete the selected email signature?';
-    const signatureId = this.eventForm.value['signatureId'];
+    const signatureId = this.signatureForm.value['signatureId'];
     this.dialog.open(ConfirmDialogComponent, {data: {title, text}})
       .afterClosed()
       .pipe(
@@ -248,7 +284,8 @@ export class EmailEditorComponent extends EmailEditor implements OnInit {
       .subscribe(() => {
         this.store.dispatch(EmailActions.removeEmailSignature({signatureId}))
         this.notifications.showSimpleInfoMessage('Successfully delete email signature');
-        this.eventForm.patchValue({signatureId: ''});
+        this.signatureForm.reset();
+        this.signatureBody = '';
         this.router.navigate([], {queryParams: {signatureId: null}, queryParamsHandling: 'merge'});
       });
   }
