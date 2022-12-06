@@ -1,1 +1,231 @@
-<div>{{settlement$ | async | json}}</div>
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z4">
+    <div>Settlement</div>
+    <a mat-stroked-button routerLink="../edit">Edit</a>
+  </mat-toolbar>
+  <div *ngIf="settlement$ | async as settlement" fxFlex fxLayout="column" fxFlexOffset="8px" style="overflow: auto">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>General</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <b fxFlex>ID</b>
+            <div fxFlex>{{settlement.id}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Code</b>
+            <div fxFlex>{{settlement.code}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Title</b>
+            <div fxFlex>{{settlement.title}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Title Long</b>
+            <div fxFlex>{{settlement.titleLong}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Type</b>
+            <div fxFlex>{{settlement.type}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Date</b>
+            <div fxFlex>{{settlement.date | date:'shortDate'}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Liability Amount</b>
+            <div fxFlex>{{settlement.liabilityAmount | currency:'USD':'$'}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Accrued Interest</b>
+            <div fxFlex>{{settlement.accruedInterestAmount | currency:'USD':'$'}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Plaintiff Name</b>
+            <div fxFlex>{{settlement.plaintiffName}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Plaintiff Attorney Name</b>
+            <div fxFlex>{{settlement.plaintiffAttorneyName}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Defendant Name</b>
+            <div fxFlex>{{settlement.defendantName}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Defendant Attorney Name</b>
+            <div fxFlex>{{settlement.defendantAttorneyName}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Email</b>
+            <div fxFlex>{{settlement.adminEmail}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Phone</b>
+            <div fxFlex>{{settlement.adminPhone}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <b fxFlex>Fax</b>
+            <div fxFlex>{{settlement.adminFax}}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <div [fxLayout]="(isHandset$ | async) ? 'column' : 'row'">
+      <mat-card fxFlex>
+        <mat-card-header>
+          <mat-card-title>Status & Styles</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <b fxFlex>Public</b>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon [color]="settlement.isPublic ? 'primary' : 'warn'">{{settlement.isPublic ? 'check' : 'close'}}</mat-icon>
+              </div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Open</b>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon [color]="settlement.isOpen ? 'primary' : 'warn'">{{settlement.isOpen ? 'check' : 'close'}}</mat-icon>
+              </div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Donation</b>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon [color]="settlement.canDonate ? 'primary' : 'warn'">{{settlement.canDonate ? 'check' : 'close'}}</mat-icon>
+              </div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Logo</b>
+              <div fxFlex><a [href]="settlement.logoImage">{{settlement.logoImage}}</a></div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Banner Prefix</b>
+              <div fxFlex>{{settlement.bannerPrefix}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Style Prefix</b>
+              <div fxFlex>{{settlement.stylePrefix}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+      <mat-card fxFlex>
+        <mat-card-header>
+          <mat-card-title>Dues Forms</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <b fxFlex>Form 1187 - Agency</b>
+              <div fxFlex>{{settlement.form1187Agency}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Form 1187 - Labor Organization</b>
+              <div fxFlex>{{settlement.form1187LaborOrg}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Form 1187 - Labor Organization Short</b>
+              <div fxFlex>{{settlement.form1187LaborOrgShort}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Form 1187 - Dues Amount</b>
+              <div fxFlex>{{settlement.form1187DuesAmount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Form 1187 - Dues Frequency</b>
+              <div fxFlex>{{settlement.form1187DuesFrequency}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+      <mat-card fxFlex>
+        <mat-card-header>
+          <mat-card-title>Claims</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <b fxFlex>Claims Start Year</b>
+              <div fxFlex>{{settlement.claimStartYear}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Claims Start Quarter</b>
+              <div fxFlex>{{settlement.claimStartQuarter}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Claims End Year</b>
+              <div fxFlex>{{settlement.claimEndYear}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Claims End Quarter</b>
+              <div fxFlex>{{settlement.claimEndQuarter}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Form</b>
+              <div fxFlex>{{settlement.claimForm}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Ask About Support Materials</b>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon [color]="settlement.claimRequestSupport ? 'primary' : 'warn'">{{settlement.claimRequestSupport ? 'check' : 'close'}}</mat-icon>
+              </div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Claims Deadline (date)</b>
+              <div fxFlex>{{settlement.claimDeadlineDate | date:'dateShort'}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <b fxFlex>Claims Deadline (time)</b>
+              <div fxFlex>{{settlement.claimDeadlineTime}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Custom Text</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list class="custom-text-list">
+          <mat-list-item>
+            <b>Email Intro</b>
+            <div *ngIf="settlement.textEmailIntro as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Front Page Text</b>
+            <div *ngIf="settlement.textFrontpage as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Intro</b>
+            <div *ngIf="settlement.textIntro as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Donation Page Text</b>
+            <div *ngIf="settlement.textDonation as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Opt-out Page Text</b>
+            <div *ngIf="settlement.textOptout as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Agreement Intro</b>
+            <div *ngIf="settlement.textAgrmtIntro as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Agreement Content</b>
+            <div *ngIf="settlement.textAgrmtContent as html" fxFlex [innerHTML]="html | safe:'html'"></div>
+          </mat-list-item>
+          <mat-list-item>
+            <b>Payment Timeframe</b>
+            <div fxFlex>{{settlement.paymentTimeframe}}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

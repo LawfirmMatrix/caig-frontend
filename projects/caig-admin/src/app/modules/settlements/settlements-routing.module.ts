@@ -14,20 +14,16 @@ const routes: Routes = [
     data: { animation: 'settlement-list' },
   },
   {
-    path: ':id',
+    path: ':id/view',
+    component: ViewSettlementComponent,
+    data: { animation: 'settlement-view' },
     resolve: { settlement: SingleSettlementResolver },
-    children: [
-      {
-        path: 'edit',
-        component: EditSettlementComponent,
-        data: { animation: 'settlement-edit' },
-      },
-      {
-        path: 'view',
-        component: ViewSettlementComponent,
-        data: { animation: 'settlement-view' },
-      }
-    ],
+  },
+  {
+    path: ':id/edit',
+    component: EditSettlementComponent,
+    data: { animation: 'settlement-edit' },
+    resolve: { settlement: SingleSettlementResolver },
   },
 ];
 

@@ -1,15 +1,14 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {map} from 'rxjs/operators';
+import {SettlementComponent} from '../settlement.component';
 
 @Component({
   selector: 'app-edit-settlement',
   templateUrl: './edit-settlement.component.html',
   styleUrls: ['./edit-settlement.component.scss']
 })
-export class EditSettlementComponent {
-  public settlement$ = this.route.parent?.data.pipe(
-    map((data) => data['settlement'])
-  );
-  constructor(private route: ActivatedRoute) { }
+export class EditSettlementComponent extends SettlementComponent {
+  constructor(protected override route: ActivatedRoute) {
+    super(route);
+  }
 }

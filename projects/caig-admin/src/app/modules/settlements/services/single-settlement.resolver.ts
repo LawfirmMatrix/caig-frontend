@@ -3,7 +3,7 @@ import {Resolve, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/rou
 import {SettlementEntityService} from './settlement-entity.service';
 import {switchMap, map} from 'rxjs/operators';
 import {Settlement} from '../../../models/settlement.model';
-import {Observable} from 'rxjs';
+import {Observable, first} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class SingleSettlementResolver implements Resolve<Settlement | undefined> {
@@ -18,7 +18,8 @@ export class SingleSettlementResolver implements Resolve<Settlement | undefined>
           );
         }
         return this.dataService.getByKey(settlementId);
-      })
+      }),
+      first(),
     )
   }
 }
