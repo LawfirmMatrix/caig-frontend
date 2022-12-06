@@ -98,6 +98,14 @@ export class SettlementsListComponent implements OnInit {
   ];
   public rowMenuItems: RowMenuItem<Settlement>[] = [
     {
+      name: () => 'View',
+      callback: (settlement) => this.router.navigate([settlement.id, 'view'], {relativeTo: this.route.parent}),
+    },
+    {
+      name: () => 'Edit',
+      callback: (settlement) => this.router.navigate([settlement.id, 'edit'], {relativeTo: this.route.parent}),
+    },
+    {
       name: () => 'Delete',
       callback: (row) => {
         const data: ConfirmDialogData = {
@@ -123,8 +131,5 @@ export class SettlementsListComponent implements OnInit {
   ) { }
   public ngOnInit() {
 
-  }
-  public editSettlement(settlement: Settlement): void {
-    this.router.navigate([settlement.id], {relativeTo: this.route});
   }
 }

@@ -1,4 +1,6 @@
-<div class="mat-app-background" [ngClass]="{'dark': isDarkTheme$ | async}">
-  <router-outlet></router-outlet>
+<div fxFlexFill fxLayout="column" class="mat-app-background" [ngClass]="{'dark': isDarkTheme$ | async}">
+  <div fxFlex>
+    <router-outlet></router-outlet>
+  </div>
+  <app-offline-status></app-offline-status>
 </div>
-<app-offline-status></app-offline-status>

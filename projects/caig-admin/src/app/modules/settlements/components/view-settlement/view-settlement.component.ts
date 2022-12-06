@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {map} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-edit-settlement',
-  templateUrl: './edit-settlement.component.html',
-  styleUrls: ['./edit-settlement.component.scss']
+  selector: 'app-view-settlement',
+  templateUrl: './view-settlement.component.html',
+  styleUrls: ['./view-settlement.component.scss']
 })
-export class EditSettlementComponent {
+export class ViewSettlementComponent {
   public settlement$ = this.route.parent?.data.pipe(
     map((data) => data['settlement'])
   );

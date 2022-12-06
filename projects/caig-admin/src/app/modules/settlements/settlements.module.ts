@@ -6,6 +6,7 @@ import {VsTableModule} from 'vs-table';
 import {CommonModule} from '@angular/common';
 import {EditSettlementComponent} from './components/edit-settlement/edit-settlement.component';
 import {SharedComponentsModule} from 'shared-components';
+import {ViewSettlementComponent} from './components/view-settlement/view-settlement.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {SharedComponentsModule} from 'shared-components';
   declarations: [
     SettlementsListComponent,
     EditSettlementComponent,
+    ViewSettlementComponent,
   ],
 })
 export class SettlementsModule { }

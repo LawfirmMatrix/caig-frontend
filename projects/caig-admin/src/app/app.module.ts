@@ -17,6 +17,7 @@ import {msalClient, guardConfig, interceptorConfig} from './msal.config';
 import {NotificationsModule} from 'notifications';
 import {CoreModule} from './core/core.module';
 import {SidenavStackModule} from 'sidenav-stack';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 const entityDispatcherOptions = {
   optimisticDelete: false,
@@ -42,6 +43,7 @@ const compareBy = (field: string) => (a: any, b: any) => a[field] - b[field];
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     AppRoutingModule,
     HttpClientModule,
     SidenavStackModule.forRoot(),
