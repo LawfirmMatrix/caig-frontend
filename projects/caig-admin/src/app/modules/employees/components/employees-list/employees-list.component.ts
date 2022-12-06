@@ -226,7 +226,6 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     ]
   ];
   public handsetFields: FieldBase<any>[][] = chunk(flatten(this.fields), 1);
-  public isProcessing = true;
   public tableMenuItems: TableMenuItem<Employee>[] = [
     {
       name: () => 'Bulk assign',
@@ -270,12 +269,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
           .afterClosed()
           .pipe(
             filter((res) => res),
-            tap(() => this.isProcessing = true),
-            switchMap(() => this.employeeService.delete(row.id))
+            switchMap(() => this.loadingService.load(this.employeeService.delete(row.id)))
           )
           .subscribe(
             () => this.notifications.showSimpleInfoMessage(`Successfully deleted ${row.name}`),
-            () => this.isProcessing = false
           );
       },
     }

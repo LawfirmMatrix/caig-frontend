@@ -7,7 +7,6 @@ import {SignatureBlockService} from '../../../../core/services/signature-block.s
 import {SignatureBlock} from '../../../../models/signature.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
-import {NotificationsService} from 'notifications';
 import {EmailActions} from '../../store/actions/action-types';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 
@@ -34,7 +33,6 @@ export class SignatureEditorComponent implements SidenavComponent, OnInit {
   constructor(
     private dataService: SignatureBlockService,
     private store: Store<AppState>,
-    private notifications: NotificationsService,
   ) { }
   public ngOnInit() {
     if (this.signatureId) {
@@ -69,7 +67,6 @@ export class SignatureEditorComponent implements SidenavComponent, OnInit {
         this.store.dispatch(EmailActions.updateEmailSignature({signature: res}));
       }
       this.controlMsg.emit(new CloseMessage(res));
-      this.notifications.showSimpleInfoMessage(`Successfully ${signature.id ? 'updated' : 'created'} email signature`);
     }, () => this.controlMsg.emit(new ProcessingMessage(false)));
   }
 }

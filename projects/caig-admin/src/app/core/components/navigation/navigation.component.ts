@@ -4,7 +4,6 @@ import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, shareReplay} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers';
-import {OfflineStatusService} from '../../services/offline-status.service';
 import {RouterOutlet} from '@angular/router';
 import {
   isAdmin,
@@ -45,7 +44,6 @@ export class NavigationComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private store: Store<AppState>,
     private navService: NavMenuService,
-    public offlineService: OfflineStatusService,
     public swService: ServiceWorkerService,
   ) { }
   public ngOnInit() {

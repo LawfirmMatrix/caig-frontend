@@ -1,0 +1,7 @@
+<vs-table
+  [data]="settlements$ | async"
+  [rowMenuItems]="rowMenuItems"
+  (rowClick)="editSettlement($event.row)"
+  [disableSelection]="true"
+  [columns]="columns">
+</vs-table>

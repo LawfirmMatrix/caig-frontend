@@ -6,6 +6,7 @@ import {map, shareReplay, startWith} from 'rxjs/operators';
 export class OfflineStatusService {
   public isOffline$!: Observable<boolean>;
   constructor() {
+    // @TODO - this doesnt work
     const offline$ = fromEvent(window, 'offline').pipe(map(() => true));
     const online$ = fromEvent(window, 'online').pipe(map(() => false));
     this.isOffline$ = merge(offline$, online$)

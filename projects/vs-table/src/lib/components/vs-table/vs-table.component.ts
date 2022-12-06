@@ -63,7 +63,7 @@ import {trigger, state, transition, animate, style, keyframes} from '@angular/an
   ]
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-  @Input() public data: T[] | null = null;
+  @Input() public data: T[] | null | undefined;
   @Input() public columns: TableColumn<T>[] = [];
   @Input() public disableSelectAll = false;
   @Input() public disableSelection = false;

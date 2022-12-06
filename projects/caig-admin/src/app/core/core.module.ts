@@ -36,6 +36,7 @@ import {SharedComponentsModule} from 'shared-components';
 import {PortalSelectionComponent} from './components/portal-selection/portal-selection.component';
 import {LoadingOverlayComponent} from './components/loading-overlay/loading-overlay.component';
 import {FormDialogComponent} from './components/form-dialog/form-dialog.component';
+import {OfflineStatusComponent} from './components/offline-status/offline-status.component';
 
 @NgModule({
   imports: [
@@ -69,7 +70,9 @@ import {FormDialogComponent} from './components/form-dialog/form-dialog.componen
     PortalSelectionComponent,
     LoadingOverlayComponent,
     FormDialogComponent,
+    OfflineStatusComponent,
   ],
+  exports: [OfflineStatusComponent],
   providers: [ NavMenuService ],
 })
 export class CoreModule {

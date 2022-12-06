@@ -1,0 +1,33 @@
+export interface Settlement {
+  accruedInterestAmount: number;
+  adminEmail: string;
+  adminFax: string;
+  adminPhone: string;
+  allowOptOut: boolean;
+  allowSsExempt: boolean;
+  canDonate: boolean;
+  checkTemplate: string;
+  claimRequestSupport: boolean;
+  code: string;
+  date: string;
+  defendantAttorneyName: string;
+  defendantName: string;
+  form1187Agency: string;
+  form1187LaborOrg: string;
+  form1187LaborOrgShort: string;
+  formTemplate: string;
+  id: number;
+  isOpen: boolean;
+  isPublic: boolean;
+  liabilityAmount: number;
+  paymentTimeframe: string;
+  plaintiffAttorneyName: string;
+  plaintiffName: string;
+  textAgrmtIntro: string;
+  textDonation: string;
+  textEmailIntro: string;
+  textIntro: string;
+  title: string;
+  titleLong: string;
+  type: string;
+}

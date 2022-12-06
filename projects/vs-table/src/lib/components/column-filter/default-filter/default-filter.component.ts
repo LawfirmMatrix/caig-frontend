@@ -15,7 +15,7 @@ import {FilterWithToggles} from '../filter-toggles/filter-with-toggles';
 export class DefaultFilterComponent<T> extends FilterWithToggles<T> implements OnInit, OnChanges {
   @Input() public disabled!: boolean;
   @Input() public menuOpen = false;
-  @Input() public override data: T[] | null = null;
+  @Input() public override data: T[] | null | undefined;
   @Input() public filteredData!: T[];
   @Input() public valueSelector: ((row: T) => string) | undefined;
   @Input() public override column!: TableColumn<T>;
