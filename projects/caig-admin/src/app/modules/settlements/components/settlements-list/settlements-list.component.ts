@@ -5,7 +5,9 @@ import {LoadingService} from '../../../../core/services/loading.service';
 import {SettlementEntityService} from '../../services/settlement-entity.service';
 import {Settlement} from '../../../../models/settlement.model';
 import {rowIcon, rowColor} from '../../../surveys/components/respondents-list/respondents-list';
-import {withLatestFrom, map} from 'rxjs/operators';
+import {withLatestFrom, map, filter, switchMap} from 'rxjs/operators';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogData, ConfirmDialogComponent} from 'shared-components';
 
 @Component({
   selector: 'app-settlements-list',
@@ -97,7 +99,19 @@ export class SettlementsListComponent implements OnInit {
   public rowMenuItems: RowMenuItem<Settlement>[] = [
     {
       name: () => 'Delete',
-      callback: (row) => this.loadingService.load(this.dataService.delete(row.id)),
+      callback: (row) => {
+        const data: ConfirmDialogData = {
+          title: 'Confirm Delete',
+          text: `Are you sure you want to delete ${row.code}?`,
+          confirmText: 'Yes',
+        };
+        this.dialog.open(ConfirmDialogComponent, { data })
+          .afterClosed()
+          .pipe(
+            filter((ok) => !!ok),
+            switchMap(() => this.loadingService.load(this.dataService.delete(row.id)))
+          ).subscribe();
+      },
     }
   ];
   constructor(
@@ -105,6 +119,7 @@ export class SettlementsListComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: SettlementEntityService,
     private loadingService: LoadingService,
+    private dialog: MatDialog,
   ) { }
   public ngOnInit() {
 

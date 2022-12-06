@@ -5,6 +5,7 @@ import {SettlementsListComponent} from './components/settlements-list/settlement
 import {VsTableModule} from 'vs-table';
 import {CommonModule} from '@angular/common';
 import {EditSettlementComponent} from './components/edit-settlement/edit-settlement.component';
+import {SharedComponentsModule} from 'shared-components';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import {EditSettlementComponent} from './components/edit-settlement/edit-settlem
     SettlementsRoutingModule,
     VsTableModule,
     CommonModule,
+    SharedComponentsModule,
   ],
   declarations: [
     SettlementsListComponent,
