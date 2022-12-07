@@ -463,6 +463,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       if (columnFilter.range.value.start && columnFilter.range.value.end) {
         const getValue = columnFilter.column.dataType === this.columnDataTypes.currency ||
           columnFilter.column.dataType === this.columnDataTypes.number ?
+          columnFilter.column.negateValue ? ((row: any) => -row[columnFilter.column.field]) :
           ((row: any) => row[columnFilter.column.field]) :
           ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase());
         const dateFilter = (row: any) => {
@@ -473,7 +474,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         };
         const defaultFilter = (row: any) => {
           const value = getValue(row);
-          return columnFilter.range.value.start <= value && value <= columnFilter.range.value.end;
+          const start = columnFilter.range.value.start;
+          const end = columnFilter.range.value.end;
+          return value < 0 ? (start >= value && value >= end) : (start <= value && value <= end);
         };
         const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
         this.filteredData = this.filteredData.filter(filterFunc);
