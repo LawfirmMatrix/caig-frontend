@@ -46,6 +46,7 @@ import {LoadingService} from '../../../../core/services/loading.service';
   providers: [EmployeesTableConfigService]
 })
 export class EmployeesListComponent implements OnInit, OnDestroy {
+  private static readonly VIEW_MODE_STORAGE = 'EMP_VIEW_MODE';
   private onDestroy$ = new Subject<void>();
   private settlementId$ = this.store.select(settlementId).pipe(filter(isNotUndefined));
   public toolbarButtons: ToolbarButton[] = [
@@ -324,6 +325,14 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
   ) {
   }
   public ngOnInit() {
+    try {
+      const viewMode = localStorage.getItem(EmployeesListComponent.VIEW_MODE_STORAGE);
+      const isViewMode = (stored: string): stored is EmployeeViewMode => ['basic', 'bue', 'financial'].includes(stored);
+      if (viewMode && isViewMode(viewMode)) {
+        this.viewMode = viewMode;
+      }
+    } catch {}
+
     this.setColumns(this.viewMode);
 
     const employees$ = combineLatest([this.employeeService.loaded$, this.employeeService.entities$])
@@ -366,6 +375,9 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     this.router.navigate([employee.id, 'view'], {relativeTo: this.route.parent});
   }
   public viewModeChange(viewMode: EmployeeViewMode): void {
+    try {
+      localStorage.setItem(EmployeesListComponent.VIEW_MODE_STORAGE, viewMode);
+    } catch { }
     this.setColumns(viewMode);
   }
   private setColumns(viewMode: EmployeeViewMode): void {

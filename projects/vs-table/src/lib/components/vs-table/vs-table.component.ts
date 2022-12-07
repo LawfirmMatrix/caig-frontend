@@ -147,11 +147,11 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     private csvService: NgxCsvService,
     private dialog: MatDialog,
     private elementRef: ElementRef,
-  ) { }
+  ) {
+    this.applyCache();
+  }
 
   public ngOnInit(): void {
-    this.applyCache();
-
     merge(this.filter$, this.columnFilter$)
       .pipe(
         skip(2),
@@ -431,6 +431,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.calculateColumnSummaries();
     this.sortData();
     this.measureViewportScroll();
+
     this.saveCache(['filter']);
   }
 

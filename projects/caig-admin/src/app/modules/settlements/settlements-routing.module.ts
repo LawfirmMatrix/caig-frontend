@@ -25,6 +25,11 @@ const routes: Routes = [
     data: { animation: 'settlement-edit' },
     resolve: { settlement: SingleSettlementResolver },
   },
+  {
+    path: 'new',
+    component: EditSettlementComponent,
+    data: { animation: 'settlement-new' },
+  }
 ];
 
 @NgModule({

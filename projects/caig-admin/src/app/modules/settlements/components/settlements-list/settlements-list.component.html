@@ -1,7 +1,16 @@
-<vs-table
-  [data]="settlements$ | async"
-  [rowMenuItems]="rowMenuItems"
-  [disableRowClick]="true"
-  [disableSelection]="true"
-  [columns]="columns">
-</vs-table>
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z4">
+    <div>Settlements</div>
+    <a mat-stroked-button routerLink="new">Create New</a>
+  </mat-toolbar>
+  <div fxFlex>
+    <vs-table
+      id="settlements-list"
+      [data]="settlements$ | async"
+      [rowMenuItems]="rowMenuItems"
+      [disableRowClick]="true"
+      [disableSelection]="true"
+      [columns]="columns">
+    </vs-table>
+  </div>
+</div>

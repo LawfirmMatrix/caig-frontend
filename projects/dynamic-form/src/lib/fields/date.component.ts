@@ -37,9 +37,11 @@ export class DateComponent extends FieldBaseComponent<DateField> implements OnIn
   public ngOnInit() {
     const ctrl = this.control;
     if (ctrl) {
-      ctrl.valueChanges
-        .pipe(filter((value) => !!(value && value.format)), startWith(ctrl.value))
-        .subscribe((value) => ctrl.setValue(value?.format('YYYY-MM-DD'), {emitEvent: false}));
+      ctrl.valueChanges.pipe(startWith(ctrl.value)).subscribe((value) => {
+        if (value && value.format) {
+          ctrl.setValue(value.format('YYYY-MM-DD'), {emitEvent: false})
+        }
+      });
     }
   }
 }
