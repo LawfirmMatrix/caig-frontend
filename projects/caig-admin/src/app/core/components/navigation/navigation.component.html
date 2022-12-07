@@ -74,10 +74,6 @@
         <app-theme-switcher></app-theme-switcher>
       </div>
     </mat-toolbar>
-    <mat-toolbar *ngIf="offlineService.isOffline$ | async" color="warn">
-      <mat-icon>error</mat-icon>
-      You are not connected to the internet
-    </mat-toolbar>
     <div fxFlex class="outlet-container" [@routeAnimations]="prepareRoute(outlet)">
       <router-outlet #outlet="outlet"></router-outlet>
     </div>

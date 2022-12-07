@@ -5,7 +5,7 @@
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Settlement</div>
-    <div fxFlex><a><b>{{employee.settlementCode}}</b></a></div> <!-- @TODO link to view settlement -->
+    <div fxFlex><a routerLink="/settlements/{{employee.settlementId}}/view"><b>{{employee.settlementCode}}</b></a></div>
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Name</div>

@@ -1,0 +1,4 @@
+<mat-toolbar *ngIf="offlineService.isOffline$ | async" color="warn" fxLayoutAlign="center center" fxLayoutGap="8px">
+  <mat-icon>error</mat-icon>
+  <div>You are not connected to the internet</div>
+</mat-toolbar>

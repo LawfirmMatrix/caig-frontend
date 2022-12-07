@@ -63,7 +63,7 @@ import {trigger, state, transition, animate, style, keyframes} from '@angular/an
   ]
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-  @Input() public data: T[] | null = null;
+  @Input() public data: T[] | null | undefined;
   @Input() public columns: TableColumn<T>[] = [];
   @Input() public disableSelectAll = false;
   @Input() public disableSelection = false;
@@ -147,11 +147,11 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     private csvService: NgxCsvService,
     private dialog: MatDialog,
     private elementRef: ElementRef,
-  ) { }
+  ) {
+    this.applyCache();
+  }
 
   public ngOnInit(): void {
-    this.applyCache();
-
     merge(this.filter$, this.columnFilter$)
       .pipe(
         skip(2),
@@ -431,6 +431,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.calculateColumnSummaries();
     this.sortData();
     this.measureViewportScroll();
+
     this.saveCache(['filter']);
   }
 
@@ -463,6 +464,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       if (columnFilter.range.value.start && columnFilter.range.value.end) {
         const getValue = columnFilter.column.dataType === this.columnDataTypes.currency ||
           columnFilter.column.dataType === this.columnDataTypes.number ?
+          columnFilter.column.negateValue ? ((row: any) => -row[columnFilter.column.field]) :
           ((row: any) => row[columnFilter.column.field]) :
           ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase());
         const dateFilter = (row: any) => {
@@ -473,7 +475,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         };
         const defaultFilter = (row: any) => {
           const value = getValue(row);
-          return columnFilter.range.value.start <= value && value <= columnFilter.range.value.end;
+          const start = columnFilter.range.value.start;
+          const end = columnFilter.range.value.end;
+          return value < 0 ? (start >= value && value >= end) : (start <= value && value <= end);
         };
         const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
         this.filteredData = this.filteredData.filter(filterFunc);

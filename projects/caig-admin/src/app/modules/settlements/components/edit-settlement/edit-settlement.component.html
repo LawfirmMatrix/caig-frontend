@@ -1,0 +1,20 @@
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar fxLayoutAlign="space-between center" class="mat-elevation-z4">
+    <div>{{(settlement$ | async) ? 'Edit' : 'New'}} Settlement</div>
+    <a *ngIf="settlement$ | async" mat-stroked-button routerLink="../view">View</a>
+  </mat-toolbar>
+  <div fxFlex fxLayout="column" fxFlexOffset="8px" style="overflow: auto">
+    <mat-card *ngFor="let section of sections">
+      <mat-card-header>
+        <mat-card-title>{{section.header}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h3 *ngIf="section.description">{{section.description}}</h3>
+        <dynamic-form [form]="form" [fields]="section.fields" [model]="settlement$ | async"></dynamic-form>
+      </mat-card-content>
+    </mat-card>
+    <div fxLayoutAlign="center center">
+      <button mat-raised-button color="primary" [disabled]="disableSave$ | async" (click)="save()">Save</button>
+    </div>
+  </div>
+</div>

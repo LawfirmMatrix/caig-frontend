@@ -260,7 +260,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         switchMap(() => this.loadingService.load(this.emailService.deleteTemplate(templateId)))
       )
       .subscribe(() => {
-        this.store.dispatch(EmailActions.removeEmailTemplate({templateId}))
+        this.store.dispatch(EmailActions.removeEmailTemplate({templateId}));
         this.notifications.showSimpleInfoMessage('Successfully delete email template');
         this.subjectForm.reset();
         this.emailBody = '';
@@ -278,8 +278,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         switchMap(() => this.loadingService.load(this.signatureService.remove(signatureId)))
       )
       .subscribe(() => {
-        this.store.dispatch(EmailActions.removeEmailSignature({signatureId}))
-        this.notifications.showSimpleInfoMessage('Successfully delete email signature');
+        this.store.dispatch(EmailActions.removeEmailSignature({signatureId}));
         this.signatureForm.reset();
         this.signatureBody = '';
         this.router.navigate([], {queryParams: {signatureId: null}, queryParamsHandling: 'merge'});

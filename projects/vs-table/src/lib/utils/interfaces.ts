@@ -75,6 +75,7 @@ export interface TableColumn<T> {
   sum?: boolean;
   format?: string;
   fxFlex?: number;
+  negateValue?: boolean;
 }
 
 export interface ICalculateColumn<T> extends TableColumn<T> {

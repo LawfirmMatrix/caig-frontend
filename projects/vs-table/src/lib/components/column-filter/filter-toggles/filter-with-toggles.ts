@@ -3,7 +3,7 @@ import {ColumnFilter} from '../column-filter';
 import {TableColumn} from '../../../utils/interfaces';
 
 export abstract class FilterWithToggles<T> {
-  public abstract data: T[] | null;
+  public abstract data: T[] | null | undefined;
   public abstract column: TableColumn<T>;
   public abstract columnFilter$: BehaviorSubject<{ [key: string]: ColumnFilter }>;
   public filterOptions = false;

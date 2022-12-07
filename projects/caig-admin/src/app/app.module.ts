@@ -17,6 +17,7 @@ import {msalClient, guardConfig, interceptorConfig} from './msal.config';
 import {NotificationsModule} from 'notifications';
 import {CoreModule} from './core/core.module';
 import {SidenavStackModule} from 'sidenav-stack';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 const entityDispatcherOptions = {
   optimisticDelete: false,
@@ -42,6 +43,7 @@ const compareBy = (field: string) => (a: any, b: any) => a[field] - b[field];
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     AppRoutingModule,
     HttpClientModule,
     SidenavStackModule.forRoot(),
@@ -55,7 +57,8 @@ const compareBy = (field: string) => (a: any, b: any) => a[field] - b[field];
         Employee: { entityDispatcherOptions, sortComparer: compareBy('id') },
         User: { entityDispatcherOptions, sortComparer: compareBy('username') },
         Survey: { entityDispatcherOptions, sortComparer: compareBy('name') },
-        Payroll: { entityDispatcherOptions, sortComparer: compareBy('id') }
+        Payroll: { entityDispatcherOptions, sortComparer: compareBy('id') },
+        Settlement: { entityDispatcherOptions, sortComparer: compareBy('id') },
       }
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {

@@ -256,5 +256,10 @@ interface RespondentsFilters {
   status: 'linked' | 'unlinked' | 'all';
 }
 
-export const rowIcon = (field: keyof RespondentFlat) => (row: RespondentFlat) => row[field] === 'Uncertain' ? 'question_mark' : row[field] ? 'check' : 'close';
-export const rowColor = (field: keyof RespondentFlat) => (row: RespondentFlat) => row[field] === 'Uncertain' ? 'orange' : row[field] ? 'green' : 'red';
+export function rowIcon<T>(field: Extract<keyof T, string>): (row: T) => string {
+  return (row: T) => String(row[field]) === 'Uncertain' ? 'question_mark' : row[field] ? 'check' : 'close';
+}
+
+export function rowColor<T>(field: Extract<keyof T, string>): (row: T) => string {
+  return (row: T) => String(row[field]) === 'Uncertain' ? 'orange' : row[field] ? 'green' : 'red';
+}
