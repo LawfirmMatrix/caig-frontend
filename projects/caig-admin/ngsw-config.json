@@ -59,6 +59,6 @@
       }
     },
     "forceReloadDuration": 0,
-    "clearLocalStorage": true
+    "clearLocalStorage": false
   }
 }
