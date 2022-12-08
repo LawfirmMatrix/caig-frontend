@@ -22,9 +22,10 @@ export class ServiceWorkerService {
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
       filter(ServiceWorkerService.isVersionReady),
-      tap(ServiceWorkerService.storeAppData),
+      tap((event) => this.storeAppData(event)),
       shareReplay(1),
     );
+  private clearCache = false;
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -53,16 +54,20 @@ export class ServiceWorkerService {
   private static isVersionReady(event: VersionEvent): event is VersionReadyEvent {
     return event.type === 'VERSION_READY';
   }
-  private static storeAppData(event: VersionReadyEvent): void {
+  private storeAppData(event: VersionReadyEvent): void {
     const appData = event.latestVersion.appData as AppData | undefined;
     if (appData) {
       localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
+      this.clearCache = !!appData.clearLocalStorage;
     }
   }
   public installUpdate(notify = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
+        if (this.clearCache) {
+          localStorage.clear();
+        }
         this.isUpdating = false;
         if (notify) {
           localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
@@ -80,7 +85,7 @@ export class ServiceWorkerService {
         withLatestFrom(this.updates.versionUpdates),
         tap(([updateFound, versionUpdates]) => {
           if (updateFound && ServiceWorkerService.isVersionReady(versionUpdates)) {
-            ServiceWorkerService.storeAppData(versionUpdates);
+            this.storeAppData(versionUpdates);
             this.installUpdate(false);
           }
         }),
@@ -111,9 +116,6 @@ export class ServiceWorkerService {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
       const appData: AppData = JSON.parse(cachedData);
       if (appData) {
-        if (appData.clearLocalStorage) {
-          localStorage.clear();
-        }
         if (appData.changes) {
           const changes = appData.changes;
           const portals = Object.keys(appData.changes) as Portals[];
