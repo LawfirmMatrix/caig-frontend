@@ -55,7 +55,7 @@
         ]
       },
       "Survey": {
-
+        "Misc.": [ "Several other minor bug fixes and improvements" ]
       }
     },
     "forceReloadDuration": 0,
