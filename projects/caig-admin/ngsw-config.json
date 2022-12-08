@@ -29,9 +29,36 @@
   ],
   "appData": {
     "changes": {
+      "General": {
+        "Tables": [
+          "Changed several caching behaviors with regards to the global table filter, sort state and scroll position",
+          "When filtering by a number column, the table should now yield accurate results for negative values when a range is set"
+        ],
+        "Misc.": [ "Several other minor bug fixes and improvements" ]
+      },
+      "CAIG": {
+        "Emailing": [
+          "Major improvements have been made to the email editor",
+          "Bulk emailing is now enabled for employees",
+          "Customizable email signatures can be added emails"
+        ],
+        "Settlements": [ "A new set of pages has been added to manage settlements" ],
+        "Employees": [
+          "The settlement code now links directly to its \"Settlement View\" page",
+          "The selected \"View Mode\" will now be cached and will persist through navigations"
+        ]
+      },
+      "Call Center": {
+        "Emailing": [
+          "Major improvements have been made to the email editor",
+          "Customizable email signatures can be added emails"
+        ]
+      },
+      "Survey": {
 
+      }
     },
-    "forceReloadDuration": 1,
+    "forceReloadDuration": 0,
     "clearLocalStorage": true
   }
 }
