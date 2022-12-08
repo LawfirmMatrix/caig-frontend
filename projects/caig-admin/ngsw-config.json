@@ -29,16 +29,9 @@
   ],
   "appData": {
     "changes": {
-      "General": {
-      },
-      "CAIG": {
-      },
-      "Call Center": {
-      },
-      "Survey": {
-      }
+
     },
-    "forceReloadDuration": 0,
-    "clearLocalStorage": false
+    "forceReloadDuration": 5,
+    "clearLocalStorage": true
   }
 }
