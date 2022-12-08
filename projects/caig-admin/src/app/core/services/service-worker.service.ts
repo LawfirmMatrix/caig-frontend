@@ -25,7 +25,7 @@ export class ServiceWorkerService {
       tap((event) => this.storeAppData(event)),
       shareReplay(1),
     );
-  private clearCache = false;
+  private appData: AppData | undefined;
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -55,18 +55,18 @@ export class ServiceWorkerService {
     return event.type === 'VERSION_READY';
   }
   private storeAppData(event: VersionReadyEvent): void {
-    const appData = event.latestVersion.appData as AppData | undefined;
-    if (appData) {
-      localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
-      this.clearCache = !!appData.clearLocalStorage;
+    this.appData = event.latestVersion.appData as AppData | undefined;
+    if (this.appData) {
+      localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(this.appData));
     }
   }
   public installUpdate(notify = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
-        if (this.clearCache) {
+        if (this.appData?.clearLocalStorage) {
           localStorage.clear();
+          localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(this.appData));
         }
         this.isUpdating = false;
         if (notify) {
