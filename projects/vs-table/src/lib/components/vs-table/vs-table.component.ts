@@ -23,7 +23,6 @@ import {intersection, omit, orderBy, round, some, cloneDeep} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {
-  auditTime,
   BehaviorSubject,
   filter,
   debounceTime,
@@ -121,7 +120,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly noValuePlaceholder = 'No Value';
 
   public padScrollbar = false;
-  public showFooter = false;
+  public hasSumColumns = false;
   public minRowWidth = 0;
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
@@ -173,8 +172,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public ngAfterViewInit(): void {
     this.scrollingElement.elementScrolled()
       .pipe(
-        filter(() => this.showFooter && !!this.data),
-        auditTime(25),
+        filter(() => this.hasSumColumns && !!this.filteredData.length),
         map((event) => (event.target as HTMLElement).scrollLeft),
         distinctUntilChanged(),
       )
@@ -409,7 +407,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private setVisibleColumns(): void {
     this.visibleColumns = this.filterHiddenColumns();
 
-    this.showFooter = some(this.visibleColumns, (c) => c.sum);
+    this.hasSumColumns = some(this.visibleColumns, (c) => c.sum);
 
     this.minRowWidth = (this.visibleColumns.length * this.columnWidth) +
       (this.disableSelection ? 0 : this.rowHeight) +
@@ -417,7 +415,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       (this.expandRowConfig ? this.columnWidth : 0) +
       (this.buttonColumns ? (this.buttonColumns.length * this.columnWidth) : 0);
 
-    if (this.showFooter) {
+    if (this.hasSumColumns) {
       setTimeout(() => {
         if (this.scrollingElement) {
           this.translateFooter(this.scrollingElement.measureScrollOffset('left'));

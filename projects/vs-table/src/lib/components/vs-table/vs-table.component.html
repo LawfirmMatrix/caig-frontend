@@ -332,7 +332,7 @@
       </div>
     </cdk-virtual-scroll-viewport>
   </table>
-  <tr #footer *ngIf="data && showFooter"
+  <tr #footer *ngIf="filteredData.length && hasSumColumns"
       [style.minHeight.px]="headerHeight"
       [style.minWidth.px]="minRowWidth + (padScrollbar ? scrollbarWidth : 0)"
       [style.paddingRight.px]="padScrollbar ? scrollbarWidth : 0"
