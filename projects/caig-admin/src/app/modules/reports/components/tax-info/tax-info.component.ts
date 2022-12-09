@@ -135,7 +135,7 @@ export class TaxInfoComponent implements OnInit {
           start: qp['fromDate'],
           end: qp['toDate'],
         },
-        allSettlements: !!qp['allSettlements'],
+        allSettlements: qp['allSettlements'] === 'true',
       }))
     );
   public data$ = this.model$
