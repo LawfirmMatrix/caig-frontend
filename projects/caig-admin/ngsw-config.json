@@ -31,31 +31,31 @@
     "changes": {
       "General": {
         "Tables": [
-          "Changed several caching behaviors with regards to the global table filter, sort state and scroll position",
-          "When filtering by a number column, the table should now yield accurate results for negative values when a range is set"
+          "Changed several caching behaviors with regards to the global table filter, sort state and scroll position.",
+          "When filtering by a number column, the table should now yield accurate results for negative values when a range is set."
         ],
-        "Misc.": [ "Several other minor bug fixes and improvements" ]
+        "Misc.": [ "Several other minor bug fixes and improvements." ]
       },
       "CAIG": {
         "Emailing": [
-          "Major improvements have been made to the email editor",
-          "Bulk emailing is now enabled for employees",
-          "Customizable email signatures can be added emails"
+          "Major improvements have been made to the email editor.",
+          "Bulk emailing is now enabled for employees.",
+          "Customizable email signatures can be appended to emails."
         ],
-        "Settlements": [ "A new set of pages has been added to manage settlements" ],
+        "Settlements": [ "A new set of pages has been added to view, edit and delete settlements." ],
         "Employees": [
-          "The settlement code now links directly to its \"Settlement View\" page",
-          "The selected \"View Mode\" will now be cached and will persist through navigations"
+          "The settlement code now links directly to its \"Settlement View\" page.",
+          "The selected \"View Mode\" will now be cached and will persist through navigations."
         ],
         "Reports": [
-          "A new set of pages has been added to view reports",
-          "New report: \"1099 and W-2 Information\""
+          "A new set of pages has been added to view and download reports.",
+          "New report: \"1099 and W-2 Information\"."
         ]
       },
       "Call Center": {
         "Emailing": [
-          "Major improvements have been made to the email editor",
-          "Customizable email signatures can be added emails"
+          "Major improvements have been made to the email editor.",
+          "Customizable email signatures can be appended to emails."
         ]
       },
       "Survey": {
