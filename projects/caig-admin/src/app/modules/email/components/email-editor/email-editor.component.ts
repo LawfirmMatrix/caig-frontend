@@ -53,7 +53,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         itemKey: 'id',
         displayField: 'title',
         fxFlex: 0,
-        onChange: (value) => this.router.navigate([], {queryParams: {templateId: value}, queryParamsHandling: 'merge'}),
+        onChange: (value) => this.router.navigate([], {queryParams: {templateId: value}, queryParamsHandling: 'merge', replaceUrl: true}),
         onAddItem: () => this.openTemplate(),
       }),
     ]
@@ -146,7 +146,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
           displayField: 'title',
           fxFlex: 0,
           value: this.route.snapshot.queryParams['signatureId'],
-          onChange: (value) => this.router.navigate([], {queryParams: {signatureId: value}, queryParamsHandling: 'merge'}),
+          onChange: (value) => this.router.navigate([], {queryParams: {signatureId: value}, queryParamsHandling: 'merge', replaceUrl: true}),
           onAddItem: () => this.openSignature(),
         }),
       ]
@@ -264,7 +264,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         this.notifications.showSimpleInfoMessage('Successfully delete email template');
         this.subjectForm.reset();
         this.emailBody = '';
-        this.router.navigate([], {queryParams: {templateId: null}, queryParamsHandling: 'merge'});
+        this.router.navigate([], {queryParams: {templateId: null}, queryParamsHandling: 'merge', replaceUrl: true});
       });
   }
   public deleteSignature(): void {
@@ -281,7 +281,7 @@ export class EmailEditorComponent extends EmailEditor implements OnInit, OnDestr
         this.store.dispatch(EmailActions.removeEmailSignature({signatureId}));
         this.signatureForm.reset();
         this.signatureBody = '';
-        this.router.navigate([], {queryParams: {signatureId: null}, queryParamsHandling: 'merge'});
+        this.router.navigate([], {queryParams: {signatureId: null}, queryParamsHandling: 'merge', replaceUrl: true});
       });
   }
 }
