@@ -1,0 +1,23 @@
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar class="mat-elevation-z6" fxLayoutAlign="space-between center">
+    <div>1099 & W-2 Information</div>
+    <button mat-raised-button color="primary" disabled>Decrypt SSN's</button>
+  </mat-toolbar>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filters</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <dynamic-form [form]="form" [fields]="fields" [model]="model$ | async"></dynamic-form>
+    </mat-card-content>
+  </mat-card>
+  <div fxFlex>
+    <vs-table
+      id="tax-info"
+      [disableSelection]="true"
+      [columns]="columns"
+      [data]="data$ | async"
+      (rowClick)="viewEmployee($event.row.employeeId)">
+    </vs-table>
+  </div>
+</div>

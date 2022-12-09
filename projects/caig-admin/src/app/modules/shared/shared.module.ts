@@ -20,6 +20,7 @@ import {PipesModule} from 'pipes';
   exports: [
     CommonModule,
     FlexLayoutModule,
+    PipesModule,
     LocationPipe,
     ZeroPadPipe,
     StartCasePipe,

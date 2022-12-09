@@ -46,6 +46,10 @@
         "Employees": [
           "The settlement code now links directly to its \"Settlement View\" page",
           "The selected \"View Mode\" will now be cached and will persist through navigations"
+        ],
+        "Reports": [
+          "A new set of pages has been added to view reports",
+          "New report: \"1099 and W-2 Information\""
         ]
       },
       "Call Center": {
@@ -55,7 +59,7 @@
         ]
       },
       "Survey": {
-        "Misc.": [ "Several other minor bug fixes and improvements" ]
+
       }
     },
     "forceReloadDuration": 0,

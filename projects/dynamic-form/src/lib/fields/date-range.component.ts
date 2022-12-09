@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {isMoment, Moment} from 'moment';
 import {FormControl, FormGroup} from '@angular/forms';
-import {distinctUntilChanged} from 'rxjs';
+import {distinctUntilChanged, startWith} from 'rxjs';
 import {isEqual} from 'lodash-es';
 import {FieldBaseComponent, FieldBase, ControlType, BaseOptions} from './field-base';
 
@@ -40,11 +40,11 @@ export class DateRangeComponent extends FieldBaseComponent<DateRangeField> imple
           start: isMoment(value.start) ? value.start.format(format) : value.start,
           end: isMoment(value.end) ? value.end.format(format) : value.end,
         };
-        ctrl.setValue(dates);
+        ctrl.patchValue(dates);
       });
       ctrl.valueChanges
-        .pipe(distinctUntilChanged(isEqual))
-        .subscribe((value) => this.range.setValue(value));
+        .pipe(distinctUntilChanged(isEqual), startWith(ctrl.value))
+        .subscribe((value) => this.range.patchValue(value));
     }
   }
 }
