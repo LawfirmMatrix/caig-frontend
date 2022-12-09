@@ -31,10 +31,10 @@
     "changes": {
       "General": {
         "Tables": [
-          "Changed several caching behaviors with regards to the global table filter, sort state and scroll position.",
+          "Changed several caching behaviors in regards to the global table filter, sort state and scroll position.",
           "When filtering by a number column, the table should now yield accurate results for negative values when a range is set."
         ],
-        "Misc.": [ "Several other minor bug fixes and improvements." ]
+        "Misc.": [ "Minor bug fixes and improvements." ]
       },
       "CAIG": {
         "Emailing": [
