@@ -30,33 +30,13 @@
   "appData": {
     "changes": {
       "General": {
-        "Tables": [
-          "Changed several caching behaviors in regards to the global table filter, sort state and scroll position.",
-          "When filtering by a number column, the table should now yield accurate results for negative values when a range is set."
-        ],
-        "Misc.": [ "Minor bug fixes and improvements." ]
+
       },
       "CAIG": {
-        "Emailing": [
-          "Major improvements have been made to the email editor.",
-          "Bulk emailing is now enabled for employees.",
-          "Customizable email signatures can be appended to emails."
-        ],
-        "Settlements": [ "A new set of pages has been added to view, edit and delete settlements." ],
-        "Employees": [
-          "The settlement code now links directly to its \"Settlement View\" page.",
-          "The selected \"View Mode\" will now be cached and will persist through navigations."
-        ],
-        "Reports": [
-          "A new set of pages has been added to view and download reports.",
-          "New report: \"1099 and W-2 Information\"."
-        ]
+
       },
       "Call Center": {
-        "Emailing": [
-          "Major improvements have been made to the email editor.",
-          "Customizable email signatures can be appended to emails."
-        ]
+
       },
       "Survey": {
 
