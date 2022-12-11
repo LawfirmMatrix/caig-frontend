@@ -29,13 +29,14 @@ import {TokenInterceptor} from '../auth/services/interceptors/token.interceptor'
 import {NavMenuService} from './components/navigation/nav-menu.service';
 import {usersReducer} from '../modules/users/store/reducers';
 import {UserEffects} from '../modules/users/store/effects/user.effects';
-import {employeesReducer} from '../modules/shared/employee/store/reducers';
-import {EmployeesEffects} from '../modules/shared/employee/store/effects/employees.effects';
 import {TimePipe} from './pipes/time.pipe';
 import {WhatsNewComponent} from './components/whats-new/whats-new.component';
 import {UpdateTimerComponent} from './components/update-timer/update-timer.component';
 import {SharedComponentsModule} from 'shared-components';
 import {PortalSelectionComponent} from './components/portal-selection/portal-selection.component';
+import {LoadingOverlayComponent} from './components/loading-overlay/loading-overlay.component';
+import {FormDialogComponent} from './components/form-dialog/form-dialog.component';
+import {OfflineStatusComponent} from './components/offline-status/offline-status.component';
 
 @NgModule({
   imports: [
@@ -50,8 +51,6 @@ import {PortalSelectionComponent} from './components/portal-selection/portal-sel
     EffectsModule.forFeature([CoreEffects]),
     StoreModule.forFeature('users', usersReducer),
     EffectsModule.forFeature([UserEffects]),
-    StoreModule.forFeature('employees', employeesReducer),
-    EffectsModule.forFeature([EmployeesEffects]),
     SharedComponentsModule,
   ],
   declarations: [
@@ -69,7 +68,11 @@ import {PortalSelectionComponent} from './components/portal-selection/portal-sel
     WhatsNewComponent,
     UpdateTimerComponent,
     PortalSelectionComponent,
+    LoadingOverlayComponent,
+    FormDialogComponent,
+    OfflineStatusComponent,
   ],
+  exports: [OfflineStatusComponent],
   providers: [ NavMenuService ],
 })
 export class CoreModule {

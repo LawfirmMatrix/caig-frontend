@@ -45,4 +45,7 @@ export class EmployeeEntityService extends EntityCollectionServiceBase<Employee>
   public createBatch(employeeIds: number[]): Observable<{ batchId: string }> {
     return this.http.post<{batchId: string}>('api/employee/batch', employeeIds);
   }
+  public getBatch(batchId: string): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`api/employee/batch/${batchId}`);
+  }
 }

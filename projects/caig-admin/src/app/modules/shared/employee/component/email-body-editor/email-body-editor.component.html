@@ -1,26 +1,26 @@
-<div fxLayout="column" style="height: 100%">
-  <div fxFlex fxLayout="row" fxLayoutGap="5px" style="height: calc(100% - 70px)">
-    <div style="height: 100%; width: 190px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;" fxLayout="column" *ngIf="!disablePlaceholders">
-      <button
-        *ngFor="let field of fields$ | async"
-        mat-stroked-button
-        (click)="insertPlaceholder(field)"
-        [disabled]="!editor">
-        {{field | startCase}}
-      </button>
-    </div>
-    <div style="height: 100%; width: 100%;">
-      <mat-card style="height: 100%; width: 100%; padding: 0; overflow: auto;">
-        <quill-editor
-          (onBlur)="isFocused = false"
-          (onFocus)="isFocused = true"
-          class="mat-app-background"
-          [(ngModel)]="template[field]"
-          [sanitize]="true"
-          [disabled]="disableEditor"
-          (onEditorCreated)="editor = $event">
-        </quill-editor>
-      </mat-card>
-    </div>
-  </div>
-</div>
+<!--<div fxLayout="column" style="height: 100%">-->
+<!--  <div fxFlex fxLayout="row" fxLayoutGap="5px" style="height: calc(100% - 70px)">-->
+<!--    <div style="height: 100%; width: 190px; overflow-y: auto; overflow-x: hidden; padding-right: 10px;" fxLayout="column" *ngIf="!disablePlaceholders">-->
+<!--      <button-->
+<!--        *ngFor="let field of fields$ | async"-->
+<!--        mat-stroked-button-->
+<!--        (click)="insertPlaceholder(field)"-->
+<!--        [disabled]="!editor">-->
+<!--        {{field | startCase}}-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div style="height: 100%; width: 100%;">-->
+<!--      <mat-card style="height: 100%; width: 100%; padding: 0; overflow: auto;">-->
+<!--        <quill-editor-->
+<!--          (onBlur)="isFocused = false"-->
+<!--          (onFocus)="isFocused = true"-->
+<!--          class="mat-app-background"-->
+<!--          [(ngModel)]="template[field]"-->
+<!--          [sanitize]="true"-->
+<!--          [disabled]="disableEditor"-->
+<!--          (onEditorCreated)="editor = $event">-->
+<!--        </quill-editor>-->
+<!--      </mat-card>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

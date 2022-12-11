@@ -9,6 +9,7 @@ import {ThemePalette} from '@angular/material/core';
       <mat-form-field fxFlex [formGroup]="form" [appearance]="field.appearance" [color]="field.color" [hideRequiredMarker]="false">
         <mat-label>{{field.label}}</mat-label>
         <input #input="matInput"
+               [id]="field.id"
                [required]="field.required"
                matInput
                autocomplete="off"
@@ -63,6 +64,7 @@ export class InputField extends FieldBase<string> {
   public clearButton: boolean;
   public buttons: InputButton[] | undefined;
   public menu: FieldMenu | undefined;
+  public id: string;
   constructor(options: InputOptions) {
     super(options);
     this.type = options.type || 'text';
@@ -70,6 +72,7 @@ export class InputField extends FieldBase<string> {
     this.clearButton = !!options.clearButton;
     this.buttons = options.buttons;
     this.menu = options.menu;
+    this.id = options.id || '';
   }
 }
 
@@ -79,6 +82,7 @@ export interface InputOptions extends BaseOptions<string> {
   clearButton?: boolean;
   buttons?: InputButton[];
   menu?: FieldMenu;
+  id?: string;
 }
 
 export interface InputButton {

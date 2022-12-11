@@ -37,6 +37,7 @@ import {
 import {QueryParams} from '@ngrx/data';
 import {usersForSettlement} from '../../../users/store/selectors/user.selectors';
 import {yesOrNo$} from '../../../../core/util/consts';
+import {LoadingService} from '../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-employees-list',
@@ -45,6 +46,7 @@ import {yesOrNo$} from '../../../../core/util/consts';
   providers: [EmployeesTableConfigService]
 })
 export class EmployeesListComponent implements OnInit, OnDestroy {
+  private static readonly VIEW_MODE_STORAGE = 'EMP_VIEW_MODE';
   private onDestroy$ = new Subject<void>();
   private settlementId$ = this.store.select(settlementId).pipe(filter(isNotUndefined));
   public toolbarButtons: ToolbarButton[] = [
@@ -225,7 +227,6 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     ]
   ];
   public handsetFields: FieldBase<any>[][] = chunk(flatten(this.fields), 1);
-  public isProcessing = true;
   public tableMenuItems: TableMenuItem<Employee>[] = [
     {
       name: () => 'Bulk assign',
@@ -234,6 +235,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     {
       name: () => 'Bulk add to payroll',
       callback: (rows) => this.addToPayroll(rows),
+    },
+    {
+      name: () => 'Bulk email',
+      callback: (rows) => this.bulkEmail(rows),
     }
   ];
   public rowMenuItems: RowMenuItem<Employee>[] = [
@@ -265,12 +270,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
           .afterClosed()
           .pipe(
             filter((res) => res),
-            tap(() => this.isProcessing = true),
-            switchMap(() => this.employeeService.delete(row.id))
+            switchMap(() => this.loadingService.load(this.employeeService.delete(row.id)))
           )
           .subscribe(
             () => this.notifications.showSimpleInfoMessage(`Successfully deleted ${row.name}`),
-            () => this.isProcessing = false
           );
       },
     }
@@ -318,9 +321,18 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     private notifications: NotificationsService,
     private themeService: ThemeService,
     private store: Store<AppState>,
+    private loadingService: LoadingService,
   ) {
   }
   public ngOnInit() {
+    try {
+      const viewMode = localStorage.getItem(EmployeesListComponent.VIEW_MODE_STORAGE);
+      const isViewMode = (stored: string): stored is EmployeeViewMode => ['basic', 'bue', 'financial'].includes(stored);
+      if (viewMode && isViewMode(viewMode)) {
+        this.viewMode = viewMode;
+      }
+    } catch {}
+
     this.setColumns(this.viewMode);
 
     const employees$ = combineLatest([this.employeeService.loaded$, this.employeeService.entities$])
@@ -363,6 +375,9 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
     this.router.navigate([employee.id, 'view'], {relativeTo: this.route.parent});
   }
   public viewModeChange(viewMode: EmployeeViewMode): void {
+    try {
+      localStorage.setItem(EmployeesListComponent.VIEW_MODE_STORAGE, viewMode);
+    } catch { }
     this.setColumns(viewMode);
   }
   private setColumns(viewMode: EmployeeViewMode): void {
@@ -381,6 +396,10 @@ export class EmployeesListComponent implements OnInit, OnDestroy {
   private addToPayroll(employees: Employee[]): void {
     this.employeeService.createBatch(employees.map((e) => e.id))
       .subscribe(({batchId}) => this.router.navigate(['/payrolls', 'add', batchId]));
+  }
+  private bulkEmail(employees: Employee[]): void {
+    this.loadingService.load(this.employeeService.createBatch(employees.map((e) => e.id)))
+      .subscribe(({batchId}) => this.router.navigate(['batch-email', batchId], {relativeTo: this.route}));
   }
 }
 

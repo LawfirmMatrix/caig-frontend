@@ -146,7 +146,7 @@ export class AutocompleteInputComponent<T> implements OnChanges, ControlValueAcc
   }
 
   public get errorState(): boolean {
-    return this.required && this.empty && this.touched;
+    return this.required && this.empty && this.touched && !this.disabled;
   }
 
   constructor(
@@ -218,6 +218,10 @@ export class AutocompleteInputComponent<T> implements OnChanges, ControlValueAcc
       this._onChange(item);
       this.filteredItems = value ? this.options.filter((item ) =>
         String(item[this.displayField]).toLowerCase().includes(value)) : this.options;
+      if (item) {
+        this.value = item[this.displayField];
+      }
+      setTimeout(() => this.autocompleteTrigger.closePanel());
     }
   }
 

@@ -1,6 +1,6 @@
-<div class="mat-app-background" [ngClass]="{'dark': isDarkTheme$ | async}">
-  <div class="load-spinner" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
+<div fxFlexFill fxLayout="column" class="mat-app-background" [ngClass]="{'dark': isDarkTheme$ | async}">
+  <div fxFlex>
+    <router-outlet></router-outlet>
   </div>
-  <router-outlet></router-outlet>
+  <app-offline-status></app-offline-status>
 </div>

@@ -194,6 +194,8 @@ export class CurrencyInputComponent implements OnChanges, ControlValueAccessor, 
     const digitsOnly = this.currencyInput.nativeElement.value.replace(/[^0-9.-]+/g, '');
     this.currencyInput.nativeElement.value = digitsOnly ?
       formatCurrency(coerceNumberProperty(digitsOnly), 'en-US', '') : '';
+    this.inputValue = this.currencyInput.nativeElement.value;
+    this.onChange(this.inputValue);
   }
 }
 

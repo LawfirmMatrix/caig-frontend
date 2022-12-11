@@ -16,6 +16,8 @@ export class NavMenuService {
           employees,
           events,
           payrolls,
+          settlements,
+          reports,
           // {
           //   name: 'Agencies',
           //   icon: 'business',
@@ -72,4 +74,16 @@ const payrolls = {
   name: 'Payrolls',
   icon: 'payments',
   route: 'payrolls',
+};
+
+const settlements = {
+  name: 'Settlements',
+  icon: 'gavel',
+  route: 'settlements',
+};
+
+const reports = {
+  name: 'Reports',
+  icon: 'topic',
+  route: 'reports',
 };

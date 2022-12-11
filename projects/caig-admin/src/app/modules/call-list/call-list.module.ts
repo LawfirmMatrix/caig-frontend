@@ -11,6 +11,7 @@ import {VsTableModule} from 'vs-table';
 import {EmployeeViewResolver} from './service/employee-view.resolver';
 import {CallListResolver} from './service/call-list.resolver';
 import {BueLocationsResolver} from './service/bue-locations.resolver';
+import {EmailModule} from '../email/email.module';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {BueLocationsResolver} from './service/bue-locations.resolver';
     SharedEmployeeModule,
     DynamicFormModule,
     VsTableModule,
+    EmailModule,
   ],
   declarations: [
     CallListComponent,

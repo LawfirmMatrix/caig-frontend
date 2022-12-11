@@ -13,17 +13,16 @@ import {
   ExportConfig,
   RowClick,
   RowMenuItem,
-  SelectionChange, TableCache,
+  SelectionChange,
   TableColumn,
   TableColumnDataType,
-  TableMenuItem, ButtonColumn, ExpandRowConfig, NewRowBadge
+  TableMenuItem, ButtonColumn, ExpandRowConfig, NewRowBadge, TableCache
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some, cloneDeep} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {
-  auditTime,
   BehaviorSubject,
   filter,
   debounceTime,
@@ -43,6 +42,7 @@ import {NgxCsvService} from 'export-csv';
 import {ExportDataComponent} from '../export-data/export-data.component';
 import {MatDialog} from '@angular/material/dialog';
 import {trigger, state, transition, animate, style, keyframes} from '@angular/animations';
+import {TableCacheService} from '../../services/table-cache.service';
 
 @Component({
   selector: 'vs-table',
@@ -63,7 +63,7 @@ import {trigger, state, transition, animate, style, keyframes} from '@angular/an
   ]
 })
 export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
-  @Input() public data: T[] | null = null;
+  @Input() public data: T[] | null | undefined;
   @Input() public columns: TableColumn<T>[] = [];
   @Input() public disableSelectAll = false;
   @Input() public disableSelection = false;
@@ -95,10 +95,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public onResize() {
     this.onWindowResize$.next(void 0);
   }
-  @HostListener('window:beforeunload', ['$event'])
-  public onBeforeUnload() {
-    this.clearCache(['scrollOffset', 'sort']);
-  }
 
   public static readonly DEFAULT_SORT: Sort = { active: '', direction: '' };
   public static readonly SCROLLBAR_WIDTH: number = measureScrollbarWidth();
@@ -124,7 +120,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly noValuePlaceholder = 'No Value';
 
   public padScrollbar = false;
-  public showFooter = false;
+  public hasSumColumns = false;
   public minRowWidth = 0;
   public mouseoverColumn: TableColumn<T> | null = null;
   public filteredData: T[] = [];
@@ -136,7 +132,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public expandRow: T | null = null;
   public expandedRows: any[] = [];
 
-  private cacheKey: string | undefined;
   private scrollToOffset: number | undefined;
   private unsortedFilteredData: T[] = [];
   private resizeObserver = new ResizeObserver(() => this.viewport.checkViewportSize());
@@ -147,11 +142,13 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     private csvService: NgxCsvService,
     private dialog: MatDialog,
     private elementRef: ElementRef,
-  ) { }
+    private cacheService: TableCacheService<T>,
+  ) {
+    this.cacheService.register(elementRef);
+    this.applyCache();
+  }
 
   public ngOnInit(): void {
-    this.applyCache();
-
     merge(this.filter$, this.columnFilter$)
       .pipe(
         skip(2),
@@ -175,8 +172,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public ngAfterViewInit(): void {
     this.scrollingElement.elementScrolled()
       .pipe(
-        filter(() => this.showFooter && !!this.data),
-        auditTime(25),
+        filter(() => this.hasSumColumns && !!this.filteredData.length),
         map((event) => (event.target as HTMLElement).scrollLeft),
         distinctUntilChanged(),
       )
@@ -323,18 +319,31 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
   public exportData(): void {
     const columns = this.filterHiddenColumns();
+    const modColumns = columns.filter((c) => !!c.calculate);
+    const negateColumns = columns.filter((c) => !!c.negateValue);
+    const data = this.filteredData.map((row) => {
+      const copy: any = { ...row };
+      modColumns.forEach((col) => {
+        if (col.dataType !== this.columnDataTypes.icon) {
+          copy[col.field] = copy[this.calcColumnPrefix + col.field];
+        }
+        delete copy[this.calcColumnPrefix + col.field];
+      });
+      negateColumns.forEach((col) => copy[col.field] = -copy[col.field]);
+      return copy;
+    });
     if (!this.exportConfig) {
       this.dialog.open(ExportDataComponent, { width: '250px' })
         .afterClosed()
         .pipe(filter((filename) => !!filename))
-        .subscribe((filename) => this.csvService.download(this.filteredData, columns, filename));
+        .subscribe((filename) => this.csvService.download(data, columns, filename));
     } else {
-      this.csvService.download(this.filteredData, columns, this.exportConfig.filename);
+      this.csvService.download(data, columns, this.exportConfig.filename);
     }
   }
 
   public resetCached(): void {
-    this.clearCache();
+    this.cacheService.clearCache(this.elementRef);
     if (this.columns) {
       this.setVisibleColumns();
     }
@@ -398,7 +407,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private setVisibleColumns(): void {
     this.visibleColumns = this.filterHiddenColumns();
 
-    this.showFooter = some(this.visibleColumns, (c) => c.sum);
+    this.hasSumColumns = some(this.visibleColumns, (c) => c.sum);
 
     this.minRowWidth = (this.visibleColumns.length * this.columnWidth) +
       (this.disableSelection ? 0 : this.rowHeight) +
@@ -406,7 +415,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       (this.expandRowConfig ? this.columnWidth : 0) +
       (this.buttonColumns ? (this.buttonColumns.length * this.columnWidth) : 0);
 
-    if (this.showFooter) {
+    if (this.hasSumColumns) {
       setTimeout(() => {
         if (this.scrollingElement) {
           this.translateFooter(this.scrollingElement.measureScrollOffset('left'));
@@ -431,6 +440,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     this.calculateColumnSummaries();
     this.sortData();
     this.measureViewportScroll();
+
     this.saveCache(['filter']);
   }
 
@@ -463,6 +473,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
       if (columnFilter.range.value.start && columnFilter.range.value.end) {
         const getValue = columnFilter.column.dataType === this.columnDataTypes.currency ||
           columnFilter.column.dataType === this.columnDataTypes.number ?
+          columnFilter.column.negateValue ? ((row: any) => -row[columnFilter.column.field]) :
           ((row: any) => row[columnFilter.column.field]) :
           ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase());
         const dateFilter = (row: any) => {
@@ -473,7 +484,9 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         };
         const defaultFilter = (row: any) => {
           const value = getValue(row);
-          return columnFilter.range.value.start <= value && value <= columnFilter.range.value.end;
+          const start = columnFilter.range.value.start;
+          const end = columnFilter.range.value.end;
+          return value < 0 ? (start >= value && value >= end) : (start <= value && value <= end);
         };
         const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
         this.filteredData = this.filteredData.filter(filterFunc);
@@ -529,78 +542,51 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
     return this.columns.filter((c) => !c.hide);
   }
 
-  private acquireCacheKey(): void {
-    this.cacheKey = this.elementRef.nativeElement.id ?
-      `vs-table-${this.elementRef.nativeElement.id}` : undefined;
-  }
-
   private applyCache(field?: keyof TableCache<T>): void {
-    this.acquireCacheKey();
-    if (this.cacheKey) {
-      const cache = localStorage.getItem(this.cacheKey);
-      if (cache) {
-        const parsed: TableCache<T> = JSON.parse(cache);
-        if ((!field || field === 'columns') && parsed.columns) {
-          parsed.columns.forEach((column, to) => {
-            const from = this.columns.findIndex((c) => c.field === column.field);
-            if (from > -1) {
-              this.columns[from].hide = column.hide;
-              moveItemInArray(this.columns, from, to);
-            }
-          });
-          this.setVisibleColumns();
-        }
-        if ((!field || field === 'filter') && parsed.filter) {
-          this.filter = parsed.filter;
-          this.filter$.next(parsed.filter);
-        }
-        if ((!field || field === 'scrollOffset') && parsed.scrollOffset) {
-          this.scrollToOffset = parsed.scrollOffset;
-        }
-        if ((!field || field === 'sort') && parsed.sort) {
-          this.sort = parsed.sort;
-        }
+    const cache = this.cacheService.getCache(this.elementRef);
+    if (cache) {
+      if ((!field || field === 'columns') && cache.columns) {
+        cache.columns.forEach((column, to) => {
+          const from = this.columns.findIndex((c) => c.field === column.field);
+          if (from > -1) {
+            this.columns[from].hide = column.hide;
+            moveItemInArray(this.columns, from, to);
+          }
+        });
+        this.setVisibleColumns();
       }
-    }
-  }
-
-  private clearCache(fields?: (keyof TableCache<T>)[]): void {
-    this.acquireCacheKey();
-    if (this.cacheKey) {
-      const cache = localStorage.getItem(this.cacheKey);
-      if (cache) {
-        const parsed: TableCache<T> = JSON.parse(cache);
-        if (fields) {
-          fields.forEach((field) => delete parsed[field]);
-          localStorage.setItem(this.cacheKey, JSON.stringify(parsed));
-        } else {
-          localStorage.removeItem(this.cacheKey);
-        }
+      if ((!field || field === 'filter') && cache.filter) {
+        this.filter = cache.filter;
+        this.filter$.next(cache.filter);
+      }
+      if ((!field || field === 'scrollOffset') && cache.scrollOffset) {
+        this.scrollToOffset = cache.scrollOffset;
+      }
+      if ((!field || field === 'sort') && cache.sort) {
+        this.sort = cache.sort;
       }
     }
   }
 
   private saveCache(fields: (keyof TableCache<T>)[]): void {
-    this.acquireCacheKey();
-    if (this.cacheKey) {
-      const cache = localStorage.getItem(this.cacheKey);
-      const payload: TableCache<T> = cache ? JSON.parse(cache) : {};
+    if (this.cacheService.canCache(this.elementRef)) {
+      const cache = this.cacheService.getCache(this.elementRef) || {};
       fields.forEach((field) => {
         switch (field) {
           case 'columns':
-            payload[field] = this.columns.map(({field, hide}) => ({field, hide: !!hide}));
+            cache[field] = this.columns.map(({field, hide}) => ({field, hide: !!hide}));
             break;
           case 'filter':
-            payload[field] = this.filter$.value;
+            cache[field] = this.filter$.value;
             break;
           case 'scrollOffset':
-            payload[field] = this.viewport.measureScrollOffset();
+            cache[field] = this.viewport.measureScrollOffset();
             break;
           case 'sort':
-            payload[field] = this.sort;
+            cache[field] = this.sort;
         }
       });
-      localStorage.setItem(this.cacheKey, JSON.stringify(payload));
+      this.cacheService.saveCache(this.elementRef, cache);
     }
   }
 

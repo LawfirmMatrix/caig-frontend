@@ -5,7 +5,7 @@
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Settlement</div>
-    <div fxFlex><a><b>{{employee.settlementCode}}</b></a></div> <!-- @TODO link to view settlement -->
+    <div fxFlex><a routerLink="/settlements/{{employee.settlementId}}/view"><b>{{employee.settlementCode}}</b></a></div>
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Name</div>
@@ -89,7 +89,7 @@
     <div class="prop-name">Email (alt)</div>
     <div fxFlex fxLayout="row">
       <div fxFlex fxLayoutAlign="start center"><b>{{employee.emailAlt}}</b></div>
-      <app-email-menu [email]="employee.emailAlt" [alt]="true"></app-email-menu>
+      <app-email-menu [email]="employee.emailAlt"></app-email-menu>
     </div>
   </mat-list-item>
   <mat-list-item role="listitem">

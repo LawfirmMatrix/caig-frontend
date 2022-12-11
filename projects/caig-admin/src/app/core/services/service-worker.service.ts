@@ -22,9 +22,15 @@ export class ServiceWorkerService {
   public isUpdateAvailable$ = this.updates.versionUpdates
     .pipe(
       filter(ServiceWorkerService.isVersionReady),
-      tap(ServiceWorkerService.storeAppData),
+      tap((event) => this.storeAppData(event)),
       shareReplay(1),
     );
+  public noUpdateAvailable$ = this.updates.versionUpdates
+    .pipe(
+      filter((event): event is NoNewVersionDetected => event.type === 'NO_NEW_VERSION_DETECTED'),
+      shareReplay(1)
+    );
+  private appData: AppData | undefined;
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -53,16 +59,20 @@ export class ServiceWorkerService {
   private static isVersionReady(event: VersionEvent): event is VersionReadyEvent {
     return event.type === 'VERSION_READY';
   }
-  private static storeAppData(event: VersionReadyEvent): void {
-    const appData = event.latestVersion.appData as AppData | undefined;
-    if (appData) {
-      localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(appData));
+  private storeAppData(event: VersionReadyEvent): void {
+    this.appData = event.latestVersion.appData as AppData | undefined;
+    if (this.appData) {
+      localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(this.appData));
     }
   }
   public installUpdate(notify = true): void {
     if (this.updates.isEnabled) {
       this.isUpdating = true;
       this.updates.activateUpdate().finally(() => {
+        if (this.appData?.clearLocalStorage) {
+          localStorage.clear();
+          localStorage.setItem(ServiceWorkerService.APP_DATA_STORAGE_KEY, JSON.stringify(this.appData));
+        }
         this.isUpdating = false;
         if (notify) {
           localStorage.setItem(ServiceWorkerService.NOTIFY_STORAGE_KEY, 'true');
@@ -80,7 +90,7 @@ export class ServiceWorkerService {
         withLatestFrom(this.updates.versionUpdates),
         tap(([updateFound, versionUpdates]) => {
           if (updateFound && ServiceWorkerService.isVersionReady(versionUpdates)) {
-            ServiceWorkerService.storeAppData(versionUpdates);
+            this.storeAppData(versionUpdates);
             this.installUpdate(false);
           }
         }),
@@ -91,6 +101,25 @@ export class ServiceWorkerService {
           return throwError(err);
         }),
       );
+  }
+  public openScopedChanges(appData: AppData): void {
+    if (appData.changes) {
+      const changes = appData.changes;
+      const portals = Object.keys(appData.changes) as Portals[];
+      if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
+        const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
+        const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
+        combineLatest([isSuperAdmin$, portal$])
+          .pipe(first())
+          .subscribe(([isSuperAdmin, portal]) => {
+            const nonAdminKeys: Portals[] = ['General', portal];
+            const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, nonAdminKeys);
+            if (Object.keys(data).length) {
+              this.dialog.open(WhatsNewComponent, {data});
+            }
+          });
+      }
+    }
   }
   private pollForUpdates(): void {
     const appIsStable$ = this.appRef.isStable.pipe(first((isStable) => isStable));
@@ -111,26 +140,7 @@ export class ServiceWorkerService {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
       const appData: AppData = JSON.parse(cachedData);
       if (appData) {
-        if (appData.clearLocalStorage) {
-          localStorage.clear();
-        }
-        if (appData.changes) {
-          const changes = appData.changes;
-          const portals = Object.keys(appData.changes) as Portals[];
-          if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
-            const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
-            const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
-            combineLatest([isSuperAdmin$, portal$])
-              .pipe(first())
-              .subscribe(([isSuperAdmin, portal]) => {
-                const nonAdminKeys: Portals[] = ['General', portal];
-                const data: AppDataChanges = isSuperAdmin ? changes : pick(changes, nonAdminKeys);
-                if (Object.keys(data).length) {
-                  this.dialog.open(WhatsNewComponent, {data});
-                }
-              });
-          }
-        }
+        this.openScopedChanges(appData);
       }
     }
   }
@@ -157,5 +167,13 @@ export class ServiceWorkerService {
         console.log('An error occurred while updating', event);
         location.reload();
       });
+  }
+}
+
+export interface NoNewVersionDetected {
+  type: 'NO_NEW_VERSION_DETECTED';
+  version: {
+    hash: string;
+    appData?: Object;
   }
 }

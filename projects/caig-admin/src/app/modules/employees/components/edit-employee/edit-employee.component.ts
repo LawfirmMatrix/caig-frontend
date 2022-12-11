@@ -528,7 +528,7 @@ export class EditEmployeeComponent {
     this.form.valueChanges
       .pipe(debounceTime(200))
       .subscribe((value) => {
-        const changes = omitBy({...this.employee, ...value}, (p) => p === undefined);
+        const changes = omitBy({...this.employee, ...value}, (p) => p === undefined || p === null);
         this.disableSave = this.form.invalid || isEqual(changes, this.employee);
       });
   }

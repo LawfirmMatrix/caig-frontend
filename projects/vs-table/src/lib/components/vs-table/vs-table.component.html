@@ -262,8 +262,8 @@
                    [matBadgeColor]="column.badge ? column.badge.color : undefined"
                    [matTooltip]="column.tooltip ? column.tooltip(row) : ''">
                 <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
-                <div *ngSwitchCase="columnDataTypes.currency">{{row[column.field] | currency:'USD':'$' | accounting}}</div>
-                <div *ngSwitchCase="columnDataTypes.number">{{row[column.field] | number:column.format}}</div>
+                <div *ngSwitchCase="columnDataTypes.currency">{{(column.negateValue ? -row[column.field] : row[column.field]) | currency:'USD':'$' | accounting}}</div>
+                <div *ngSwitchCase="columnDataTypes.number">{{(column.negateValue ? -row[column.field] : row[column.field]) | number:column.format}}</div>
                 <div *ngSwitchCase="columnDataTypes.calc">{{row[calcColumnPrefix + column.field]}}</div>
                 <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
                 <div *ngSwitchCase="columnDataTypes.changes">
@@ -332,7 +332,7 @@
       </div>
     </cdk-virtual-scroll-viewport>
   </table>
-  <tr #footer *ngIf="data && showFooter"
+  <tr #footer *ngIf="filteredData.length && hasSumColumns"
       [style.minHeight.px]="headerHeight"
       [style.minWidth.px]="minRowWidth + (padScrollbar ? scrollbarWidth : 0)"
       [style.paddingRight.px]="padScrollbar ? scrollbarWidth : 0"
@@ -343,8 +343,8 @@
     <td *ngIf="!visibleColumns.length" fxFlex></td>
     <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign" [style.minWidth.px]="columnWidth">
       <div *ngIf="column.sum" [ngSwitch]="column.dataType">
-        <div *ngSwitchCase="columnDataTypes.currency">{{columnSummaries[column.field] | currency:'USD':'$' | accounting}}</div>
-        <div *ngSwitchCase="columnDataTypes.number">{{columnSummaries[column.field] | number:column.format}}</div>
+        <div *ngSwitchCase="columnDataTypes.currency">{{(column.negateValue ? -columnSummaries[column.field] : columnSummaries[column.field]) | currency:'USD':'$' | accounting}}</div>
+        <div *ngSwitchCase="columnDataTypes.number">{{(column.negateValue ? -columnSummaries[column.field] : columnSummaries[column.field]) | number:column.format}}</div>
         <div *ngSwitchDefault>-</div>
       </div>
     </td>

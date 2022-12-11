@@ -72,6 +72,18 @@ const routes: Routes = [
             loadChildren: () => import('./modules/payrolls/payrolls.module').then(m => m.PayrollsModule),
             data: { animation: 'payrolls' },
             canActivate: [ CaigPortalGuard ],
+          },
+          {
+            path: 'settlements',
+            loadChildren: () => import('./modules/settlements/settlements.module').then(m => m.SettlementsModule),
+            data: { animation: 'settlements' },
+            canActivate: [ CaigPortalGuard ],
+          },
+          {
+            path: 'reports',
+            loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule),
+            data: { animation: 'reports' },
+            canActivate: [ CaigPortalGuard ],
           }
         ],
       },

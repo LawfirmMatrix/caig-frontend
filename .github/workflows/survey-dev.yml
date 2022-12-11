@@ -9,6 +9,7 @@ on:
       - 'projects/file-upload/**'
       - 'projects/vs-table/**'
       - 'projects/export-csv/**'
+      - 'projects/sidenav-stack/**'
 
 env:
   AZURE_WEBAPP_NAME: caigsurveytest

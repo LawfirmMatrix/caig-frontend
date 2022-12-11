@@ -1,15 +1,18 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store/reducers';
 import {user} from '../../store/selectors/core.selectors';
 import {AuthActions} from '../../../auth/store/actions/action-types';
+import {ServiceWorkerService} from '../../services/service-worker.service';
+import {first} from 'rxjs';
+import {AppData} from '../../../models/app-data.model';
 
 @Component({
   selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.scss'],
 })
-export class UserMenuComponent {
+export class UserMenuComponent implements OnInit {
   public user$ = this.store.select(user);
   public routeMenu: UserMenuItemWithRoute[] = [
     {
@@ -25,7 +28,21 @@ export class UserMenuComponent {
       callback: () => this.store.dispatch(AuthActions.logout({}))
     }
   ];
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>, private swService: ServiceWorkerService) { }
+  public ngOnInit() {
+    this.swService.noUpdateAvailable$
+      .pipe(first())
+      .subscribe((event) => {
+        const appData: AppData | undefined = event.version.appData;
+        if (appData) {
+          this.callbackMenu.unshift({
+            label: 'What\'s New',
+            icon: 'new_releases',
+            callback: () => this.swService.openScopedChanges(appData),
+          });
+        }
+      });
+  }
 }
 
 interface UserMenuItem {

@@ -1,0 +1,73 @@
+<div fxFlex fxLayout="column">
+  <mat-accordion displayMode="flat" fxFlex fxLayout="column">
+    <mat-expansion-panel [ngClass]="{'flex': body.expanded}" #body (closed)="signature.open()" expanded>
+      <mat-expansion-panel-header>
+        Subject / Body
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div fxFlexFill fxLayout="row" fxLayoutGap="12px">
+          <app-tag-selector *ngIf="quillEditor" (selected)="insertTag($event)"></app-tag-selector>
+          <div fxFlex fxLayout="column">
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <dynamic-form fxFlex [fields]="subjectFields" [form]="subjectForm"></dynamic-form>
+              <div *ngIf="subjectForm.value['templateId'] as templateId" style="padding: 0 0 16px 0" fxLayout="row" fxLayoutGap="8px">
+                <button mat-icon-button color="accent" (click)="openTemplate(templateId)" matTooltip="Edit email template">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteTemplate()" matTooltip="Delete email template">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div fxFlex style="overflow: auto">
+              <div class="quill-container">
+                <quill-editor
+                  [sanitize]="true"
+                  [(ngModel)]="emailBody"
+                  (onBlur)="quillEditorFocused = false"
+                  (onFocus)="quillEditorFocused = true"
+                  (onEditorCreated)="quillEditor = $event">
+                </quill-editor>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+    <mat-expansion-panel [ngClass]="{'flex': signature.expanded}" #signature (closed)="body.open()">
+      <mat-expansion-panel-header>
+        Signature
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div fxFlex fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="end center">
+            <dynamic-form [form]="signatureForm" [fields]="signatureFields"></dynamic-form>
+            <div *ngIf="signatureForm.value['signatureId'] as signatureId" style="padding: 0 0 16px 0" fxLayout="row" fxLayoutGap="8px">
+              <button mat-icon-button color="accent" (click)="openSignature(signatureId)" matTooltip="Edit signature template">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteSignature()" matTooltip="Delete signature template">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxFlex style="overflow: auto">
+            <div class="quill-container">
+              <quill-editor [sanitize]="true" [(ngModel)]="signatureBody"></quill-editor>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div class="bot-form" fxLayout="row" fxLayoutGap="12px">
+    <dynamic-form fxFlex [fields]="eventFields" [form]="eventForm"></dynamic-form>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="preview()"
+      [disabled]="!employee || !emailBody || addressForm.invalid || subjectForm.invalid || eventForm.invalid">
+      Preview & Send
+    </button>
+  </div>
+</div>

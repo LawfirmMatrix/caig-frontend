@@ -14,7 +14,7 @@ import {FilterWithToggles} from '../filter-toggles/filter-with-toggles';
 })
 export class IconFilterComponent<T> extends FilterWithToggles<T> implements OnInit, OnChanges {
   @Input() public disabled!: boolean;
-  @Input() public override data: T[] | null = null;
+  @Input() public override data: T[] | null | undefined;
   @Input() public filteredData!: T[];
   @Input() public override column!: TableColumn<T>;
   @Input() public override columnFilter$!: BehaviorSubject<{ [key: string]: ColumnFilter }>;

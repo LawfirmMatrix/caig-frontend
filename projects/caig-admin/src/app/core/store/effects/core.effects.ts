@@ -6,6 +6,7 @@ import {AuthService} from '../../../auth/services/auth.service';
 import {EnumsActions} from '../../../enums/store/actions/action-types';
 import {UserActions} from '../../../modules/users/store/actions/action-types';
 import {EmployeeEntityService} from '../../../modules/employees/services/employee-entity.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class CoreEffects {
@@ -27,6 +28,7 @@ export class CoreEffects {
     this.actions$.pipe(
       ofType(CoreActions.settlementChange),
       tap((action) => {
+        this.router.navigateByUrl('/employees');
         AuthService.settlementId = action.settlementId;
         this.employeeService.clearCache();
         this.employeeService.setLoaded(false);
@@ -49,5 +51,9 @@ export class CoreEffects {
   );
 
 
-  constructor(private actions$: Actions, private employeeService: EmployeeEntityService) { }
+  constructor(
+    private actions$: Actions,
+    private employeeService: EmployeeEntityService,
+    private router: Router,
+  ) { }
 }
