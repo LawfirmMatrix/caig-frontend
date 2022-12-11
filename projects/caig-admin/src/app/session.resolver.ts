@@ -17,6 +17,7 @@ export class SessionResolver implements Resolve<any> {
         first(),
         tap((state) => {
           if (state.mustChangePassword && state.user) {
+            console.log('must change password');
             const data: ChangePasswordData = { userId: state.user.id, self: true, copyAuthPassword: true };
             this.dialog.open(ChangePasswordComponent, { data , disableClose: true});
           }
