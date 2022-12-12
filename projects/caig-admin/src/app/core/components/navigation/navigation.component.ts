@@ -36,6 +36,11 @@ export class NavigationComponent implements OnInit {
       icon : 'people',
       route : '/users'
     },
+    {
+      name: 'Configurations',
+      icon: 'settings',
+      route: 'configurations',
+    }
   ];
   public isAdmin$ = this.store.select(isAdmin);
   public coreState$: Observable<CoreState> = this.store.select(selectCoreState);

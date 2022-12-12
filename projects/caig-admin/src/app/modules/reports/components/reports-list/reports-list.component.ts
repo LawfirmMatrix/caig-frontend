@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {reportsList} from '../../reports-routing.module';
+import {Routes} from '@angular/router';
 
 @Component({
   selector: 'app-reports-list',
@@ -7,7 +8,5 @@ import {reportsList} from '../../reports-routing.module';
   styleUrls: ['./reports-list.component.scss']
 })
 export class ReportsListComponent {
-  public list: string[] = reportsList
-    .map((route) => route.path)
-    .filter((path): path is string => !!path);
+  public list: Routes = reportsList;
 }

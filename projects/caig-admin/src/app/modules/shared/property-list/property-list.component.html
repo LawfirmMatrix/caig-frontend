@@ -1,0 +1,19 @@
+<mat-list>
+  <mat-list-item *ngFor="let item of items">
+    <b>{{item.label}}</b>
+    <div fxFlex [ngSwitch]="item.type">
+      <div fxFlex *ngSwitchCase="'html'">
+        <div fxFlex *ngIf="object[item.field] as html" [innerHTML]="html | safe:'html'"></div>
+      </div>
+      <div *ngSwitchCase="'icon'" fxFlex [fxLayoutAlign]="item.fxLayoutAlign">
+        <mat-icon *ngIf="item.iconValue" [style.color]="item.iconColor ? item.iconColor(object) : undefined">{{item.iconValue(object)}}</mat-icon>
+      </div>
+      <div *ngSwitchCase="'currency'" fxFlex>{{currency(object[item.field]) | currency:'USD':'$'}}</div>
+      <div *ngSwitchCase="'date'" fxFlex>{{date(object[item.field]) | date:'shortDate'}}</div>
+      <div *ngSwitchCase="'link'" fxFlex>
+        <a [href]="object[item.field]" target="_blank">{{object[item.field]}}</a>
+      </div>
+      <div *ngSwitchDefault fxFlex>{{object[item.field]}}</div>
+    </div>
+  </mat-list-item>
+</mat-list>

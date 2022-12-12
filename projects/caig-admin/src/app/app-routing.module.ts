@@ -84,7 +84,13 @@ const routes: Routes = [
             loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule),
             data: { animation: 'reports' },
             canActivate: [ CaigPortalGuard ],
-          }
+          },
+          {
+            path: 'configurations',
+            loadChildren: () => import('./modules/configurations/configurations.module').then(m => m.ConfigurationsModule),
+            data: { animation: 'configurations' },
+            canLoad: [ AdminGuard ],
+          },
         ],
       },
       {

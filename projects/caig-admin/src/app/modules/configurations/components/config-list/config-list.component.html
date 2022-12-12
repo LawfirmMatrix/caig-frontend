@@ -1,0 +1,10 @@
+<mat-toolbar class="mat-elevation-z6">Configurations</mat-toolbar>
+<mat-card>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let item of list">
+        <a mat-button [routerLink]="item">{{item | startCase}}</a>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

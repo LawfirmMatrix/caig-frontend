@@ -13,10 +13,10 @@ export class NavMenuService {
         ];
       case Portal.CAIG:
         return [
-          employees,
-          events,
-          payrolls,
           settlements,
+          employees,
+          payrolls,
+          events,
           reports,
           // {
           //   name: 'Agencies',

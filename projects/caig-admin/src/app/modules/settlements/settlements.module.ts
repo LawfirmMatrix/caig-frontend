@@ -8,6 +8,7 @@ import {SharedComponentsModule} from 'shared-components';
 import {ViewSettlementComponent} from './components/view-settlement/view-settlement.component';
 import {SharedModule} from '../shared/shared.module';
 import {DynamicFormModule} from 'dynamic-form';
+import {PropertyListModule} from '../shared/property-list/property-list.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import {DynamicFormModule} from 'dynamic-form';
     SharedComponentsModule,
     SharedModule,
     DynamicFormModule,
+    PropertyListModule,
   ],
   declarations: [
     SettlementsListComponent,

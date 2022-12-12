@@ -1,0 +1,17 @@
+mat-toolbar {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  margin-bottom: 4px;
+  z-index: 5;
+}
+
+mat-card {
+  margin: 16px;
+}
+
+.mat-list-item:nth-child(odd) {
+  background: rgba(150,150,150,0.2);
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}

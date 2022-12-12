@@ -6,6 +6,7 @@ import {SharedModule} from '../shared/shared.module';
 import {TaxInfoComponent} from './components/tax-info/tax-info.component';
 import {VsTableModule} from 'vs-table';
 import {DynamicFormModule} from 'dynamic-form';
+import {StateTaxComponent} from './components/state-tax/state-tax.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {DynamicFormModule} from 'dynamic-form';
   declarations: [
     ReportsListComponent,
     TaxInfoComponent,
+    StateTaxComponent,
   ],
 })
 export class ReportsModule { }

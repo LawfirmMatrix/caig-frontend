@@ -1,0 +1,19 @@
+.mat-list-item {
+  padding: 6px 0;
+  height: 42px;
+}
+
+.mat-list-item:nth-child(odd) {
+  background: rgba(150,150,150,0.2);
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+::ng-deep .mat-list-item-content, .mat-list-item {
+  height: auto;
+  min-height: 42px;
+}
+
+b {
+  width: 220px;
+}
