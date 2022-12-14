@@ -40,6 +40,9 @@
       "sidenav-stack": [
         "dist/sidenav-stack"
       ],
+      "tree-viewer": [
+        "dist/tree-viewer"
+      ],
       "vs-table": [
         "dist/vs-table"
       ]

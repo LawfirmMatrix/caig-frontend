@@ -7,6 +7,7 @@ import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, CheckboxField} from 'dynamic-form';
 import {Router, ActivatedRoute} from '@angular/router';
 import {startWith, debounceTime} from 'rxjs';
+import {ReportsComponent} from '../reports/reports.component';
 
 @Component({
   selector: 'app-tax-info',
@@ -33,7 +34,7 @@ export class TaxInfoComponent implements OnInit {
     new CalculateColumn({
       title: 'SSN',
       field: 'ssn',
-      calculate: (row) => row.ssn || 'ENCRYPTED',
+      calculate: (row) => row.ssn || ReportsComponent.ENCRYPTED_SSN,
     }),
     new TextColumn({
       title: 'Settlement',

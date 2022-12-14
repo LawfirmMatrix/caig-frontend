@@ -1,0 +1,9 @@
+<div fxFlexFill fxLayout="column">
+  <mat-toolbar class="mat-elevation-z6" fxLayoutAlign="space-between center">
+    <div>{{header}}</div>
+    <button *ngIf="decrypt" mat-raised-button color="primary" disabled>Decrypt SSN's</button>
+  </mat-toolbar>
+  <div fxFlex style="overflow: auto">
+    <router-outlet (activate)="onActivate()"></router-outlet>
+  </div>
+</div>

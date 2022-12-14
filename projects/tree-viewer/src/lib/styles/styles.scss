@@ -1,0 +1,50 @@
+.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+}
+.name {
+  left: 0;
+  z-index: 2;
+}
+.value {
+  right: 0;
+  z-index: 1;
+}
+.header {
+  top: 0;
+  font-size: larger;
+  text-decoration: underline;
+  z-index: 4;
+}
+.footer {
+  bottom: 0;
+  font-weight: bold;
+  z-index: 3;
+}
+.cell {
+  padding: 0 10px;
+  width: 250px;
+  height: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tree-node {
+  font-size: 14px;
+}
+.odd-node {
+  background-color: rgba(130,130,130,0.15);
+
+  .mat-app-background {
+    background-color: rgba(130,130,130,0.25);
+  }
+}
+.divider {
+  border-bottom: 1px rgba(130, 130, 130, 0.75) solid;
+}
+.no-total {
+  max-width: 60px;
+}
+h3 {
+  margin: 0;
+}

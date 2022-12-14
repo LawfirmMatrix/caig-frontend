@@ -7,6 +7,9 @@ import {TaxInfoComponent} from './components/tax-info/tax-info.component';
 import {VsTableModule} from 'vs-table';
 import {DynamicFormModule} from 'dynamic-form';
 import {StateTaxComponent} from './components/state-tax/state-tax.component';
+import {NoContentComponent} from './components/no-content/no-content.component';
+import {ReportsComponent} from './components/reports/reports.component';
+import {TreeViewerModule} from 'tree-viewer';
 
 @NgModule({
   imports: [
@@ -15,8 +18,13 @@ import {StateTaxComponent} from './components/state-tax/state-tax.component';
     SharedModule,
     VsTableModule,
     DynamicFormModule,
+    TreeViewerModule,
   ],
   declarations: [
+    NoContentComponent,
+
+
+    ReportsComponent,
     ReportsListComponent,
     TaxInfoComponent,
     StateTaxComponent,

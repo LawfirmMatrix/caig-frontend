@@ -1,0 +1,70 @@
+<div class="tree-node divider"
+     [ngClass]="{'odd-node': nodeIndex % 2 === 1}"
+     [ngStyle]="{fontWeight: node.nodes ? 'bold' : 'normal'}"
+     fxLayout="row"
+     fxLayoutAlign="start center">
+  <div class="cell sticky name" [ngClass]="{'mat-app-background': !!node.dimensions?.length}" fxLayoutAlign="start center">
+    <button mat-icon-button disabled *ngFor="let lvl of levels"></button>
+    <button *ngIf="node.nodes"
+            mat-icon-button
+            [attr.aria-label]="'toggle ' + node.name"
+            (click)="toggleExpand()">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{isExpanded ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    {{node.name}}
+  </div>
+  <div *ngFor="let d of node.dimensions"
+       [ngSwitch]="d.type"
+       class="cell"
+       fxLayoutAlign="end center">
+    <div *ngSwitchCase="'number'">{{d.value | number:(d.format || '1.0-2')}}</div>
+    <div *ngSwitchCase="'currency'">{{d.value | currency:'USD':'$'}}</div>
+    <div *ngSwitchCase="'date'">{{d.value | date:(d.format || 'shortDate')}}</div>
+    <div *ngSwitchDefault>{{d.value}}</div>
+  </div>
+  <div class="cell sticky value"
+       [ngClass]="{'no-total': hideTotal, 'mat-app-background': !!node.dimensions?.length}"
+       fxLayoutAlign="end center">
+    <mat-progress-bar mode="indeterminate"
+                      color="primary"
+                      *ngIf="node.value === undefined; else showAmount">
+    </mat-progress-bar>
+    <ng-template #showAmount>
+      <div fxLayout="column" fxLayoutAlign="end center">
+        <div *ngIf="!hideTotal">{{node.value | currency:'USD':'$'}}</div>
+        <div *ngIf="showDiff" style="color: firebrick">
+          <div *ngIf="node.diff; else noDiff">{{node.diff | currency:'USD':'$'}}</div>
+          <ng-template #noDiff>N/A</ng-template>
+        </div>
+      </div>
+    </ng-template>
+    <div *ngIf="nodeMenuConfig as config">
+      <button mat-icon-button
+              #btn
+              [disabled]="config.requireField && !node[config.requireField]"
+              [matMenuTriggerFor]="nodeMenu">
+        <mat-icon *ngIf="!btn.disabled">more_vert</mat-icon>
+      </button>
+      <mat-menu #nodeMenu="matMenu">
+        <button mat-menu-item
+                *ngFor="let button of config.menu | visibleMenu:node"
+                (click)="button.callback(node)">
+          {{button.name}}
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
+<div *ngIf="isExpanded">
+  <tree-viewer-node
+    *ngFor="let node of node.nodes; let i = index;"
+    [node]="node"
+    [nodeIndex]="nodeIndex % 2 === 0 ? i + 1 : i"
+    [level]="level + 1"
+    [nodeMenuConfig]="nodeMenuConfig"
+    [hideTotal]="hideTotal"
+    [showDiff]="showDiff">
+  </tree-viewer-node>
+</div>

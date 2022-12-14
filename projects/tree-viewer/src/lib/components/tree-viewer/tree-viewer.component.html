@@ -1,0 +1,57 @@
+<div fxLayout="column">
+  <div *ngIf="data; else loadingData"
+       fxFlex
+       fxLayout="column"
+       [ngStyle]="{width: ((((data.dimensions?.length || 0)) + 2) * 250) - (hideTotal ? 190 : 0) + 'px'}">
+    <div class="sticky header mat-app-background" fxLayout="row">
+      <div class="cell sticky name header-cell mat-app-background" fxLayoutAlign="start center">
+        <button mat-icon-button disabled></button>
+        {{headerLabel}}
+      </div>
+      <div *ngFor="let d of data.dimensions"
+           class="cell header-cell"
+           fxLayoutAlign="end center">
+        {{d.header}}
+      </div>
+      <div *ngIf="!hideTotal"
+           class="cell sticky value header-cell mat-app-background"
+           fxLayoutAlign="end center">
+        {{totalLabel}}
+        <button mat-icon-button disabled></button>
+      </div>
+    </div>
+    <tree-viewer-node
+      *ngFor="let node of data.nodes; let i = index;"
+      (nodeExpanded)="nodeToggle.emit({node: node, isExpanded: $event})"
+      [node]="node"
+      [nodeIndex]="i"
+      [isExpanded]="isExpanded"
+      [nodeMenuConfig]="nodeMenuConfig"
+      [hideTotal]="hideTotal"
+      [showDiff]="showDiff">
+    </tree-viewer-node>
+    <div class="sticky footer mat-app-background" fxLayout="row" *ngIf="data.total !== undefined || hideTotal">
+      <div class="cell sticky name footer-cell mat-app-background" fxLayoutAlign="start center">
+        <button mat-icon-button disabled></button>
+        {{footerLabel}}
+      </div>
+      <div *ngFor="let d of data.dimensions"
+           class="cell footer-cell"
+           [ngSwitch]="d.type"
+           fxLayoutAlign="end center">
+        <div *ngSwitchCase="'number'">{{d.total | number:(d.format || '1.0-2')}}</div>
+        <div *ngSwitchDefault>{{d.total | currency:'USD':'$'}}</div>
+      </div>
+      <div *ngIf="!hideTotal"
+           class="cell sticky value footer-cell mat-app-background"
+           fxLayoutAlign="end center">
+        {{data.total | currency:'USD':'$'}}
+        <button mat-icon-button disabled></button>
+      </div>
+    </div>
+  </div>
+  <ng-template #loadingData>
+    <h3>Loading...</h3>
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+  </ng-template>
+</div>

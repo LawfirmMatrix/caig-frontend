@@ -28,5 +28,6 @@ export interface TaxDetail {
   totalBp: number;
   totalLd: number;
   zip: string;
+  paymentCount: number;
   ssn?: string;
 }
