@@ -36,7 +36,7 @@ export const coreReducer = createReducer(
 );
 
 function validatePortal(storedPortal: string | null): Portal | null {
-  if (storedPortal && Object.values(Role).includes(storedPortal)) {
+  if (storedPortal && Object.keys(Portal).includes(storedPortal)) {
     return storedPortal as Portal;
   }
   return null;

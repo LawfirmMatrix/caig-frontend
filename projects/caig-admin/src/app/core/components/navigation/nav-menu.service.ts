@@ -13,9 +13,7 @@ export class NavMenuService {
         ];
       case Portal.CAIG:
         return [
-          settlements,
           employees,
-          payrolls,
           events,
           reports,
           // {
@@ -68,18 +66,6 @@ const surveys = {
   name: 'Surveys',
   icon: 'quiz',
   route: 'surveys',
-};
-
-const payrolls = {
-  name: 'Payrolls',
-  icon: 'payments',
-  route: 'payrolls',
-};
-
-const settlements = {
-  name: 'Settlements',
-  icon: 'gavel',
-  route: 'settlements',
 };
 
 const reports = {

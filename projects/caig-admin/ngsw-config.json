@@ -30,10 +30,10 @@
   "appData": {
     "changes": {
       "General": {
-
+        "Misc.": [ "Several bug fixes." ]
       },
       "CAIG": {
-
+        "Navigation": [ "Some pages previously listed in the left sidenav are now only accessible by Admins / Superadmins." ]
       },
       "Call Center": {
 

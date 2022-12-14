@@ -23,7 +23,7 @@
         <div fxLayout="column" *ngIf="isAdmin$ | async">
           <div fxLayoutAlign="center center" style="font-size: 14px; text-decoration: underline;">Admin Menu</div>
           <mat-nav-list>
-            <ng-container *ngFor="let item of adminMenu; last as last;">
+            <ng-container *ngFor="let item of adminMenu$ | async; last as last;">
               <a mat-list-item [routerLink]="[item.route]" [routerLinkActive]="'selected'">
                 <mat-icon color="primary">{{item.icon}}</mat-icon> {{item.name}}
               </a>
