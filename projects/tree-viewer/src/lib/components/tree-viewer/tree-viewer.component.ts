@@ -13,6 +13,7 @@ export class TreeViewerComponent<T extends TreeNode<T>> {
   @Input() public footerLabel: string = '';
   @Input() public totalLabel: string = 'Total';
   @Input() public hideTotal: boolean = false;
+  @Input() public hideFooter: boolean = false;
   @Input() public showDiff: boolean = false;
   @Input() public nodeMenuConfig: TreeNodeMenuConfig<T> | undefined;
   @Input() public isExpanded = true;

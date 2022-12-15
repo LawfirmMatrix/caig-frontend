@@ -23,7 +23,7 @@
 }
 .cell {
   padding: 0 10px;
-  width: 250px;
+  min-width: 250px;
   height: 48px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -32,17 +32,11 @@
 .tree-node {
   font-size: 14px;
 }
-.odd-node {
-  background-color: rgba(130,130,130,0.15);
-
-  .mat-app-background {
-    background-color: rgba(130,130,130,0.25);
-  }
-}
 .divider {
   border-bottom: 1px rgba(130, 130, 130, 0.75) solid;
 }
 .no-total {
+  min-width: 60px;
   max-width: 60px;
 }
 h3 {

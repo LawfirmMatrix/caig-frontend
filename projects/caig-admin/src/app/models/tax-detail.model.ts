@@ -29,5 +29,9 @@ export interface TaxDetail {
   totalLd: number;
   zip: string;
   paymentCount: number;
+  donation: number;
+  totalOwned: number;
+  employerMc: number;
+  employerSs: number;
   ssn?: string;
 }

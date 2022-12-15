@@ -1,0 +1,19 @@
+<div fxFlexFill fxLayout="column">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filters</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <dynamic-form [form]="form" [fields]="fields" [model]="model$ | async"></dynamic-form>
+    </mat-card-content>
+  </mat-card>
+  <div fxFlex>
+    <vs-table
+      id="all-payments"
+      [disableSelection]="true"
+      [columns]="columns"
+      [data]="data$ | async"
+      (rowClick)="viewEmployee($event.row.employeeId)">
+    </vs-table>
+  </div>
+</div>

@@ -21,16 +21,15 @@
       </div>
     </div>
     <tree-viewer-node
-      *ngFor="let node of data.nodes; let i = index;"
+      *ngFor="let node of data.nodes"
       (nodeExpanded)="nodeToggle.emit({node: node, isExpanded: $event})"
       [node]="node"
-      [nodeIndex]="i"
       [isExpanded]="isExpanded"
       [nodeMenuConfig]="nodeMenuConfig"
       [hideTotal]="hideTotal"
       [showDiff]="showDiff">
     </tree-viewer-node>
-    <div class="sticky footer mat-app-background" fxLayout="row" *ngIf="data.total !== undefined || hideTotal">
+    <div class="sticky footer mat-app-background" fxLayout="row" *ngIf="!hideFooter">
       <div class="cell sticky name footer-cell mat-app-background" fxLayoutAlign="start center">
         <button mat-icon-button disabled></button>
         {{footerLabel}}

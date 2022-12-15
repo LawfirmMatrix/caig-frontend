@@ -1,5 +1,4 @@
 <div class="tree-node divider"
-     [ngClass]="{'odd-node': nodeIndex % 2 === 1}"
      [ngStyle]="{fontWeight: node.nodes ? 'bold' : 'normal'}"
      fxLayout="row"
      fxLayoutAlign="start center">
@@ -59,11 +58,11 @@
 </div>
 <div *ngIf="isExpanded">
   <tree-viewer-node
-    *ngFor="let node of node.nodes; let i = index;"
+    *ngFor="let node of node.nodes"
     [node]="node"
-    [nodeIndex]="nodeIndex % 2 === 0 ? i + 1 : i"
     [level]="level + 1"
     [nodeMenuConfig]="nodeMenuConfig"
+    [isExpanded]="isExpanded"
     [hideTotal]="hideTotal"
     [showDiff]="showDiff">
   </tree-viewer-node>

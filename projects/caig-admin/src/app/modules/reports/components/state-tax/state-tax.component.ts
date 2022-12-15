@@ -14,7 +14,6 @@ import {TaxDetail} from '../../../../models/tax-detail.model';
 import {ReportsComponent} from '../reports/reports.component';
 import {ReportDataService} from '../../services/report-data.service';
 import {TreeData, TreeNode} from 'tree-viewer';
-import {sumBy} from 'lodash-es';
 
 @Component({
   selector: 'app-state-tax',
@@ -118,31 +117,307 @@ export class StateTaxComponent implements OnInit {
       startWith([]),
       shareReplay(),
     );
-  public treeData$: Observable<TreeData<TaxDetailNode> | null> = this.data$
-    .pipe(
-      map((data) => {
-        if (!data) {
-          return data;
-        }
-        const nodes: TaxDetailNode[] = [];
-        const headerFooterDimensions = [
-          { header: 'Year' },
-          { header: 'Quarter' },
-          { header: 'Month' },
-          { header: 'Date' },
-          { header: 'Employees in Payroll', total: 0, type: 'number' as 'number', format: '1.0-0' },
-          { header: 'Gross Wages', total: 0 },
-          { header: 'State Taxes', total: 0 },
-          { header: 'Fed Taxes', total: 0 },
-        ];
-        const treeData: TreeData<TaxDetailNode> = {
-          nodes,
-          total: sumBy(nodes, (n) => n.value),
-          dimensions: headerFooterDimensions,
-        };
-        return treeData;
-      })
-    );
+  // public treeData$: Observable<TreeData<TaxDetailNode> | null> = this.data$
+  //   .pipe(
+  //     map((data) => {
+  //       if (!data) {
+  //         return data;
+  //       }
+  //       const headerFooterDimensions = [
+  //         { header: 'Year' },
+  //         { header: 'Quarter' },
+  //         { header: 'Month' },
+  //         { header: 'Date' },
+  //         { header: 'Employees in Payroll', total: 13, type: 'number' as 'number', format: '1.0-0' },
+  //         { header: 'Gross Wages', total: 2836.90 },
+  //         { header: 'State Taxes', total: -280.85 },
+  //         { header: 'Fed Taxes', total: -624.12 },
+  //       ];
+  //       const nodes: TaxDetailNode[] = [
+  //         {
+  //           name: 'Year 2021',
+  //           value: 0,
+  //           dimensions: [
+  //             { value: null },
+  //             { value: null },
+  //             { value: null },
+  //             { value: null },
+  //             { value: 9, type: 'number' as 'number', format: '1.0-0' },
+  //             { value: 2474.08, type: 'currency' },
+  //             { value: -244.93, type: 'currency' },
+  //             { value: -544.30, type: 'currency' },
+  //           ],
+  //           nodes: [
+  //             {
+  //               name: 'Quarter 3 / 2021',
+  //               value: 0,
+  //               dimensions: [
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                 { value: 318.08, type: 'currency' },
+  //                 { value: -31.49, type: 'currency' },
+  //                 { value: -69.98, type: 'currency' },
+  //               ],
+  //               nodes: [
+  //                 {
+  //                   name: 'September 2021',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 318.08, type: 'currency' },
+  //                     { value: -31.49, type: 'currency' },
+  //                     { value: -69.98, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2021' },
+  //                         { value: '3' },
+  //                         { value: '9' },
+  //                         { value: '2021-09-15', type: 'date' },
+  //                         { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 318.08, type: 'currency' },
+  //                         { value: -31.49, type: 'currency' },
+  //                         { value: -69.98, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 },
+  //               ],
+  //             },
+  //             {
+  //               name: 'Quarter 4 / 2021',
+  //               value: 0,
+  //               dimensions: [
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: 8, type: 'number' as 'number', format: '1.0-0' },
+  //                 { value: 2156, type: 'currency' },
+  //                 { value: -213.44, type: 'currency' },
+  //                 { value: -474.32, type: 'currency' },
+  //               ],
+  //               nodes: [
+  //                 {
+  //                   name: 'October 2021',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 7, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 1868.50, type: 'currency' },
+  //                     { value: -184.98, type: 'currency' },
+  //                     { value: -411.07, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2021' },
+  //                         { value: '4' },
+  //                         { value: '10' },
+  //                         { value: '2021-10-07', type: 'date' },
+  //                         { value: 7, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 1868.50, type: 'currency' },
+  //                         { value: -184.98, type: 'currency' },
+  //                         { value: -411.07, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 },
+  //                 {
+  //                   name: 'December 2021',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 287.50, type: 'currency' },
+  //                     { value: -28.46, type: 'currency' },
+  //                     { value: -63.25, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2021' },
+  //                         { value: '4' },
+  //                         { value: '12' },
+  //                         { value: '2021-12-27', type: 'date' },
+  //                         { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 287.50, type: 'currency' },
+  //                         { value: -28.46, type: 'currency' },
+  //                         { value: -63.25, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 }
+  //               ],
+  //             }
+  //           ],
+  //         },
+  //         {
+  //           name: 'Year 2022',
+  //           value: 0,
+  //           dimensions: [
+  //             { value: null },
+  //             { value: null },
+  //             { value: null },
+  //             { value: null },
+  //             { value: 4, type: 'number' as 'number', format: '1.0-0' },
+  //             { value: 362.82, type: 'currency' },
+  //             { value: -35.92, type: 'currency' },
+  //             { value: -79.82, type: 'currency' },
+  //           ],
+  //           nodes: [
+  //             {
+  //               name: 'Quarter 2 / 2022',
+  //               value: 0,
+  //               dimensions: [
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: 3, type: 'number' as 'number', format: '1.0-0' },
+  //                 { value: 144.32, type: 'currency' },
+  //                 { value: -14.29, type: 'currency' },
+  //                 { value: -31.75, type: 'currency' },
+  //               ],
+  //               nodes: [
+  //                 {
+  //                   name: 'April 2022',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 2, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 92, type: 'currency' },
+  //                     { value: -9.11, type: 'currency' },
+  //                     { value: -20.24, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2022' },
+  //                         { value: '2' },
+  //                         { value: '4' },
+  //                         { value: '2022-04-15', type: 'date' },
+  //                         { value: 2, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 92, type: 'currency' },
+  //                         { value: -9.11, type: 'currency' },
+  //                         { value: -20.24, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 },
+  //                 {
+  //                   name: 'May 2022',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 52.32, type: 'currency' },
+  //                     { value: -5.18, type: 'currency' },
+  //                     { value: -11.51, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2022' },
+  //                         { value: '2' },
+  //                         { value: '5' },
+  //                         { value: '2022-05-03', type: 'date' },
+  //                         { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 52.32, type: 'currency' },
+  //                         { value: -5.18, type: 'currency' },
+  //                         { value: -11.51, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 }
+  //               ],
+  //             },
+  //             {
+  //               name: 'Quarter 3 / 2022',
+  //               value: 0,
+  //               dimensions: [
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: null },
+  //                 { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                 { value: 218.50, type: 'currency' },
+  //                 { value: -21.63, type: 'currency' },
+  //                 { value: -48.07, type: 'currency' },
+  //               ],
+  //               nodes: [
+  //                 {
+  //                   name: 'September 2022',
+  //                   value: 0,
+  //                   dimensions: [
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: null },
+  //                     { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                     { value: 218.50, type: 'currency' },
+  //                     { value: -21.63, type: 'currency' },
+  //                     { value: -48.07, type: 'currency' },
+  //                   ],
+  //                   nodes: [
+  //                     {
+  //                       name: '',
+  //                       value: 0,
+  //                       dimensions: [
+  //                         { value: '2022' },
+  //                         { value: '3' },
+  //                         { value: '9' },
+  //                         { value: '2022-09-20', type: 'date' },
+  //                         { value: 1, type: 'number' as 'number', format: '1.0-0' },
+  //                         { value: 218.50, type: 'currency' },
+  //                         { value: -21.63, type: 'currency' },
+  //                         { value: -48.07, type: 'currency' },
+  //                       ],
+  //                     }
+  //                   ],
+  //                 }
+  //               ],
+  //             },
+  //           ],
+  //         },
+  //       ];
+  //       const treeData: TreeData<TaxDetailNode> = {
+  //         nodes,
+  //         dimensions: headerFooterDimensions,
+  //       };
+  //       return treeData;
+  //     })
+  //   );
   constructor(
     private router: Router,
     private route: ActivatedRoute,

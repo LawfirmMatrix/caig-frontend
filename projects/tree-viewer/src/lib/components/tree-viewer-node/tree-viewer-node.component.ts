@@ -9,11 +9,10 @@ import {TreeNode, TreeNodeMenuConfig} from '../../interfaces';
 })
 export class TreeViewerNodeComponent<T extends TreeNode<T>> implements OnInit {
   @Input() public node!: T;
-  @Input() public isExpanded!: boolean;
   @Input() public nodeMenuConfig: TreeNodeMenuConfig<T> | undefined;
   @Input() public showDiff!: boolean;
   @Input() public hideTotal!: boolean;
-  @Input() public nodeIndex!: number;
+  @Input() public isExpanded!: boolean;
   @Input() public level: number = 0;
 
   @Output() public nodeExpanded = new EventEmitter<boolean>();

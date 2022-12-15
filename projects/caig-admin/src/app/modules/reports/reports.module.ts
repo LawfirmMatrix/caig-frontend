@@ -10,6 +10,7 @@ import {StateTaxComponent} from './components/state-tax/state-tax.component';
 import {NoContentComponent} from './components/no-content/no-content.component';
 import {ReportsComponent} from './components/reports/reports.component';
 import {TreeViewerModule} from 'tree-viewer';
+import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import {TreeViewerModule} from 'tree-viewer';
     ReportsListComponent,
     TaxInfoComponent,
     StateTaxComponent,
+    AllPaymentsDetailComponent,
   ],
 })
 export class ReportsModule { }
