@@ -27,6 +27,7 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
   ];
   public model$ = this.route.queryParams
     .pipe(
+      debounceTime(100),
       map((qp) => ({
         dates: {
           start: qp['fromDate'],

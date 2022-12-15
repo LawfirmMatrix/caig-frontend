@@ -1,13 +1,5 @@
-mat-toolbar {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  margin-bottom: 4px;
-  z-index: 5;
-}
-
 mat-card {
-  margin: 16px;
+  margin: 12px;
 }
 
 .mat-list-item:nth-child(odd) {

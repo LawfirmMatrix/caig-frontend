@@ -55,6 +55,7 @@ export class StateTaxComponent implements OnInit {
   ];
   public model$ = this.route.queryParams
     .pipe(
+      debounceTime(100),
       map((qp) => ({
         dates: {
           start: qp['fromDate'],

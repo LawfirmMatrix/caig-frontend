@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {configsList} from '../../configurations-routing.module';
+import {Routes} from '@angular/router';
 
 @Component({
   selector: 'app-config-list',
@@ -7,7 +8,5 @@ import {configsList} from '../../configurations-routing.module';
   styleUrls: ['./config-list.component.scss']
 })
 export class ConfigListComponent {
-  public list: string[] = configsList
-    .map((route) => route.path)
-    .filter((path): path is string => !!path);
+  public list: Routes = configsList;
 }

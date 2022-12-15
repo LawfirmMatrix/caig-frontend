@@ -4,6 +4,7 @@ import {ConfigurationsRoutingModule} from './configurations-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {ConfigListComponent} from './components/config-list/config-list.component';
 import {CustomSettingsComponent} from './components/custom-settings/custom-settings.component';
+import {ConfigurationsComponent} from './components/configurations/configurations.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import {CustomSettingsComponent} from './components/custom-settings/custom-setti
     SharedModule,
   ],
   declarations: [
+    ConfigurationsComponent,
     ConfigListComponent,
     CustomSettingsComponent,
   ],
