@@ -25,6 +25,10 @@ export class AllPaymentsDetailComponent extends TaxDetailComponent<TaxDetail> {
       field: 'settlementCode',
     }),
     new TextColumn({
+      title: 'Employee ID',
+      field: 'employeeId',
+    }),
+    new TextColumn({
       title: 'First',
       field: 'firstName',
     }),
@@ -133,6 +137,11 @@ export class AllPaymentsDetailComponent extends TaxDetailComponent<TaxDetail> {
     new CurrencyColumn({
       title: 'Donation',
       field: 'donation',
+      sum: true,
+    }),
+    new CurrencyColumn({
+      title: 'Owed',
+      field: 'totalOwed',
       sum: true,
     }),
     new CurrencyColumn({

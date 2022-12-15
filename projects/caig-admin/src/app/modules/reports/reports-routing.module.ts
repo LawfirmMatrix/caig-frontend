@@ -16,17 +16,17 @@ export const reportsList: Routes = [
   {
     path: 'gross-wages-and-withholdings-by-state-and-settlement',
     component: NoContentComponent,
-    data: { animation: 'x-by-state-and-settlement' },
+    data: { animation: 'x-by-state-and-settlement', disabled: true },
   },
   {
     path: 'withholdings-by-date-and-settlement',
     component: NoContentComponent,
-    data: { animation: 'x-by-date-and-settlement' },
+    data: { animation: 'x-by-date-and-settlement', disabled: true },
   },
   {
     path: 'gross-wages-and-withholdings-by-payroll-date',
     component: NoContentComponent,
-    data: { animation: 'gross-wages-and-withholdings-by-payroll-date' },
+    data: { animation: 'gross-wages-and-withholdings-by-payroll-date', disabled: true },
   },
   {
     path: 'all-payments-details',
@@ -36,7 +36,7 @@ export const reportsList: Routes = [
   {
     path: 'settlement-status-details',
     component: NoContentComponent,
-    data: { animation: 'settlement-status-details' },
+    data: { animation: 'settlement-status-details', disabled: true },
   },
   {
     path: '1099-and-w2-information',
@@ -46,32 +46,32 @@ export const reportsList: Routes = [
   {
     path: 'user-activity-report',
     component: NoContentComponent,
-    data: { animation: 'user-activity-report' },
+    data: { animation: 'user-activity-report', disabled: true },
   },
   {
     path: 'employee-confirmation-status',
     component: NoContentComponent,
-    data: { animation: 'employee-confirmation-status' },
+    data: { animation: 'employee-confirmation-status', disabled: true },
   },
   {
     path: 'employee-history',
     component: NoContentComponent,
-    data: { animation: 'employee-history' },
+    data: { animation: 'employee-history', disabled: true },
   },
   {
     path: 'employee-locations',
     component: NoContentComponent,
-    data: { animation: 'employee-history', isMap: true },
+    data: { animation: 'employee-history', isMap: true, disabled: true },
   },
   {
     path: 'employee-confirmation-status-by-location',
     component: NoContentComponent,
-    data: { animation: 'employee-confirmation-status-by-location', isMap: true },
+    data: { animation: 'employee-confirmation-status-by-location', isMap: true, disabled: true },
   },
   {
     path: 'union-membership-status-by-location',
     component: NoContentComponent,
-    data: { animation: 'union-membership-status-by-location', isMap: true },
+    data: { animation: 'union-membership-status-by-location', isMap: true, disabled: true },
   },
 ];
 

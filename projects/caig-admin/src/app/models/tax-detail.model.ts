@@ -30,7 +30,7 @@ export interface TaxDetail {
   zip: string;
   paymentCount: number;
   donation: number;
-  totalOwned: number;
+  totalOwed: number;
   employerMc: number;
   employerSs: number;
   ssn?: string;

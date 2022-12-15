@@ -35,7 +35,8 @@
       "CAIG": {
         "Navigation": [ "Some pages previously listed in the left sidenav are now only accessible by Admins / Superadmins." ],
         "Reports": [
-          "New report - State Tax Report"
+          "New report - State Tax Report",
+          "New report - All Payments Details"
         ]
       },
       "Call Center": {
