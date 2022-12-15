@@ -19,7 +19,7 @@
        class="cell"
        fxLayoutAlign="end center">
     <div *ngSwitchCase="'number'">{{d.value | number:(d.format || '1.0-2')}}</div>
-    <div *ngSwitchCase="'currency'">{{d.value | currency:'USD':'$'}}</div>
+    <div *ngSwitchCase="'currency'">{{d.value | currency:'USD':'$' | accounting}}</div>
     <div *ngSwitchCase="'date'">{{d.value | date:(d.format || 'shortDate')}}</div>
     <div *ngSwitchDefault>{{d.value}}</div>
   </div>
@@ -32,9 +32,9 @@
     </mat-progress-bar>
     <ng-template #showAmount>
       <div fxLayout="column" fxLayoutAlign="end center">
-        <div *ngIf="!hideTotal">{{node.value | currency:'USD':'$'}}</div>
+        <div *ngIf="!hideTotal">{{node.value | currency:'USD':'$' | accounting}}</div>
         <div *ngIf="showDiff" style="color: firebrick">
-          <div *ngIf="node.diff; else noDiff">{{node.diff | currency:'USD':'$'}}</div>
+          <div *ngIf="node.diff; else noDiff">{{node.diff | currency:'USD':'$' | accounting}}</div>
           <ng-template #noDiff>N/A</ng-template>
         </div>
       </div>

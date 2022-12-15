@@ -4,7 +4,6 @@ import {VsTableComponent} from './components/vs-table/vs-table.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {AccountingPipe} from './pipes/accounting.pipe';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -31,6 +30,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ExportDataComponent} from './components/export-data/export-data.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {FilterTogglesComponent} from './components/column-filter/filter-toggles/filter-toggles.component';
+import {PipesModule} from 'pipes';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,6 @@ import {FilterTogglesComponent} from './components/column-filter/filter-toggles/
     IconFilterComponent,
     ChangesFilterComponent,
     ExportDataComponent,
-    AccountingPipe,
     FilterTogglesComponent,
   ],
   imports: [
@@ -68,6 +67,7 @@ import {FilterTogglesComponent} from './components/column-filter/filter-toggles/
     MatGridListModule,
     MatSlideToggleModule,
     MatDialogModule,
+    PipesModule,
   ],
   exports: [
     VsTableComponent

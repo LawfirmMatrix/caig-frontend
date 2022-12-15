@@ -8,6 +8,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {VisibleMenuPipe} from './pipes/visible-menu.pipe';
+import {PipesModule} from 'pipes';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {VisibleMenuPipe} from './pipes/visible-menu.pipe';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    PipesModule
   ],
   exports: [
     TreeViewerComponent

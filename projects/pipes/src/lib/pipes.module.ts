@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import {SafePipe} from './safe.pipe';
+import {AccountingPipe} from './accounting.pipe';
 
 @NgModule({
   declarations: [
-    SafePipe
+    SafePipe,
+    AccountingPipe,
   ],
   exports: [
-    SafePipe
+    SafePipe,
+    AccountingPipe,
   ]
 })
 export class PipesModule { }

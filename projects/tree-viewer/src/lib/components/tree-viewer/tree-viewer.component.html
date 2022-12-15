@@ -39,12 +39,12 @@
            [ngSwitch]="d.type"
            fxLayoutAlign="end center">
         <div *ngSwitchCase="'number'">{{d.total | number:(d.format || '1.0-2')}}</div>
-        <div *ngSwitchDefault>{{d.total | currency:'USD':'$'}}</div>
+        <div *ngSwitchDefault>{{d.total | currency:'USD':'$' | accounting}}</div>
       </div>
       <div *ngIf="!hideTotal"
            class="cell sticky value footer-cell mat-app-background"
            fxLayoutAlign="end center">
-        {{data.total | currency:'USD':'$'}}
+        {{data.total | currency:'USD':'$' | accounting}}
         <button mat-icon-button disabled></button>
       </div>
     </div>
