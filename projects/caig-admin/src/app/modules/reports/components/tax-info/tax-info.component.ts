@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TableColumn, CalculateColumn, TextColumn, CurrencyColumn} from 'vs-table';
+import {TableColumn, TextColumn, CurrencyColumn} from 'vs-table';
 import {ReportDataService} from '../../services/report-data.service';
 import {TaxDetail} from '../../../../models/tax-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
@@ -12,12 +12,8 @@ import {TaxDetailComponent} from '../tax-detail.component';
   styleUrls: ['./tax-info.component.scss']
 })
 export class TaxInfoComponent extends TaxDetailComponent<TaxDetailTableItem> {
-  public override columns: TableColumn<TaxDetailTableItem>[] = [
-    new CalculateColumn({
-      title: 'SSN',
-      field: 'ssn',
-      calculate: (row) => row.ssn || ReportsComponent.ENCRYPTED_SSN,
-    }),
+  public columns: TableColumn<TaxDetailTableItem>[] = [
+    ReportsComponent.SSN_COL,
     new TextColumn({
       title: 'Settlement',
       field: 'settlementCode',

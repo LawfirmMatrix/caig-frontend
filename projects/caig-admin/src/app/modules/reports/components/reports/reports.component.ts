@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {startCase} from 'lodash-es';
+import {CalculateColumn, TableColumn} from 'vs-table';
+import {TaxDetail} from '../../../../models/tax-detail.model';
 
 @Component({
   selector: 'app-reports',
@@ -8,7 +10,11 @@ import {startCase} from 'lodash-es';
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent {
-  public static readonly ENCRYPTED_SSN = 'xxx-xxx-xxxx';
+  public static readonly SSN_COL: TableColumn<TaxDetail> = new CalculateColumn({
+    title: 'SSN',
+    field: 'ssn',
+    calculate: (row) => row.ssn || 'xxx-xxx-xxxx',
+  });
   public componentHeader: string | undefined;
   public decrypt = false;
   constructor(public route: ActivatedRoute) { }

@@ -1,15 +1,13 @@
 import {ReportDataService} from '../services/report-data.service';
 import {Router, ActivatedRoute} from '@angular/router';
-import {map, switchMap} from 'rxjs/operators';
-import {startWith, debounceTime} from 'rxjs';
-import {TableColumn} from 'vs-table';
+import {map, switchMap, shareReplay} from 'rxjs/operators';
+import {startWith, debounceTime, distinctUntilChanged, skip} from 'rxjs';
 import {TaxDetail} from '../../../models/tax-detail.model';
 import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, CheckboxField} from 'dynamic-form';
-import {QueryParams} from '@ngrx/data';
+import {isEqual} from 'lodash-es';
 
 export abstract class TaxDetailComponent<T extends TaxDetail> {
-  public abstract columns: TableColumn<T>[];
   public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
@@ -33,19 +31,22 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
           start: qp['fromDate'],
           end: qp['toDate'],
         },
-        ...this.modelParams(qp),
-      }))
+        allSettlements: qp['allSettlements'] === 'true',
+        state: qp['state'],
+      })),
+      shareReplay(),
     );
   public data$ = this.model$
     .pipe(
       switchMap((model) =>
-        this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements)
+        this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements, model.state)
           .pipe(
             map((data) => data.map((row) => ({...row, _state: row.state, _totalBp: row.totalBp}))),
             startWith(null)
           )
       ),
       startWith([]),
+      shareReplay(),
     );
   constructor(
     protected dataService: ReportDataService,
@@ -53,23 +54,21 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
     protected route: ActivatedRoute,
   ) {
     this.form.valueChanges
-      .pipe(debounceTime(100))
+      .pipe(
+        debounceTime(100),
+        distinctUntilChanged(isEqual),
+        skip(1),
+      )
       .subscribe((value) => {
         const queryParams = {
           fromDate: value.dates.start,
           toDate: value.dates.end,
-          ...this.modelForm(value),
+          allSettlements: value.allSettlements,
+          state: value.state,
         };
         this.router.navigate([], {queryParams, queryParamsHandling: 'merge', replaceUrl: true});
       });
-  }
-  protected modelForm(formValue: any): any {
-    return { allSettlements: formValue.allSettlements };
-  }
-  protected modelParams(queryParams: QueryParams): any {
-    return {
-      allSettlements: queryParams['allSettlements'] === 'true',
-    };
+    this.model$.subscribe((model) => this.form.patchValue(model));
   }
   public viewEmployee(employeeId: number): void {
     this.router.navigate(['/employees', employeeId, 'view']);

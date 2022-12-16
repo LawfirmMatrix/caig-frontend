@@ -4,7 +4,7 @@
       <mat-card-title>Filters</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <dynamic-form [form]="form" [fields]="fields" [model]="model$ | async"></dynamic-form>
+      <dynamic-form [form]="form" [fields]="fields"></dynamic-form>
     </mat-card-content>
   </mat-card>
   <mat-card fxFlex fxLayout="column">
@@ -16,7 +16,7 @@
     <div fxFlex class="container">
       <vs-table
         id="state-tax"
-        [disableRowClick]="true"
+        (rowClick)="viewEmployee($event.row.employeeId)"
         [disableSelection]="true"
         [columns]="columns"
         [data]="data$ | async"
@@ -30,12 +30,15 @@
       </mat-card-title>
     </mat-card-header>
     <p>Note: months will be skipped if there were no payments in them.</p>
-    <div fxFlex class="container">
-      <tree-viewer
-        [data]="treeData$ | async"
-        footerLabel="Total in requested period"
-        [hideFooter]="true"
-        [hideTotal]="true"></tree-viewer>
+    <div fxFlex fxLayoutAlign="center center" class="container">
+      <h1>Still working on this...</h1>
     </div>
+<!--    <div fxFlex class="container">-->
+<!--      <tree-viewer-->
+<!--        [data]="treeData$ | async"-->
+<!--        footerLabel="Total in requested period"-->
+<!--        [hideFooter]="true"-->
+<!--        [hideTotal]="true"></tree-viewer>-->
+<!--    </div>-->
   </mat-card>
 </div>
