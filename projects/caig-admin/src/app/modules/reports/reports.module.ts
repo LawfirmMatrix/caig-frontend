@@ -11,6 +11,8 @@ import {NoContentComponent} from './components/no-content/no-content.component';
 import {ReportsComponent} from './components/reports/reports.component';
 import {TreeViewerModule} from 'tree-viewer';
 import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
+import {EmployeeLocationsComponent} from './components/employee-locations/employee-locations.component';
+import {WorldMapModule} from '../shared/world-map/world-map.module';
 
 @NgModule({
   imports: [
@@ -20,6 +22,7 @@ import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-p
     VsTableModule,
     DynamicFormModule,
     TreeViewerModule,
+    WorldMapModule,
   ],
   declarations: [
     NoContentComponent,
@@ -30,6 +33,7 @@ import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-p
     TaxInfoComponent,
     StateTaxComponent,
     AllPaymentsDetailComponent,
+    EmployeeLocationsComponent,
   ],
 })
 export class ReportsModule { }

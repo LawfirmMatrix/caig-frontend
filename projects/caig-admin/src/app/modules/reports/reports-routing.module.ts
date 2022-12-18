@@ -6,6 +6,7 @@ import {StateTaxComponent} from './components/state-tax/state-tax.component';
 import {NoContentComponent} from './components/no-content/no-content.component';
 import {ReportsComponent} from './components/reports/reports.component';
 import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
+import {EmployeeLocationsComponent} from './components/employee-locations/employee-locations.component';
 
 export const reportsList: Routes = [
   {
@@ -60,17 +61,17 @@ export const reportsList: Routes = [
   },
   {
     path: 'employee-locations',
-    component: NoContentComponent,
+    component: EmployeeLocationsComponent,
     data: { animation: 'employee-history', isMap: true, disabled: true },
   },
   {
     path: 'employee-confirmation-status-by-location',
-    component: NoContentComponent,
+    component: EmployeeLocationsComponent,
     data: { animation: 'employee-confirmation-status-by-location', isMap: true, disabled: true },
   },
   {
     path: 'union-membership-status-by-location',
-    component: NoContentComponent,
+    component: EmployeeLocationsComponent,
     data: { animation: 'union-membership-status-by-location', isMap: true, disabled: true },
   },
 ];
