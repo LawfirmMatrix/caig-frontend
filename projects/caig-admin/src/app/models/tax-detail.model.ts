@@ -34,4 +34,5 @@ export interface TaxDetail {
   employerMc: number;
   employerSs: number;
   ssn?: string;
+  payrollDate?: string;
 }

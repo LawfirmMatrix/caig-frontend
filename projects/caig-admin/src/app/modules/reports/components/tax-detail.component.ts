@@ -6,6 +6,7 @@ import {TaxDetail} from '../../../models/tax-detail.model';
 import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, CheckboxField} from 'dynamic-form';
 import {isEqual} from 'lodash-es';
+import {coerceBooleanProperty} from "@angular/cdk/coercion";
 
 export abstract class TaxDetailComponent<T extends TaxDetail> {
   public form = new UntypedFormGroup({});
@@ -18,7 +19,7 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
       new CheckboxField({
         key: 'allSettlements',
         label: 'All settlements',
-        value: false,
+        value: true,
         position: 'start',
       }),
     ]
@@ -26,14 +27,17 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
   public model$ = this.route.queryParams
     .pipe(
       debounceTime(100),
-      map((qp) => ({
-        dates: {
-          start: qp['fromDate'],
-          end: qp['toDate'],
-        },
-        allSettlements: qp['allSettlements'] === 'true',
-        state: qp['state'],
-      })),
+      map((qp) => {
+        const allSettlementsKey = 'allSettlements';
+        return {
+          dates: {
+            start: qp['fromDate'],
+            end: qp['toDate'],
+          },
+          allSettlements: !qp[allSettlementsKey] || coerceBooleanProperty(qp[allSettlementsKey]),
+          state: qp['state'],
+        };
+      }),
       shareReplay(),
     );
   public data$ = this.model$
