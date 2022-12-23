@@ -30,15 +30,13 @@
       </mat-card-title>
     </mat-card-header>
     <p>Note: months will be skipped if there were no payments in them.</p>
-    <div fxFlex fxLayoutAlign="center center" class="container">
-      <h1>Still working on this...</h1>
+    <div fxFlex class="container">
+      <vs-tree-viewer
+        [data]="treeData$ | async"
+        footerLabel="Total in requested period"
+        [hideTotal]="true"
+        [isExpanded]="false">
+      </vs-tree-viewer>
     </div>
-<!--    <div fxFlex class="container">-->
-<!--      <tree-viewer-->
-<!--        [data]="treeData$ | async"-->
-<!--        footerLabel="Total in requested period"-->
-<!--        [hideFooter]="true"-->
-<!--        [hideTotal]="true"></tree-viewer>-->
-<!--    </div>-->
   </mat-card>
 </div>

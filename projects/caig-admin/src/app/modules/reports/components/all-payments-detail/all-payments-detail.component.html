@@ -8,36 +8,12 @@
     </mat-card-content>
   </mat-card>
   <div fxFlex>
-    <mat-tab-group mat-stretch-tabs [selectedIndex]="1">
-      <mat-tab label="Summary" disabled>
-        <ng-template matTabContent>
-          <vs-table
-            id="all-payments-summary"
-            [data]="[]"
-            [columns]="summaryColumns"
-          ></vs-table>
-        </ng-template>
-      </mat-tab>
-      <mat-tab label="Aggregated by Employee">
-        <ng-template matTabContent>
-          <vs-table
-            id="all-payments-employee"
-            [disableSelection]="true"
-            [data]="data$ | async"
-            [columns]="employeeColumns"
-            (rowClick)="viewEmployee($event.row.employeeId)"
-          ></vs-table>
-        </ng-template>
-      </mat-tab>
-      <mat-tab label="Sequence" disabled>
-        <ng-template matTabContent>
-          <vs-table
-            id="all-payments-sequence"
-            [data]="[]"
-            [columns]="sequenceColumns"
-          ></vs-table>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+    <vs-table
+      id="all-payments-employee"
+      [disableSelection]="true"
+      [data]="data$ | async"
+      [columns]="columns"
+      (rowClick)="viewEmployee($event.row.employeeId)"
+    ></vs-table>
   </div>
 </div>

@@ -1,0 +1,67 @@
+<div fxFlex fxLayout="column" cdkVirtualScrollingElement>
+  <div fxLayout="row" class="header sticky mat-app-background" [style.minWidth.px]="minWidth">
+    <div class="sticky toggle-all">
+      <button mat-icon-button aria-label="toggle all" (click)="toggleExpandAll()">
+        <mat-icon>{{isExpanded ? 'unfold_less' : 'unfold_more'}}</mat-icon>
+      </button>
+    </div>
+    <div class="sticky cell name mat-app-background" fxLayoutAlign="center center">{{headerLabel}}</div>
+    <div *ngFor="let cell of data?.dimensions"
+         class="cell"
+         [fxLayoutAlign]="cell.type === 'number' || cell.type === 'currency' ? 'end center' : 'start center'">
+      {{cell.header}}
+    </div>
+    <div *ngIf="!hideTotal" class="sticky cell total mat-app-background" fxLayoutAlign="center center">
+      {{totalLabel}}
+    </div>
+  </div>
+  <cdk-virtual-scroll-viewport itemSize="48" fxFlex>
+    <div *cdkVirtualFor="let node of nodes; let i = index;" fxLayout="row" [style.minWidth.px]="minWidth" [ngClass]="{'even-row': i % 2 === 0}">
+      <div class="sticky cell name mat-app-background" fxLayout="row" fxLayoutAlign="start center">
+        <div [style.width.px]="node.depth * 40"></div>
+        <div *ngIf="data && node.depth < data.maxDepth; else endNode" fxLayout="row" fxLayoutAlign="start center">
+          <button mat-icon-button [attr.aria-label]="'toggle ' + node.name" (click)="toggleExpand(node, i)">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{expansionModel.isSelected(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <b>{{node.name}}</b>
+        </div>
+        <ng-template #endNode>
+          <div>{{node.name}}</div>
+        </ng-template>
+      </div>
+      <div *ngFor="let cell of node.dimensions"
+           class="cell"
+           [ngSwitch]="cell.type"
+           [ngClass]="{'bold': data && node.depth < data.maxDepth}"
+           [fxLayoutAlign]="cell.type === 'number' || cell.type === 'currency' ? 'end center' : 'start center'">
+        <div *ngSwitchCase="'currency'">{{cell.value | currency:'USD':'$' | accounting}}</div>
+        <div *ngSwitchCase="'number'">{{cell.value | number:cell.format || '1.0-2'}}</div>
+        <div *ngSwitchCase="'date'">{{cell.value | date:cell.format || 'shortDate'}}</div>
+        <div *ngSwitchDefault>{{cell.value}}</div>
+      </div>
+      <div *ngIf="!hideTotal" class="sticky cell total mat-app-background" fxLayoutAlign="end center">
+        <div>{{node.value | currency:'USD':'$' | accounting}}</div>
+        <div *ngIf="showDiff" class="diff">
+          <div *ngIf="node.diff; else noDiff">{{node.diff | currency:'USD':'$' | accounting}}</div>
+          <ng-template #noDiff>N/A</ng-template>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+  <div *ngIf="!hideFooter" fxLayout="row" class="footer sticky mat-app-background bold" [style.minWidth.px]="minWidth">
+    <div class="sticky cell name mat-app-background" fxLayoutAlign="center center">{{footerLabel}}</div>
+    <div *ngFor="let cell of data?.dimensions"
+         class="cell"
+         [ngSwitch]="cell.type"
+         [fxLayoutAlign]="cell.type === 'number' || cell.type === 'currency' ? 'end center' : 'start center'">
+      <div *ngSwitchCase="'number'">{{cell.total | number:cell.format || '1.0-2'}}</div>
+      <div *ngSwitchCase="'currency'">{{cell.total | currency:'USD':'$' | accounting}}</div>
+      <div *ngSwitchDefault>{{cell.total}}</div>
+    </div>
+    <div *ngIf="!hideTotal" class="sticky cell total mat-app-background" fxLayoutAlign="end center">
+      {{data?.total | currency:'USD':'$'}}
+    </div>
+  </div>
+</div>

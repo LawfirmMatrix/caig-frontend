@@ -9,8 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:survey": "ng build pipes && ng build notifications && ng build dynamic-form && ng build mock-api && ng build shared-components && ng build survey",
-    "build:caig-admin": "ng build pipes && ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build shared-components && ng build sidenav-stack && ng build tree-viewer && ng build caig-admin",
-    "build:libs": "ng build pipes && ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build mock-api && ng build shared-components && ng build sidenav-stack && ng build tree-viewer"
+    "build:caig-admin": "ng build pipes && ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build shared-components && ng build sidenav-stack && ng build vs-tree-viewer && ng build caig-admin",
+    "build:libs": "ng build pipes && ng build notifications && ng build export-csv && ng build vs-table && ng build dynamic-form && ng build file-upload && ng build mock-api && ng build shared-components && ng build sidenav-stack && ng build vs-tree-viewer"
   },
   "private": true,
   "dependencies": {

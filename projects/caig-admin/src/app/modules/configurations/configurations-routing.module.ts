@@ -8,47 +8,47 @@ export const configsList: Routes = [
   {
     path: 'custom-settings',
     component: CustomSettingsComponent,
-    data: { animation: 'custom-settings', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'employee-statuses',
     component: CustomSettingsComponent,
-    data: { animation: 'employee-statuses', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'employee-tags',
     component: CustomSettingsComponent,
-    data: { animation: 'employee-tags', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'event-groups',
     component: CustomSettingsComponent,
-    data: { animation: 'event-groups', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'event-types',
     component: CustomSettingsComponent,
-    data: { animation: 'event-types', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'state-rates',
     component: CustomSettingsComponent,
-    data: { animation: 'state-rates', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'fed-rates',
     component: CustomSettingsComponent,
-    data: { animation: 'fed-rates', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'confirmation-methods',
     component: CustomSettingsComponent,
-    data: { animation: 'confirmation-methods', disabled: true },
+    data: { disabled: true },
   },
   {
     path: 'surveys',
     component: CustomSettingsComponent,
-    data: { animation: 'surveys', disabled: true },
+    data: { disabled: true },
   },
 ];
 

@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/tree-viewer'),
+      dir: require('path').join(__dirname, '../../coverage/vs-tree-viewer'),
       subdir: '.',
       reporters: [
         { type: 'html' },

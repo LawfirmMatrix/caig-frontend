@@ -543,23 +543,23 @@
         }
       }
     },
-    "tree-viewer": {
+    "vs-tree-viewer": {
       "projectType": "library",
-      "root": "projects/tree-viewer",
-      "sourceRoot": "projects/tree-viewer/src",
+      "root": "projects/vs-tree-viewer",
+      "sourceRoot": "projects/vs-tree-viewer/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/tree-viewer/ng-package.json"
+            "project": "projects/vs-tree-viewer/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/tree-viewer/tsconfig.lib.prod.json"
+              "tsConfig": "projects/vs-tree-viewer/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/tree-viewer/tsconfig.lib.json"
+              "tsConfig": "projects/vs-tree-viewer/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -567,9 +567,9 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/tree-viewer/src/test.ts",
-            "tsConfig": "projects/tree-viewer/tsconfig.spec.json",
-            "karmaConfig": "projects/tree-viewer/karma.conf.js"
+            "main": "projects/vs-tree-viewer/src/test.ts",
+            "tsConfig": "projects/vs-tree-viewer/tsconfig.spec.json",
+            "karmaConfig": "projects/vs-tree-viewer/karma.conf.js"
           }
         }
       }

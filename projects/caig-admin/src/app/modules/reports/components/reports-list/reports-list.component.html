@@ -4,7 +4,7 @@
   </mat-card-header>
   <mat-card-content>
     <mat-list>
-      <mat-list-item *ngFor="let item of list">
+      <mat-list-item *ngFor="let item of reports">
         <a mat-button [routerLink]="item.path" [disabled]="item.data && !!item.data['disabled']">
           <mat-icon *ngIf="item.data && item.data['isMap']">public</mat-icon>
           {{item.path | startCase}}

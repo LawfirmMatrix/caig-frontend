@@ -5,13 +5,14 @@ import {TaxDetail} from '../../../../models/tax-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ReportsComponent} from '../reports/reports.component';
 import {TaxDetailComponent} from '../tax-detail.component';
+import {map, filter} from 'rxjs/operators';
 
 @Component({
   selector: 'app-tax-info',
   templateUrl: './tax-info.component.html',
   styleUrls: ['./tax-info.component.scss']
 })
-export class TaxInfoComponent extends TaxDetailComponent<TaxDetailTableItem> {
+export class TaxInfoComponent extends TaxDetailComponent {
   public columns: TableColumn<TaxDetailTableItem>[] = [
     ReportsComponent.SSN_COL,
     new TextColumn({
@@ -107,6 +108,10 @@ export class TaxInfoComponent extends TaxDetailComponent<TaxDetailTableItem> {
       sum: true,
     })
   ];
+  public tableData$ = this.data$.pipe(
+    filter((data): data is TaxDetail[] => !!data),
+    map((data) => data.map((d) => ({...d, _state: d.state, _totalBp: d.totalBp}))),
+  );
   constructor(
     protected override dataService: ReportDataService,
     protected override router: Router,
