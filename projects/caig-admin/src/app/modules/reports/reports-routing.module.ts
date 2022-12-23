@@ -30,9 +30,19 @@ export const reportsList: Routes = [
     data: { disabled: true },
   },
   {
-    path: 'all-payments-details',
+    path: 'all-payments-details-summary',
+    component: NoContentComponent,
+    data: { disabled: true },
+  },
+  {
+    path: 'all-payments-details-by-employee',
     component: AllPaymentsDetailComponent,
     data: { hasSsn: true },
+  },
+  {
+    path: 'all-payments-details-sequence',
+    component: NoContentComponent,
+    data: { disabled: true },
   },
   {
     path: 'settlement-status-details',
