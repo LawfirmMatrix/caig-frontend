@@ -1,14 +1,14 @@
 import {ReportDataService} from '../services/report-data.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {map, switchMap, shareReplay} from 'rxjs/operators';
-import {startWith, debounceTime, distinctUntilChanged, skip} from 'rxjs';
-import {TaxDetail} from '../../../models/tax-detail.model';
+import {startWith, debounceTime, distinctUntilChanged, skip, Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, CheckboxField} from 'dynamic-form';
 import {isEqual} from 'lodash-es';
 import {coerceBooleanProperty} from "@angular/cdk/coercion";
+import {TaxDetail} from '../../../models/tax-detail.model';
 
-export abstract class TaxDetailComponent<T extends TaxDetail> {
+export abstract class TaxDetailComponent {
   public form = new UntypedFormGroup({});
   public fields: FieldBase<any>[][] = [
     [
@@ -40,16 +40,12 @@ export abstract class TaxDetailComponent<T extends TaxDetail> {
       }),
       shareReplay(),
     );
-  public data$ = this.model$
+  public data$: Observable<TaxDetail[] | null> = this.model$
     .pipe(
       switchMap((model) =>
         this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements, model.state)
-          .pipe(
-            map((data) => data.map((row) => ({...row, _state: row.state, _totalBp: row.totalBp}))),
-            startWith(null)
-          )
+          .pipe(startWith(null))
       ),
-      startWith([]),
       shareReplay(),
     );
   constructor(

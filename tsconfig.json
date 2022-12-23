@@ -40,11 +40,11 @@
       "sidenav-stack": [
         "dist/sidenav-stack"
       ],
-      "tree-viewer": [
-        "dist/tree-viewer"
-      ],
       "vs-table": [
         "dist/vs-table"
+      ],
+      "vs-tree-viewer": [
+        "dist/vs-tree-viewer"
       ]
     },
     "importHelpers": true,

@@ -10,7 +10,7 @@ on:
       - 'projects/vs-table/**'
       - 'projects/export-csv/**'
       - 'projects/sidenav-stack/**'
-      - 'projects/tree-viewer/**'
+      - 'projects/vs-tree-viewer/**'
 
 env:
   AZURE_WEBAPP_NAME: caigsurveytest

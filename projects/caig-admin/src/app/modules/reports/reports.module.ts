@@ -7,10 +7,12 @@ import {VsTableModule} from 'vs-table';
 import {DynamicFormModule} from 'dynamic-form';
 import {NoContentComponent} from './components/no-content/no-content.component';
 import {ReportsComponent} from './components/reports/reports.component';
-import {TreeViewerModule} from 'tree-viewer';
 import {EmployeeLocationsComponent} from './components/employee-locations/employee-locations.component';
 import {WorldMapModule} from '../shared/world-map/world-map.module';
-import {PaymentsAndTaxesComponent} from "./components/payment-and-taxes/payments-and-taxes.component";
+import {StateTaxComponent} from './components/state-tax/state-tax.component';
+import {TaxInfoComponent} from './components/tax-info/tax-info.component';
+import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
+import {VsTreeViewerModule} from 'vs-tree-viewer';
 
 @NgModule({
   imports: [
@@ -19,7 +21,7 @@ import {PaymentsAndTaxesComponent} from "./components/payment-and-taxes/payments
     SharedModule,
     VsTableModule,
     DynamicFormModule,
-    TreeViewerModule,
+    VsTreeViewerModule,
     WorldMapModule,
   ],
   declarations: [
@@ -29,7 +31,9 @@ import {PaymentsAndTaxesComponent} from "./components/payment-and-taxes/payments
     ReportsComponent,
     ReportsListComponent,
     EmployeeLocationsComponent,
-    PaymentsAndTaxesComponent,
+    StateTaxComponent,
+    TaxInfoComponent,
+    AllPaymentsDetailComponent,
   ],
 })
 export class ReportsModule { }

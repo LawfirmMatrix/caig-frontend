@@ -1,15 +1,17 @@
 export interface TreeData<T extends TreeNode<T>> {
   nodes: T[];
-  dimensions?: {header: string, total?: number, type?: 'number', format?: string}[];
+  maxDepth: number;
+  dimensions?: {header: string, total?: number, type?: 'number' | 'currency', format?: string}[];
   total?: number;
 }
 
 export interface TreeNode<T extends TreeNode<T>> {
   name: string;
-  value: any;
+  depth: number;
+  parent: T | null;
+  value?: any;
   dimensions?: {value: any, type?: 'number' | 'currency' | 'date', format?: string}[];
   diff?: any;
-  nodes?: T[];
 }
 
 export interface NodeExpandToggle<T extends TreeNode<T>> {

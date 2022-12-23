@@ -8,5 +8,5 @@ import {Routes} from '@angular/router';
   styleUrls: ['./reports-list.component.scss']
 })
 export class ReportsListComponent {
-  public list: Routes = reportsList;
+  public reports: Routes = reportsList;
 }

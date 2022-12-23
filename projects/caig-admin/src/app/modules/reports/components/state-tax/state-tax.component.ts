@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {SelectField} from 'dynamic-form';
-import {map, filter} from 'rxjs/operators';
+import {map, filter, switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {tap, Observable} from 'rxjs';
+import {tap, Observable, startWith} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {settlementStates} from '../../../../enums/store/selectors/enums.selectors';
@@ -12,15 +12,17 @@ import {TableColumn, TextColumn, NumberColumn, CurrencyColumn} from 'vs-table';
 import {TaxDetail} from '../../../../models/tax-detail.model';
 import {ReportsComponent} from '../reports/reports.component';
 import {ReportDataService} from '../../services/report-data.service';
-import {TreeData, TreeNode} from 'tree-viewer';
 import {TaxDetailComponent} from '../tax-detail.component';
+import {groupBy, sumBy} from 'lodash-es';
+import * as moment from 'moment';
+import {TreeData, TreeNode} from 'vs-tree-viewer';
 
 @Component({
   selector: 'app-state-tax',
   templateUrl: './state-tax.component.html',
   styleUrls: ['./state-tax.component.scss']
 })
-export class StateTaxComponent extends TaxDetailComponent<TaxDetail> {
+export class StateTaxComponent extends TaxDetailComponent {
   public columns: TableColumn<TaxDetail>[] = [
     ReportsComponent.SSN_COL,
     new TextColumn({
@@ -61,305 +63,147 @@ export class StateTaxComponent extends TaxDetailComponent<TaxDetail> {
       sum: true,
     })
   ];
-  public treeData$: Observable<TreeData<TaxDetailNode> | null> = this.data$
+  public treeData$: Observable<TreeData<TaxDetailNode> | null> = this.model$
     .pipe(
+      switchMap((model) =>
+        this.dataService.paymentDetail(model.dates.start, model.dates.end, model.allSettlements, model.state)
+          .pipe(startWith(null))
+      ),
       map((data) => {
         if (!data) {
           return data;
         }
+
         const headerFooterDimensions = [
           { header: 'Year' },
           { header: 'Quarter' },
           { header: 'Month' },
           { header: 'Date' },
-          { header: 'Employees in Payroll', total: 13, type: 'number' as 'number', format: '1.0-0' },
-          { header: 'Gross Wages', total: 2836.90 },
-          { header: 'State Taxes', total: -280.85 },
-          { header: 'Fed Taxes', total: -624.12 },
+          { header: 'Employees', total: 0, type: 'number' as 'number', format: '1.0-0' },
+          { header: 'Gross Wages', total: 0, type: 'currency' as 'currency' },
+          { header: 'State Taxes', total: 0, type: 'currency' as 'currency'},
+          { header: 'Fed Taxes', total: 0, type: 'currency' as 'currency' },
         ];
-        // const nodes: TaxDetailNode[] = [
-        //   {
-        //     name: 'Year 2021',
-        //     value: 0,
-        //     dimensions: [
-        //       { value: null },
-        //       { value: null },
-        //       { value: null },
-        //       { value: null },
-        //       { value: 9, type: 'number' as 'number', format: '1.0-0' },
-        //       { value: 2474.08, type: 'currency' },
-        //       { value: -244.93, type: 'currency' },
-        //       { value: -544.30, type: 'currency' },
-        //     ],
-        //     nodes: [
-        //       {
-        //         name: 'Quarter 3 / 2021',
-        //         value: 0,
-        //         dimensions: [
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //           { value: 318.08, type: 'currency' },
-        //           { value: -31.49, type: 'currency' },
-        //           { value: -69.98, type: 'currency' },
-        //         ],
-        //         nodes: [
-        //           {
-        //             name: 'September 2021',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 318.08, type: 'currency' },
-        //               { value: -31.49, type: 'currency' },
-        //               { value: -69.98, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2021' },
-        //                   { value: '3' },
-        //                   { value: '9' },
-        //                   { value: '2021-09-15', type: 'date' },
-        //                   { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 318.08, type: 'currency' },
-        //                   { value: -31.49, type: 'currency' },
-        //                   { value: -69.98, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           },
-        //         ],
-        //       },
-        //       {
-        //         name: 'Quarter 4 / 2021',
-        //         value: 0,
-        //         dimensions: [
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: 8, type: 'number' as 'number', format: '1.0-0' },
-        //           { value: 2156, type: 'currency' },
-        //           { value: -213.44, type: 'currency' },
-        //           { value: -474.32, type: 'currency' },
-        //         ],
-        //         nodes: [
-        //           {
-        //             name: 'October 2021',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 7, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 1868.50, type: 'currency' },
-        //               { value: -184.98, type: 'currency' },
-        //               { value: -411.07, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2021' },
-        //                   { value: '4' },
-        //                   { value: '10' },
-        //                   { value: '2021-10-07', type: 'date' },
-        //                   { value: 7, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 1868.50, type: 'currency' },
-        //                   { value: -184.98, type: 'currency' },
-        //                   { value: -411.07, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           },
-        //           {
-        //             name: 'December 2021',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 287.50, type: 'currency' },
-        //               { value: -28.46, type: 'currency' },
-        //               { value: -63.25, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2021' },
-        //                   { value: '4' },
-        //                   { value: '12' },
-        //                   { value: '2021-12-27', type: 'date' },
-        //                   { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 287.50, type: 'currency' },
-        //                   { value: -28.46, type: 'currency' },
-        //                   { value: -63.25, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           }
-        //         ],
-        //       }
-        //     ],
-        //   },
-        //   {
-        //     name: 'Year 2022',
-        //     value: 0,
-        //     dimensions: [
-        //       { value: null },
-        //       { value: null },
-        //       { value: null },
-        //       { value: null },
-        //       { value: 4, type: 'number' as 'number', format: '1.0-0' },
-        //       { value: 362.82, type: 'currency' },
-        //       { value: -35.92, type: 'currency' },
-        //       { value: -79.82, type: 'currency' },
-        //     ],
-        //     nodes: [
-        //       {
-        //         name: 'Quarter 2 / 2022',
-        //         value: 0,
-        //         dimensions: [
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: 3, type: 'number' as 'number', format: '1.0-0' },
-        //           { value: 144.32, type: 'currency' },
-        //           { value: -14.29, type: 'currency' },
-        //           { value: -31.75, type: 'currency' },
-        //         ],
-        //         nodes: [
-        //           {
-        //             name: 'April 2022',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 2, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 92, type: 'currency' },
-        //               { value: -9.11, type: 'currency' },
-        //               { value: -20.24, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2022' },
-        //                   { value: '2' },
-        //                   { value: '4' },
-        //                   { value: '2022-04-15', type: 'date' },
-        //                   { value: 2, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 92, type: 'currency' },
-        //                   { value: -9.11, type: 'currency' },
-        //                   { value: -20.24, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           },
-        //           {
-        //             name: 'May 2022',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 52.32, type: 'currency' },
-        //               { value: -5.18, type: 'currency' },
-        //               { value: -11.51, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2022' },
-        //                   { value: '2' },
-        //                   { value: '5' },
-        //                   { value: '2022-05-03', type: 'date' },
-        //                   { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 52.32, type: 'currency' },
-        //                   { value: -5.18, type: 'currency' },
-        //                   { value: -11.51, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           }
-        //         ],
-        //       },
-        //       {
-        //         name: 'Quarter 3 / 2022',
-        //         value: 0,
-        //         dimensions: [
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: null },
-        //           { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //           { value: 218.50, type: 'currency' },
-        //           { value: -21.63, type: 'currency' },
-        //           { value: -48.07, type: 'currency' },
-        //         ],
-        //         nodes: [
-        //           {
-        //             name: 'September 2022',
-        //             value: 0,
-        //             dimensions: [
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: null },
-        //               { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //               { value: 218.50, type: 'currency' },
-        //               { value: -21.63, type: 'currency' },
-        //               { value: -48.07, type: 'currency' },
-        //             ],
-        //             nodes: [
-        //               {
-        //                 name: '',
-        //                 value: 0,
-        //                 dimensions: [
-        //                   { value: '2022' },
-        //                   { value: '3' },
-        //                   { value: '9' },
-        //                   { value: '2022-09-20', type: 'date' },
-        //                   { value: 1, type: 'number' as 'number', format: '1.0-0' },
-        //                   { value: 218.50, type: 'currency' },
-        //                   { value: -21.63, type: 'currency' },
-        //                   { value: -48.07, type: 'currency' },
-        //                 ],
-        //               }
-        //             ],
-        //           }
-        //         ],
-        //       },
-        //     ],
-        //   },
-        // ];
-        const treeData: TreeData<TaxDetailNode> = {
-          nodes: [],
-          dimensions: headerFooterDimensions,
+
+        const years = groupBy(data, (row) => moment(row.payrollDate).year());
+
+        const quarteredYears = Object.keys(years).reduce((prev, curr) => ({...prev, [curr]: groupBy(years[curr], (row) => moment(row.payrollDate).quarter())}), {} as any);
+
+        const monthedYears: any = { };
+
+        for (let year in quarteredYears) {
+          monthedYears[year] = { };
+          for (let quarter in quarteredYears[year]) {
+            monthedYears[year][quarter] = groupBy(quarteredYears[year][quarter], (row) => moment(row.payrollDate).month());
+          }
+        }
+
+        const blankColumns = 4;
+
+        const sumParent = (parent: any, child: any) => {
+          parent.dimensions.slice(blankColumns).forEach((d: any, i: number) => {
+            const offsetIndex = i + blankColumns;
+            parent.dimensions[offsetIndex].value += child.dimensions[offsetIndex].value;
+          });
         };
-        return treeData;
+
+        const nodes: TaxDetailNode[] = Object.keys(monthedYears).reduce((prev, year) => {
+          const parent0: any = {
+            name: `Year ${year}`,
+            depth: 0,
+            parent: null,
+            dimensions: [
+              { value: null },
+              { value: null },
+              { value: null },
+              { value: null },
+              { value: 0, type: 'number' as 'number', format: '1.0-0' },
+              { value: 0, type: 'currency' as 'currency' },
+              { value: 0, type: 'currency' as 'currency' },
+              { value: 0, type: 'currency' as 'currency' },
+            ],
+          };
+
+          const quarters = Object.keys(monthedYears[year]).reduce((pre, quarter) => {
+            const parent1: any = {
+              name: `Quarter ${quarter} / ${year}`,
+              depth: 1,
+              parent: parent0,
+              dimensions: [
+                { value: null },
+                { value: null },
+                { value: null },
+                { value: null },
+                { value: 0, type: 'number', format: '1.0-0' },
+                { value: 0, type: 'currency' },
+                { value: 0, type: 'currency' },
+                { value: 0, type: 'currency' },
+              ],
+            };
+
+            const months = Object.keys(monthedYears[year][quarter]).reduce((p, month) => {
+              const monthName = moment(month, 'M').format('MMMM');
+              const parent2: any = {
+                name: `${monthName} ${year}`,
+                depth: 2,
+                parent: parent1,
+                dimensions: [
+                  { value: null },
+                  { value: null },
+                  { value: null },
+                  { value: null },
+                  { value: sumBy(monthedYears[year][quarter][month], (row: TaxDetail) => row.paymentCount), type: 'number', format: '1.0-0' },
+                  { value: sumBy(monthedYears[year][quarter][month], (row: TaxDetail) => row.totalBp), type: 'currency' },
+                  { value: sumBy(monthedYears[year][quarter][month], (row: TaxDetail) => row.stateTaxes), type: 'currency' },
+                  { value: sumBy(monthedYears[year][quarter][month], (row: TaxDetail) => row.fedTaxes), type: 'currency' },
+                ],
+              };
+
+              sumParent(parent1, parent2);
+
+              return [
+                ...p,
+                parent2,
+                ...monthedYears[year][quarter][month].map((row: TaxDetail, index: number) => ({
+                  name: `#${index + 1}`,
+                  depth: 3,
+                  parent: parent2,
+                  dimensions: [
+                    { value: year },
+                    { value: quarter },
+                    { value: month },
+                    { value: row.payrollDate, type: 'date' },
+                    { value: row.paymentCount, type: 'number', format: '1.0-0' },
+                    { value: row.totalBp, type: 'currency' },
+                    { value: row.stateTaxes, type: 'currency' },
+                    { value: row.fedTaxes, type: 'currency' },
+                  ],
+                })),
+              ];
+            }, [] as TaxDetailNode[]);
+
+            sumParent(parent0, parent1);
+
+            return [
+              ...pre,
+              parent1,
+              ...months,
+            ];
+          }, [] as TaxDetailNode[]);
+
+          headerFooterDimensions.slice(blankColumns).forEach((d, i) => {
+            const offsetIndex = i + blankColumns;
+            headerFooterDimensions[offsetIndex].total += parent0.dimensions[offsetIndex].value;
+          });
+
+          return [
+            ...prev,
+            parent0,
+            ...quarters,
+          ];
+        }, [] as TaxDetailNode[]);
+
+        return { nodes, maxDepth: 3, dimensions: headerFooterDimensions };
       })
     );
   constructor(

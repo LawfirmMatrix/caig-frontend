@@ -4,7 +4,6 @@ import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   exports: [
@@ -13,7 +12,6 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatTabsModule,
   ]
 })
 export class ReportsMaterialModule { }

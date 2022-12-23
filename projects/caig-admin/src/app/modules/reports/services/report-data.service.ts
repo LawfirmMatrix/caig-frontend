@@ -9,7 +9,15 @@ export class ReportDataService {
   private static readonly baseUrl = 'api/report';
   constructor(private http: HttpClient) { }
   public taxDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): Observable<TaxDetail[]> {
-    const params: any = omitBy({ fromDate, toDate, allSettlements, taxState }, (p) => p === undefined || p === null);
+    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState);
     return this.http.get<TaxDetail[]>(`${ReportDataService.baseUrl}/taxdetail`, { params });
   }
+  public paymentDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): Observable<TaxDetail[]> {
+    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState);
+    return this.http.get<TaxDetail[]>(`${ReportDataService.baseUrl}/paymentdetail`, { params });
+  }
+}
+
+function sanitizeParams(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): any {
+  return omitBy({ fromDate, toDate, allSettlements, taxState }, (p) => p === undefined || p === null);
 }

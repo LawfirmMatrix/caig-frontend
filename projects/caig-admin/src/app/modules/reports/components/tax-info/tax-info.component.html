@@ -12,7 +12,7 @@
       id="tax-info"
       [disableSelection]="true"
       [columns]="columns"
-      [data]="data$ | async"
+      [data]="tableData$ | async"
       (rowClick)="viewEmployee($event.row.employeeId)">
     </vs-table>
   </div>
