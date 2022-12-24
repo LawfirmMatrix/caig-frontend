@@ -41,12 +41,6 @@ export class StateTaxComponent extends TaxDetailComponent {
       title: 'Last',
       field: 'lastName',
     }),
-    new NumberColumn({
-      title: 'Payments',
-      field: 'paymentCount',
-      sum: true,
-      format: '1.0-0',
-    }),
     new CurrencyColumn({
       title: 'Gross Wages',
       field: 'totalBp',
@@ -74,6 +68,26 @@ export class StateTaxComponent extends TaxDetailComponent {
           return data;
         }
 
+        const payrollDates = groupBy(data, (row) => row.payrollDate);
+
+        const baseDetailWithPaymentCount = {
+          paymentCount: 0,
+          totalBp: 0,
+          stateTaxes: 0,
+          fedTaxes: 0
+        };
+
+        const dataByDate: TaxDetail[] = Object.keys(payrollDates).map((date) =>
+          payrollDates[date].reduce((withPaymentCount, detail) => ({
+            ...withPaymentCount,
+            ...detail,
+            paymentCount: withPaymentCount.paymentCount + 1,
+            totalBp: withPaymentCount.totalBp + detail.totalBp,
+            stateTaxes: withPaymentCount.stateTaxes + detail.stateTaxes,
+            fedTaxes: withPaymentCount.fedTaxes + detail.fedTaxes,
+          } as TaxDetail), baseDetailWithPaymentCount) as TaxDetail
+        );
+
         const headerFooterDimensions = [
           { header: 'Year' },
           { header: 'Quarter' },
@@ -85,7 +99,7 @@ export class StateTaxComponent extends TaxDetailComponent {
           { header: 'Fed Taxes', total: 0, type: 'currency' as 'currency' },
         ];
 
-        const years = groupBy(data, (row) => moment(row.payrollDate).year());
+        const years = groupBy(dataByDate, (row) => moment(row.payrollDate).year());
 
         const quarteredYears = Object.keys(years).reduce((prev, curr) => ({...prev, [curr]: groupBy(years[curr], (row) => moment(row.payrollDate).quarter())}), {} as any);
 
