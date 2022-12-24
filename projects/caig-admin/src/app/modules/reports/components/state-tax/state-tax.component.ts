@@ -8,7 +8,7 @@ import {AppState} from '../../../../store/reducers';
 import {settlementStates} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {isNotUndefined} from '../../../../core/util/functions';
-import {TableColumn, TextColumn, CurrencyColumn} from 'vs-table';
+import {TableColumn, TextColumn, CurrencyColumn, NumberColumn} from 'vs-table';
 import {TaxDetail} from '../../../../models/tax-detail.model';
 import {ReportsComponent} from '../reports/reports.component';
 import {ReportDataService} from '../../services/report-data.service';
@@ -40,6 +40,12 @@ export class StateTaxComponent extends TaxDetailComponent {
     new TextColumn({
       title: 'Last',
       field: 'lastName',
+    }),
+    new NumberColumn({
+      title: 'Payments',
+      field: 'paymentCount',
+      sum: true,
+      format: '1.0-0',
     }),
     new CurrencyColumn({
       title: 'Gross Wages',
