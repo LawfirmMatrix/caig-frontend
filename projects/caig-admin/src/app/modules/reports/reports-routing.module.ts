@@ -31,11 +31,11 @@ export const reportsList: Routes = [
     data: { disabled: true },
   },
   {
-    path: 'all-payments-details-by-date',
+    path: 'payments-by-date',
     component: PaymentsByDateComponent,
   },
   {
-    path: 'all-payments-details-by-employee',
+    path: 'payments-by-employee',
     component: PaymentsByEmployeeComponent,
     data: { hasSsn: true },
   },
