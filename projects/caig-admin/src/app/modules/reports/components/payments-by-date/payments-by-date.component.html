@@ -9,11 +9,11 @@
   </mat-card>
   <div fxFlex>
     <vs-table
-      id="tax-info"
+      id="all-payments-date"
       [disableSelection]="true"
+      [data]="data$ | async"
       [columns]="columns"
-      [data]="tableData$ | async"
-      (rowClick)="viewEmployee($event.row.employeeId)">
-    </vs-table>
+      (rowClick)="viewEmployee($event.row.employeeId)"
+    ></vs-table>
   </div>
 </div>

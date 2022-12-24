@@ -1,3 +1,8 @@
 mat-toolbar {
   z-index: 10;
 }
+
+.outlet-container {
+  overflow: auto;
+  padding: 12px;
+}

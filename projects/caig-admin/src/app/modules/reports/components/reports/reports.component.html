@@ -7,7 +7,7 @@
     </div>
     <button *ngIf="decrypt" mat-raised-button color="primary" disabled>Decrypt SSN's</button>
   </mat-toolbar>
-  <div fxFlex style="overflow: auto">
+  <div fxFlex class="outlet-container">
     <router-outlet (activate)="onActivate()"></router-outlet>
   </div>
 </div>

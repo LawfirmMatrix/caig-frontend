@@ -1,4 +1,4 @@
-<div fxFlexFill fxLayout="column">
+<div fxFlexFill fxLayout="column" fxLayoutGap="12px">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Filters</mat-card-title>
@@ -35,7 +35,7 @@
         [data]="treeData$ | async"
         footerLabel="Total in requested period"
         [hideTotal]="true"
-        [isExpanded]="false">
+        [isExpanded]="true">
       </vs-tree-viewer>
     </div>
   </mat-card>

@@ -11,8 +11,9 @@ import {EmployeeLocationsComponent} from './components/employee-locations/employ
 import {WorldMapModule} from '../shared/world-map/world-map.module';
 import {StateTaxComponent} from './components/state-tax/state-tax.component';
 import {TaxInfoComponent} from './components/tax-info/tax-info.component';
-import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
 import {VsTreeViewerModule} from 'vs-tree-viewer';
+import {PaymentsByEmployeeComponent} from './components/payments-by-employee/payments-by-employee.component';
+import {PaymentsByDateComponent} from './components/payments-by-date/payments-by-date.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import {VsTreeViewerModule} from 'vs-tree-viewer';
     EmployeeLocationsComponent,
     StateTaxComponent,
     TaxInfoComponent,
-    AllPaymentsDetailComponent,
+    PaymentsByEmployeeComponent,
+    PaymentsByDateComponent,
   ],
 })
 export class ReportsModule { }

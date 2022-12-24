@@ -8,7 +8,7 @@ import {AppState} from '../../../../store/reducers';
 import {settlementStates} from '../../../../enums/store/selectors/enums.selectors';
 import {EnumsActions} from '../../../../enums/store/actions/action-types';
 import {isNotUndefined} from '../../../../core/util/functions';
-import {TableColumn, TextColumn, NumberColumn, CurrencyColumn} from 'vs-table';
+import {TableColumn, TextColumn, CurrencyColumn} from 'vs-table';
 import {TaxDetail} from '../../../../models/tax-detail.model';
 import {ReportsComponent} from '../reports/reports.component';
 import {ReportDataService} from '../../services/report-data.service';

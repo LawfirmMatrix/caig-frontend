@@ -5,8 +5,9 @@ import {NoContentComponent} from './components/no-content/no-content.component';
 import {ReportsComponent} from './components/reports/reports.component';
 import {EmployeeLocationsComponent} from './components/employee-locations/employee-locations.component';
 import {StateTaxComponent} from './components/state-tax/state-tax.component';
-import {AllPaymentsDetailComponent} from './components/all-payments-detail/all-payments-detail.component';
+import {PaymentsByEmployeeComponent} from './components/payments-by-employee/payments-by-employee.component';
 import {TaxInfoComponent} from './components/tax-info/tax-info.component';
+import {PaymentsByDateComponent} from './components/payments-by-date/payments-by-date.component';
 
 export const reportsList: Routes = [
   {
@@ -30,19 +31,13 @@ export const reportsList: Routes = [
     data: { disabled: true },
   },
   {
-    path: 'all-payments-details-summary',
-    component: NoContentComponent,
-    data: { disabled: true },
+    path: 'all-payments-details-by-date',
+    component: PaymentsByDateComponent,
   },
   {
     path: 'all-payments-details-by-employee',
-    component: AllPaymentsDetailComponent,
+    component: PaymentsByEmployeeComponent,
     data: { hasSsn: true },
-  },
-  {
-    path: 'all-payments-details-sequence',
-    component: NoContentComponent,
-    data: { disabled: true },
   },
   {
     path: 'settlement-status-details',

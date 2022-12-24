@@ -8,10 +8,10 @@ import {ReportsComponent} from '../reports/reports.component';
 
 @Component({
   selector: 'app-all-payments-detail',
-  templateUrl: './all-payments-detail.component.html',
-  styleUrls: ['./all-payments-detail.component.scss']
+  templateUrl: './payments-by-employee.component.html',
+  styleUrls: ['./payments-by-employee.component.scss']
 })
-export class AllPaymentsDetailComponent extends TaxDetailComponent {
+export class PaymentsByEmployeeComponent extends TaxDetailComponent {
   public columns: TableColumn<TaxDetail>[] = [
     ReportsComponent.SSN_COL,
     new TextColumn({
