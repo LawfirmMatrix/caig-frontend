@@ -1,5 +1,13 @@
-<div fxFlexFill fxLayoutAlign="center center">
-  <div class="map-container">
-    <app-world-map></app-world-map>
+<div fxFlexFill fxLayout="column">
+  <div fxFlexOffset="20px" fxLayoutAlign="center center">
+    <button *ngIf="!markers.length; else clearBtn" mat-raised-button color="primary" (click)="addMarkers()">ADD MARKERS</button>
+    <ng-template #clearBtn>
+      <button mat-raised-button color="warn" (click)="clearMarkers()">CLEAR MARKERS</button>
+    </ng-template>
+  </div>
+  <div fxFlex fxLayoutAlign="center center">
+    <div class="map-container">
+      <app-world-map (mapCreated)="map = $event"></app-world-map>
+    </div>
   </div>
 </div>

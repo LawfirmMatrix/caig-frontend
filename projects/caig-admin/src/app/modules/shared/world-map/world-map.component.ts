@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, AfterViewInit, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
 import {Browser, Map, map, tileLayer, TileLayerOptions} from 'leaflet';
 
 @Component({
@@ -7,6 +7,8 @@ import {Browser, Map, map, tileLayer, TileLayerOptions} from 'leaflet';
   styleUrls: ['./world-map.component.scss']
 })
 export class WorldMapComponent implements AfterViewInit {
+  @Output() public mapCreated = new EventEmitter<Map>();
+
   @ViewChild('map') public mapContainer!: ElementRef<HTMLElement>;
 
   public ngAfterViewInit() {
@@ -14,13 +16,16 @@ export class WorldMapComponent implements AfterViewInit {
     const baseUrl = 'https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}';
     const regUrl = `${baseUrl}.png?apiKey=${apiKey}`;
     const retinaUrl = `${baseUrl}@2x.png?apiKey=${apiKey}`;
-    const lefletMap: Map = map(this.mapContainer.nativeElement).setView([39.369, -76.717], 12);
+    const leafletMap: Map = map(this.mapContainer.nativeElement).setView([39.369, -76.717], 3);
 
     tileLayer(Browser.retina ? retinaUrl : regUrl, {
       attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a> contributors',
       apiKey,
       maxZoom: 20,
       id: 'osm-bright',
-    } as TileLayerOptions).addTo(lefletMap);
+      className: 'map-tiles'
+    } as TileLayerOptions).addTo(leafletMap);
+
+    this.mapCreated.emit(leafletMap);
   }
 }
