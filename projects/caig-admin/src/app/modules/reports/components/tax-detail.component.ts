@@ -36,7 +36,7 @@ export abstract class TaxDetailComponent {
           },
           allSettlements: !qp[allSettlementsKey] || coerceBooleanProperty(qp[allSettlementsKey]),
           state: qp['state'],
-          includeSsn: qp['includeSsn'],
+          includeSsn: qp['includeSsn'] === 'true',
         };
       }),
       shareReplay(),
