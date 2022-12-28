@@ -37,7 +37,15 @@
         "Reports": [
           "New report - State Tax Report",
           "New report - Payments by Date",
-          "New report - Payments by Employee"
+          "New report - Payments by Employee",
+          "Reports that contain encrypted employee social security numbers can now be decrypted by appropriate users."
+        ],
+        "Employees": [
+          "Social security numbers and login passwords can now be updated from the employee view page.",
+          "In the employee view page, a new button has been added by the settlement code which will allow you to quickly change settlement context. This button will only be visible when viewing an employee that is outside of the currently selected settlement."
+        ],
+        "Settlements": [
+          "In the settlement view page, a new button has been added in the center of the top toolbar which will allow you to quickly change settlement context. This button will only be visible when viewing a settlement other than the one currently selected."
         ]
       },
       "Call Center": {
