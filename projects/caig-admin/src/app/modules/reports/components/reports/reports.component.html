@@ -5,7 +5,9 @@
       <mat-icon *ngIf="componentHeader">chevron_right</mat-icon>
       <div>{{componentHeader}}</div>
     </div>
-    <button *ngIf="decrypt" mat-raised-button color="primary" disabled>Decrypt SSN's</button>
+    <div *ngIf="canDecrypt" fxLayout="column">
+      <button mat-raised-button color="primary" (click)="decrypt()" [disabled]="route.snapshot.queryParams['includeSsn'] === 'true'">Decrypt SSN's</button>
+    </div>
   </mat-toolbar>
   <div fxFlex class="outlet-container">
     <router-outlet (activate)="onActivate()"></router-outlet>

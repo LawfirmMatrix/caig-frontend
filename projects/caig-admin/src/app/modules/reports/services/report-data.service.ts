@@ -8,16 +8,16 @@ import {omitBy} from 'lodash-es';
 export class ReportDataService {
   private static readonly baseUrl = 'api/report';
   constructor(private http: HttpClient) { }
-  public taxDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): Observable<TaxDetail[]> {
-    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState);
+  public taxDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string, includeSsn?: boolean): Observable<TaxDetail[]> {
+    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState, includeSsn);
     return this.http.get<TaxDetail[]>(`${ReportDataService.baseUrl}/taxdetail`, { params });
   }
-  public paymentDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): Observable<TaxDetail[]> {
-    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState);
+  public paymentDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string, includeSsn?: boolean): Observable<TaxDetail[]> {
+    const params = sanitizeParams(fromDate, toDate, allSettlements, taxState, includeSsn);
     return this.http.get<TaxDetail[]>(`${ReportDataService.baseUrl}/paymentdetail`, { params });
   }
 }
 
-function sanitizeParams(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string): any {
-  return omitBy({ fromDate, toDate, allSettlements, taxState }, (p) => p === undefined || p === null);
+function sanitizeParams(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string, includeSsn?: boolean): any {
+  return omitBy({ fromDate, toDate, allSettlements, taxState, includeSsn }, (p) => p === undefined || p === null);
 }

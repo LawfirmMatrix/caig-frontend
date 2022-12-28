@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {startCase} from 'lodash-es';
-import {CalculateColumn, TableColumn} from 'vs-table';
+import {TableColumn, TextColumn} from 'vs-table';
 import {TaxDetail} from '../../../../models/tax-detail.model';
+import {LoadingService} from '../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-reports',
@@ -10,21 +11,24 @@ import {TaxDetail} from '../../../../models/tax-detail.model';
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent {
-  public static readonly SSN_COL: TableColumn<TaxDetail> = new CalculateColumn({
+  public static readonly SSN_COL: TableColumn<TaxDetail> = new TextColumn({
     title: 'SSN',
     field: 'ssn',
-    calculate: (row) => row.ssn || 'xxx-xxx-xxxx',
   });
   public componentHeader: string | undefined;
-  public decrypt = false;
-  constructor(public route: ActivatedRoute) { }
+  public canDecrypt = false;
+  constructor(public loadingService: LoadingService, public route: ActivatedRoute, private router: Router) { }
   public onActivate(): void {
     const snapshot = this.route.firstChild?.snapshot;
     if (snapshot) {
       const segment = snapshot.url[0];
       const hasSsn = snapshot.data['hasSsn'] === true;
       this.componentHeader = segment ? startCase(segment.path) : undefined;
-      this.decrypt = hasSsn;
+      this.canDecrypt = hasSsn;
     }
+  }
+  public decrypt(): void {
+    this.loadingService.attach();
+    this.router.navigate([], {queryParams: { includeSsn: true }, queryParamsHandling: 'merge', replaceUrl: true});
   }
 }

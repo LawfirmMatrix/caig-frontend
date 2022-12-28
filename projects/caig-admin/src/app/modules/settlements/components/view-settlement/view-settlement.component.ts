@@ -1,17 +1,23 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {SettlementComponent} from '../settlement.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {map} from 'rxjs/operators';
+import {map, filter} from 'rxjs/operators';
 import {ListItem} from '../../../shared/property-list/property-list.component';
 import {Settlement} from '../../../../models/settlement.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../store/reducers';
+import {Observable, combineLatest} from 'rxjs';
+import {settlementId} from '../../../../core/store/selectors/core.selectors';
+import {isNotUndefined} from '../../../../core/util/functions';
+import {CoreActions} from '../../../../core/store/actions/action-types';
 
 @Component({
   selector: 'app-view-settlement',
   templateUrl: './view-settlement.component.html',
   styleUrls: ['./view-settlement.component.scss']
 })
-export class ViewSettlementComponent extends SettlementComponent {
+export class ViewSettlementComponent extends SettlementComponent implements OnInit {
   public isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({matches}) => matches)
   );
@@ -68,10 +74,21 @@ export class ViewSettlementComponent extends SettlementComponent {
     new ListItem('Agreement Content', 'textAgrmtContent', 'html'),
     new ListItem('Payment Timeframe', 'paymentTimeframe'),
   ];
+  public isNotCurrentSettlement$!: Observable<boolean>;
   constructor(
     protected override route: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
+    private store: Store<AppState>
   ) {
     super(route);
+  }
+  public ngOnInit() {
+    const settlementId$ = this.store.select(settlementId).pipe(filter(isNotUndefined));
+    const settlement$ = this.settlement$.pipe(filter(isNotUndefined));
+    this.isNotCurrentSettlement$ = combineLatest([settlementId$, settlement$])
+      .pipe(map(([settlementId, settlement]) => settlementId !== settlement.id));
+  }
+  public changeSettlement(settlementId: number): void {
+    this.store.dispatch(CoreActions.settlementChange({settlementId}));
   }
 }

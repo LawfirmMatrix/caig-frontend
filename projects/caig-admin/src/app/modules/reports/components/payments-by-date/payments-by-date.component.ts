@@ -16,7 +16,7 @@ export class PaymentsByDateComponent extends TaxDetailComponent {
   public override data$: Observable<TaxDetail[] | null> = this.model$
     .pipe(
       switchMap((model) =>
-        this.dataService.paymentDetail(model.dates.start, model.dates.end, model.allSettlements, model.state)
+        this.dataService.paymentDetail(model.dates.start, model.dates.end, model.allSettlements, model.state, model.includeSsn)
           .pipe(startWith(null))
       ),
       shareReplay(),

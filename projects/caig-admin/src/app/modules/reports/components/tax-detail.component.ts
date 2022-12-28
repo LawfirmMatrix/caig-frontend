@@ -36,6 +36,7 @@ export abstract class TaxDetailComponent {
           },
           allSettlements: !qp[allSettlementsKey] || coerceBooleanProperty(qp[allSettlementsKey]),
           state: qp['state'],
+          includeSsn: qp['includeSsn'],
         };
       }),
       shareReplay(),
@@ -43,7 +44,7 @@ export abstract class TaxDetailComponent {
   public data$: Observable<TaxDetail[] | null> = this.model$
     .pipe(
       switchMap((model) =>
-        this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements, model.state)
+        this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements, model.state, model.includeSsn)
           .pipe(startWith(null))
       ),
       shareReplay(),

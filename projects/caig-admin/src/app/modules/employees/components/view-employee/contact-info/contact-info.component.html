@@ -5,7 +5,12 @@
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Settlement</div>
-    <div fxFlex><a mat-button routerLink="/settlements/{{employee.settlementId}}/view"><b>{{employee.settlementCode}}</b></a></div>
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+      <a mat-button routerLink="/settlements/{{employee.settlementId}}/view"><b>{{employee.settlementCode}}</b></a>
+      <button *ngIf="isNotCurrentSettlement$ | async" mat-icon-button color="accent" matTooltip="Switch to this settlement" (click)="changeSettlement(employee.settlementId)">
+        <mat-icon>loop</mat-icon>
+      </button>
+    </div>
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Name</div>
