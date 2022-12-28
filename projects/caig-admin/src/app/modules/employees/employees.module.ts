@@ -15,7 +15,6 @@ import {SharedModule} from '../shared/shared.module';
 import {AmountsOwedComponent} from './components/view-employee/amounts-owed/amounts-owed.component';
 import {TransformNumPipe} from './pipes/transform-num.pipe';
 import {PaymentsComponent} from './components/view-employee/payments/payments.component';
-import {DecryptService} from './services/decrypt.service';
 import {StatusComponent} from './components/view-employee/status/status.component';
 import {TagsComponent} from './components/view-employee/tags/tags.component';
 import {TaxExemptionsComponent} from './components/view-employee/tax-exemptions/tax-exemptions.component';
@@ -55,7 +54,6 @@ import {EmailModule} from '../email/email.module';
     EmployeeEnumsResolver,
     SettlementStatesResolver,
     EmployeeStatusResolver,
-    DecryptService,
   ]
 })
 export class EmployeesModule { }

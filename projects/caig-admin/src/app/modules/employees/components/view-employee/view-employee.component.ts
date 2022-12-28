@@ -9,12 +9,11 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ToolbarButton} from '../../../shared/employee/component/toolbar-buttons/toolbar-buttons.component';
 import {EmployeeEntityService} from '../../services/employee-entity.service';
 import {Employee} from '../../../../models/employee.model';
-import {isNotUndefined, participationRowPainter} from '../../../../core/util/functions';
+import {isNotUndefined} from '../../../../core/util/functions';
 import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../store/reducers';
 import {settlementId} from '../../../../core/store/selectors/core.selectors';
-import {Role} from '../../../../models/session.model';
 
 @Component({
   selector: 'app-view-bue',

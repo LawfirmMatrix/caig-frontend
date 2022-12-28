@@ -1,31 +1,27 @@
-<div *ngIf="decryptedValue; else decryptBtn" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-  <button mat-icon-button color="primary" (click)="decryptedValue = null" matTooltip="Encrypt">
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+  <button *ngIf="decryptedValue" mat-icon-button color="primary" (click)="decryptedValue = ''" matTooltip="Encrypt">
     <mat-icon>lock_open</mat-icon>
   </button>
-  <div *ngIf="editMode; else readMode" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+  <div *ngIf="editMode; else readMode" fxLayout="row" fxLayoutAlign="start center">
     <mat-form-field color="primary">
-      <input #editInput="matInput" matInput [value]="decryptedValue" />
+      <input #editInput="matInput" matInput [value]="decryptedValue" [disabled]="isProcessing" />
     </mat-form-field>
-    <button disabled mat-icon-button color="primary" (click)="saveChanges(editInput.value)" matTooltip="Confirm">
-      <mat-icon>check</mat-icon>
-    </button>
-    <button mat-icon-button color="warn" (click)="editMode = false" matTooltip="Cancel">
-      <mat-icon>cancel</mat-icon>
-    </button>
+    <mat-spinner *ngIf="isProcessing; else saveBtn" diameter="25"></mat-spinner>
+    <ng-template #saveBtn>
+      <button mat-icon-button color="accent" matTooltip="Confirm" (click)="saveChanges(editInput)" [disabled]="!editInput.value">
+        <mat-icon>check</mat-icon>
+      </button>
+    </ng-template>
   </div>
   <ng-template #readMode>
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-      <b>{{decryptedValue}}</b>
-      <button mat-icon-button color="accent" matTooltip="Change {{prop}}" (click)="editMode = true">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </div>
+    <button *ngIf="!decryptedValue && employeeValue; else noValue" mat-flat-button color="primary" (click)="decrypt()" [disabled]="isProcessing">
+      <mat-icon class="locked">{{isProcessing ? 'key' : 'lock'}}</mat-icon>{{isProcessing ? 'Decrypting...' : employeeValue}}
+    </button>
+    <ng-template #noValue>
+      <b>{{decryptedValue || 'Missing'}}</b>
+    </ng-template>
   </ng-template>
-</div>
-<ng-template #decryptBtn>
-  <button *ngIf="employee[prop]; else noValue" mat-flat-button color="primary" (click)="decrypt()" [disabled]="isDecrypting">
-    <mat-icon class="locked">{{isDecrypting ? 'key' : 'lock'}}</mat-icon>{{isDecrypting ? 'Decrypting...' : 'ENCRYPTED'}}
+  <button *ngIf="decryptedValue || !employeeValue" mat-icon-button [color]="editMode ? 'warn' : 'accent'" (click)="toggleEditMode()" [matTooltip]="editMode ? 'Cancel' : 'Edit'" [disabled]="isProcessing">
+    <mat-icon>{{editMode ? 'cancel' : 'edit'}}</mat-icon>
   </button>
-  <ng-template #noValue>Not Applicable</ng-template>
-</ng-template>
-
+</div>

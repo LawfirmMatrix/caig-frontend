@@ -39,6 +39,9 @@ export class EmployeeEntityService extends EntityCollectionServiceBase<Employee>
   public override getByKey(key: any, options: EntityActionOptions = { mergeStrategy: MergeStrategy.OverwriteChanges }): Observable<Employee> {
     return super.getByKey(key, options);
   }
+  public patch(employee: Partial<Employee>): Observable<void> {
+    return this.http.patch<void>(`/api/employee/${employee.id}`, employee);
+  }
   public bulkPatch(payload: {ids: number[], value: Partial<Employee>}): Observable<void> {
     return this.http.patch<void>('/api/employee/bulk', payload);
   }
@@ -47,5 +50,8 @@ export class EmployeeEntityService extends EntityCollectionServiceBase<Employee>
   }
   public getBatch(batchId: string): Observable<Employee[]> {
     return this.http.get<Employee[]>(`api/employee/batch/${batchId}`);
+  }
+  public decrypt(employeeId: number, property: string): Observable<{[property: string]: string}> {
+    return this.http.get<{[property: string]: string}>(`/api/employee/${employeeId}/${property}`);
   }
 }
