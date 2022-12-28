@@ -197,7 +197,7 @@
         </mat-menu>
       </th>
     </tr>
-    <cdk-virtual-scroll-viewport [itemSize]="rowHeight" fxFlex>
+    <cdk-virtual-scroll-viewport [itemSize]="rowHeight" fxFlex (scrolledIndexChange)="scrollIndex$.next($event)">
       <mat-progress-bar *ngIf="!data" mode="indeterminate" color="primary"></mat-progress-bar>
       <h1 *ngIf="data && !filteredData.length" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
         <div>No results found</div>

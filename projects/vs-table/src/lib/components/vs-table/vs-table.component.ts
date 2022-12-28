@@ -117,6 +117,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
   public readonly scrollbarWidth = VsTableComponent.SCROLLBAR_WIDTH;
   public readonly onWindowResize$ = new Subject<void>();
+  public readonly scrollIndex$ = new Subject<number>();
   public readonly noValuePlaceholder = 'No Value';
 
   public padScrollbar = false;
@@ -167,6 +168,16 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         selection: event.source.selected,
         isAllSelected: this.isAllSelected(),
       }));
+
+    this.scrollIndex$
+      .pipe(
+        filter((index) => !!index),
+        debounceTime(200)
+      )
+      .subscribe((index) => {
+        this.saveCache(['scrollOffset']);
+        this.scrollToOffset = this.viewport.measureScrollOffset();
+      });
   }
 
   public ngAfterViewInit(): void {
@@ -220,7 +231,6 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public ngOnDestroy(): void {
-    this.saveCache(['scrollOffset']);
     this.resizeObserver.disconnect();
   }
 
