@@ -66,7 +66,7 @@ export class ChangePasswordComponent implements OnInit {
     confirmPassword.buttons = [ visibilityButton(confirmPassword) ];
     newPassword.buttons = [ visibilityButton(newPassword) ];
     this.fields = [[ newPassword ], [ confirmPassword ]];
-    if (this.data.self) {
+    if (this.data?.self) {
       const storedPassword = this.data.copyAuthPassword ? this.authService.loggedInPassword : undefined;
       const currentPassword = new InputField({
         key: 'currentPassword',
@@ -83,16 +83,23 @@ export class ChangePasswordComponent implements OnInit {
         generatePasswordButton(this.form),
         copyContentButton(this.clipboard, this.notifications),
       );
-      this.fields.push([ changePasswordOnNextLogin ]);
+      if (this.data) {
+        this.fields.push([ changePasswordOnNextLogin ]);
+      }
     }
   }
   public save(): void {
-    this.form.disable();
-    this.dataService.patch(this.data.userId, this.form.getRawValue(), this.data.self)
-      .subscribe(() => {
-        this.notifications.showSimpleInfoMessage('Successfully changed password');
-        this.dialogRef.close(true);
-      }, () => this.form.enable());
+    const formValue = this.form.getRawValue();
+    if (this.data) {
+      this.form.disable();
+      this.dataService.patch(this.data.userId, formValue, this.data.self)
+        .subscribe(() => {
+          this.notifications.showSimpleInfoMessage('Successfully changed password');
+          this.dialogRef.close(true);
+        }, () => this.form.enable());
+    } else {
+      this.dialogRef.close(formValue);
+    }
   }
 }
 

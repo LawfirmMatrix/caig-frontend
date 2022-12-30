@@ -1,27 +1,24 @@
-<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-  <button *ngIf="decryptedValue" mat-icon-button color="primary" (click)="decryptedValue = ''" matTooltip="Encrypt">
-    <mat-icon>lock_open</mat-icon>
-  </button>
-  <div *ngIf="editMode; else readMode" fxLayout="row" fxLayoutAlign="start center">
-    <mat-form-field color="primary">
-      <input #editInput="matInput" matInput [value]="decryptedValue" [disabled]="isProcessing" />
-    </mat-form-field>
-    <mat-spinner *ngIf="isProcessing; else saveBtn" diameter="25"></mat-spinner>
-    <ng-template #saveBtn>
-      <button mat-icon-button color="accent" matTooltip="Confirm" (click)="saveChanges(editInput)" [disabled]="!editInput.value">
-        <mat-icon>check</mat-icon>
-      </button>
-    </ng-template>
+<div fxLayout="row" fxLayoutAlign="start center">
+  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="decryptedValue; else isEncrypted">
+    <button mat-icon-button color="primary" (click)="decryptedValue = ''" matTooltip="Encrypt">
+      <mat-icon>lock_open</mat-icon>
+    </button>
+    <b>{{decryptedValue}}</b>
   </div>
-  <ng-template #readMode>
-    <button *ngIf="!decryptedValue && employeeValue; else noValue" mat-flat-button color="primary" (click)="decrypt()" [disabled]="isProcessing">
+  <ng-template #isEncrypted>
+    <button *ngIf="employeeValue; else noValue" mat-flat-button color="primary" (click)="decrypt()" [disabled]="isProcessing">
       <mat-icon class="locked">{{isProcessing ? 'key' : 'lock'}}</mat-icon>{{isProcessing ? 'Decrypting...' : employeeValue}}
     </button>
     <ng-template #noValue>
-      <b>{{decryptedValue || 'Missing'}}</b>
+      <div>Missing</div>
     </ng-template>
   </ng-template>
-  <button *ngIf="decryptedValue || !employeeValue" mat-icon-button [color]="editMode ? 'warn' : 'accent'" (click)="toggleEditMode()" [matTooltip]="editMode ? 'Cancel' : 'Edit'" [disabled]="isProcessing">
-    <mat-icon>{{editMode ? 'cancel' : 'edit'}}</mat-icon>
-  </button>
+  <div *ngIf="!employeeValue || decryptedValue" fxLayout="row" fxFlexOffset="12px" fxLayoutAlign="start center">
+    <button mat-icon-button color="accent" (click)="edit()" matTooltip="Edit" [disabled]="isProcessing">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button *ngIf="employeeValue" mat-icon-button color="warn" (click)="remove()" matTooltip="Delete" [disabled]="isProcessing">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
 </div>

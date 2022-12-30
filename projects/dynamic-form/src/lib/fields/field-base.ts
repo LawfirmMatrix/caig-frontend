@@ -69,7 +69,8 @@ export enum ControlType {
   Currency,
   PhoneNumber,
   Date,
-  DateRange
+  DateRange,
+  Ssn,
 }
 
 export class FormFieldHint {

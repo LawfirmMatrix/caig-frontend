@@ -17,3 +17,4 @@ export * from './lib/fields/currency.component';
 export * from './lib/fields/phone-number.component';
 export * from './lib/fields/date.component';
 export * from './lib/fields/date-range.component';
+export * from './lib/fields/ssn.component';

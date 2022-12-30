@@ -33,6 +33,7 @@ import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/mater
 import {DateComponent} from './fields/date.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {DateRangeComponent} from './fields/date-range.component';
+import {SsnComponent, SsnInputComponent} from './fields/ssn.component';
 
 export const DYNAMIC_FORM_DATE_FORMATS = {
   parse: {
@@ -66,6 +67,8 @@ export const DYNAMIC_FORM_DATE_FORMATS = {
     PhoneNumberInputComponent,
     DateComponent,
     DateRangeComponent,
+    SsnComponent,
+    SsnInputComponent,
   ],
   imports: [
     CommonModule,

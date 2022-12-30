@@ -13,6 +13,7 @@ import {CurrencyComponent} from '../fields/currency.component';
 import {PhoneNumberComponent} from '../fields/phone-number.component';
 import {DateComponent} from '../fields/date.component';
 import {DateRangeComponent} from '../fields/date-range.component';
+import {SsnComponent} from '../fields/ssn.component';
 
 const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.Input ]: InputComponent,
@@ -27,6 +28,7 @@ const componentMapper: {[key in ControlType]: Type<FieldBaseComponent<any>>} = {
   [ ControlType.PhoneNumber ]: PhoneNumberComponent,
   [ ControlType.Date ]: DateComponent,
   [ ControlType.DateRange ]: DateRangeComponent,
+  [ ControlType.Ssn ]: SsnComponent,
 };
 
 @Directive({ selector: '[dynamicField]' })
