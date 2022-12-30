@@ -39,6 +39,7 @@ export abstract class TaxDetailComponent {
           includeSsn: qp['includeSsn'] === 'true',
         };
       }),
+      distinctUntilChanged(isEqual),
       shareReplay(),
     );
   public data$: Observable<TaxDetail[] | null> = this.model$

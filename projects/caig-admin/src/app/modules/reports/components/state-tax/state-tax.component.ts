@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {SelectField} from 'dynamic-form';
-import {map, filter, switchMap} from 'rxjs/operators';
+import {map, filter, switchMap, shareReplay} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {tap, Observable, startWith} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -224,8 +224,12 @@ export class StateTaxComponent extends TaxDetailComponent {
         }, [] as TaxDetailNode[]);
 
         return { nodes, maxDepth: 3, dimensions: headerFooterDimensions };
-      })
+      }),
+      shareReplay(),
     );
+  public tabIndex$ = this.route.queryParams.pipe(
+    map((qp) => qp['tabIndex']),
+  );
   constructor(
     protected override router: Router,
     protected override route: ActivatedRoute,
@@ -250,6 +254,9 @@ export class StateTaxComponent extends TaxDetailComponent {
       displayField: 'name',
       deselect: true,
     }));
+  }
+  public tabIndexChange(tabIndex: number): void {
+    this.router.navigate([], {queryParams: {tabIndex}, queryParamsHandling: 'merge', replaceUrl: true});
   }
 }
 

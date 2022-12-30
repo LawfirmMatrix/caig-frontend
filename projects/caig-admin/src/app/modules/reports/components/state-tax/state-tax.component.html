@@ -7,36 +7,29 @@
       <dynamic-form [form]="form" [fields]="fields"></dynamic-form>
     </mat-card-content>
   </mat-card>
-  <mat-card fxFlex fxLayout="column">
-    <mat-card-header>
-      <mat-card-title>
-        Aggregated by employee
-      </mat-card-title>
-    </mat-card-header>
-    <div fxFlex class="container">
-      <vs-table
-        id="state-tax"
-        (rowClick)="viewEmployee($event.row.employeeId)"
-        [disableSelection]="true"
-        [columns]="columns"
-        [data]="data$ | async"
-      ></vs-table>
-    </div>
-  </mat-card>
-  <mat-card fxFlex fxLayout="column">
-    <mat-card-header>
-      <mat-card-title>
-        Aggregated by year/quarter/month
-      </mat-card-title>
-    </mat-card-header>
-    <p>Note: months will be skipped if there were no payments in them.</p>
-    <div fxFlex class="container">
-      <vs-tree-viewer
-        [data]="treeData$ | async"
-        footerLabel="Total in requested period"
-        [hideTotal]="true"
-        [isExpanded]="true">
-      </vs-tree-viewer>
-    </div>
-  </mat-card>
+  <div fxFlex>
+    <mat-tab-group mat-stretch-tabs [selectedIndex]="tabIndex$ | async" (selectedIndexChange)="tabIndexChange($event)">
+      <mat-tab label="Aggregated by Employee">
+        <ng-template matTabContent>
+          <vs-table
+            id="state-tax"
+            (rowClick)="viewEmployee($event.row.employeeId)"
+            [disableSelection]="true"
+            [columns]="columns"
+            [data]="data$ | async"
+          ></vs-table>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Aggregated by Date">
+        <ng-template matTabContent>
+          <vs-tree-viewer
+            [data]="treeData$ | async"
+            footerLabel="Total in requested period"
+            [hideTotal]="true"
+            [isExpanded]="true">
+          </vs-tree-viewer>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
