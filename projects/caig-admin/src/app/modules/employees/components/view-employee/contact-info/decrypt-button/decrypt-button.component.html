@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="start center">
   <div fxLayout="row" fxLayoutAlign="start center" *ngIf="decryptedValue; else isEncrypted">
-    <button mat-icon-button color="primary" (click)="decryptedValue = ''" matTooltip="Encrypt">
+    <button mat-icon-button color="primary" (click)="encrypt()" matTooltip="Encrypt">
       <mat-icon>lock_open</mat-icon>
     </button>
     <b>{{decryptedValue}}</b>

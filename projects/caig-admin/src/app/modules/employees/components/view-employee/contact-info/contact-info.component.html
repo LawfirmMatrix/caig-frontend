@@ -99,11 +99,11 @@
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Password</div>
-    <div fxFlex><app-decrypt-button [employee]="employee" prop="password"></app-decrypt-button></div>
+    <div fxFlex><app-decrypt-button #btn="decrypt" [employee]="employee" prop="password"></app-decrypt-button></div>
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">SSN</div>
-    <div fxFlex><app-decrypt-button [employee]="employee" prop="ssn"></app-decrypt-button></div>
+    <div fxFlex><app-decrypt-button [employee]="employee" prop="ssn" (valueSet)="btn.encrypt()"></app-decrypt-button></div>
   </mat-list-item>
   <mat-list-item role="listitem">
     <div class="prop-name">Notes</div>

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {Employee} from '../../../../../../models/employee.model';
 import {EmployeeEntityService} from '../../../../services/employee-entity.service';
 import {NotificationsService} from 'notifications';
@@ -13,11 +13,14 @@ import {ConfirmDialogComponent, ConfirmDialogData} from 'shared-components';
 @Component({
   selector: 'app-decrypt-button',
   templateUrl: './decrypt-button.component.html',
-  styleUrls: ['./decrypt-button.component.scss']
+  styleUrls: ['./decrypt-button.component.scss'],
+  exportAs: 'decrypt',
 })
 export class DecryptButtonComponent implements OnChanges {
+  private static readonly ENCRYPTED = '[Encrypted]';
   @Input() public employee!: Employee;
   @Input() public prop!: keyof Employee;
+  @Output() public valueSet = new EventEmitter<void>();
   public isProcessing = false;
   public employeeValue = '';
   public decryptedValue = '';
@@ -28,8 +31,12 @@ export class DecryptButtonComponent implements OnChanges {
   ) { }
   public ngOnChanges(changes: SimpleChanges) {
     if (this.employee && this.prop) {
-      this.employeeValue = this.employee[this.prop] as string;
+      this.employeeValue = this.employee[this.prop] as string || '';
     }
+  }
+  public encrypt(): void {
+    this.decryptedValue = '';
+    this.employeeValue = DecryptButtonComponent.ENCRYPTED;
   }
   public decrypt(): void {
     this.isProcessing = true;
@@ -43,9 +50,13 @@ export class DecryptButtonComponent implements OnChanges {
     const employeeValue = this.employeeValue;
     const decryptedValue = this.decryptedValue;
     this.collectResponse()?.pipe(
+      filter((data) => !!data),
       tap((data) => {
         this.isProcessing = true;
-        this.employeeValue = '[Encrypted]';
+        if (!employeeValue) {
+          this.valueSet.emit(void 0);
+        }
+        this.employeeValue = DecryptButtonComponent.ENCRYPTED;
         this.decryptedValue = data[this.prop];
       }),
       switchMap((data) => this.dataService.patch({id: this.employee.id, [this.prop]: data[this.prop]}))
