@@ -25,11 +25,6 @@ export class ServiceWorkerService {
       tap((event) => this.storeAppData(event)),
       shareReplay(1),
     );
-  public noUpdateAvailable$ = this.updates.versionUpdates
-    .pipe(
-      filter((event): event is NoNewVersionDetected => event.type === 'NO_NEW_VERSION_DETECTED'),
-      shareReplay(1)
-    );
   private appData: AppData | undefined;
   constructor(
     private updates: SwUpdate,

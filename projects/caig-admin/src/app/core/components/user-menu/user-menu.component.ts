@@ -30,10 +30,10 @@ export class UserMenuComponent implements OnInit {
   ];
   constructor(private store: Store<AppState>, private swService: ServiceWorkerService) { }
   public ngOnInit() {
-    this.swService.noUpdateAvailable$
+    this.swService.isUpdateAvailable$
       .pipe(first())
       .subscribe((event) => {
-        const appData: AppData | undefined = event.version.appData;
+        const appData: AppData | undefined = event.latestVersion.appData;
         if (appData) {
           this.callbackMenu.unshift({
             label: 'What\'s New',
