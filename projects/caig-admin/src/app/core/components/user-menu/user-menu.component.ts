@@ -4,8 +4,6 @@ import {AppState} from '../../../store/reducers';
 import {user} from '../../store/selectors/core.selectors';
 import {AuthActions} from '../../../auth/store/actions/action-types';
 import {ServiceWorkerService} from '../../services/service-worker.service';
-import {first} from 'rxjs';
-import {AppData} from '../../../models/app-data.model';
 
 @Component({
   selector: 'app-user-menu',
@@ -30,18 +28,13 @@ export class UserMenuComponent implements OnInit {
   ];
   constructor(private store: Store<AppState>, private swService: ServiceWorkerService) { }
   public ngOnInit() {
-    this.swService.isUpdateAvailable$
-      .pipe(first())
-      .subscribe((event) => {
-        const appData: AppData | undefined = event.latestVersion.appData;
-        if (appData) {
-          this.callbackMenu.unshift({
-            label: 'What\'s New',
-            icon: 'new_releases',
-            callback: () => this.swService.openScopedChanges(appData),
-          });
-        }
+    if (this.swService.appData) {
+      this.callbackMenu.unshift({
+        label: 'What\'s New',
+        icon: 'new_releases',
+        callback: () => this.swService.openScopedChanges(),
       });
+    }
   }
 }
 

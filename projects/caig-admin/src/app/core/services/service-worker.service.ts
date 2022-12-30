@@ -25,7 +25,7 @@ export class ServiceWorkerService {
       tap((event) => this.storeAppData(event)),
       shareReplay(1),
     );
-  private appData: AppData | undefined;
+  public appData: AppData | undefined;
   constructor(
     private updates: SwUpdate,
     private notifications: NotificationsService,
@@ -97,10 +97,10 @@ export class ServiceWorkerService {
         }),
       );
   }
-  public openScopedChanges(appData: AppData): void {
-    if (appData.changes) {
-      const changes = appData.changes;
-      const portals = Object.keys(appData.changes) as Portals[];
+  public openScopedChanges(): void {
+    if (this.appData?.changes) {
+      const changes = this.appData.changes;
+      const portals = Object.keys(changes) as Portals[];
       if (portals.length && some(portals, (p) => changes[p] && Object.keys(changes[p] as AppDataChangePortal).length > 0)) {
         const isSuperAdmin$ = this.store.select(isSuperAdmin).pipe(filter(isNotUndefined));
         const portal$ = this.store.select(portal).pipe(filter(isNotUndefined));
@@ -133,10 +133,8 @@ export class ServiceWorkerService {
     }
     if (cachedData) {
       localStorage.removeItem(ServiceWorkerService.APP_DATA_STORAGE_KEY);
-      const appData: AppData = JSON.parse(cachedData);
-      if (appData) {
-        this.openScopedChanges(appData);
-      }
+      this.appData = JSON.parse(cachedData);
+      this.openScopedChanges();
     }
   }
   private handleUnrecoverableState(): void {
@@ -162,13 +160,5 @@ export class ServiceWorkerService {
         console.log('An error occurred while updating', event);
         location.reload();
       });
-  }
-}
-
-export interface NoNewVersionDetected {
-  type: 'NO_NEW_VERSION_DETECTED';
-  version: {
-    hash: string;
-    appData?: Object;
   }
 }
