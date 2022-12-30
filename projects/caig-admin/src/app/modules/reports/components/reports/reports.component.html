@@ -2,14 +2,18 @@
   <mat-toolbar class="mat-elevation-z6" fxLayoutAlign="space-between center">
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
       <div>Reports</div>
-      <mat-icon *ngIf="componentHeader">chevron_right</mat-icon>
-      <div>{{componentHeader}}</div>
+      <div *ngIf="componentHeader$ | async as header" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+        <mat-icon>chevron_right</mat-icon>
+        <div>{{header}}</div>
+      </div>
     </div>
-    <div *ngIf="canDecrypt" fxLayout="column">
-      <button mat-raised-button color="primary" (click)="decrypt()" [disabled]="route.snapshot.queryParams['includeSsn'] === 'true'">Decrypt SSN's</button>
+    <div *ngIf="canDecrypt$ | async" fxLayout="column">
+      <button mat-raised-button [color]="route.snapshot.queryParams['includeSsn'] === 'true' ? 'accent' : 'primary'" (click)="toggleEncryption()" [disabled]="loadingService.isLoading$ | async">
+        {{route.snapshot.queryParams['includeSsn'] === 'true' ? 'Encrypt' : 'Decrypt'}} SSN's
+      </button>
     </div>
   </mat-toolbar>
   <div fxFlex class="outlet-container">
-    <router-outlet (activate)="onActivate()"></router-outlet>
+    <router-outlet (activate)="onActivate$.next($event)"></router-outlet>
   </div>
 </div>
