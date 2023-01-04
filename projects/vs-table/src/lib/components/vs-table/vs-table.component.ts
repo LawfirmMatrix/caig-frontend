@@ -1,13 +1,18 @@
 import {
   AfterViewInit,
-  Component, ElementRef,
-  EventEmitter, HostListener,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output, QueryList,
-  SimpleChanges, ViewChild, ViewChildren
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import {
   ExportConfig,
@@ -16,22 +21,17 @@ import {
   SelectionChange,
   TableColumn,
   TableColumnDataType,
-  TableMenuItem, ButtonColumn, ExpandRowConfig, NewRowBadge, TableCache
+  TableMenuItem,
+  ButtonColumn,
+  ExpandRowConfig,
+  NewRowBadge,
+  TableCache
 } from '../../utils/interfaces';
 import {Sort} from '@angular/material/sort';
 import {intersection, omit, orderBy, round, some, cloneDeep} from 'lodash-es';
 import {SelectionModel} from '@angular/cdk/collections';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
-import {
-  BehaviorSubject,
-  filter,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  merge,
-  skip,
-  Subject,
-} from 'rxjs';
+import {BehaviorSubject, filter, debounceTime, distinctUntilChanged, map, merge, skip, Subject} from 'rxjs';
 import {MatInput} from '@angular/material/input';
 import {ColumnFilter} from '../column-filter/column-filter';
 import moment from 'moment';
@@ -43,6 +43,7 @@ import {ExportDataComponent} from '../export-data/export-data.component';
 import {MatDialog} from '@angular/material/dialog';
 import {trigger, state, transition, animate, style, keyframes} from '@angular/animations';
 import {TableCacheService} from '../../services/table-cache.service';
+import {CurrencyColumn} from '../../column-types/currency-column';
 
 @Component({
   selector: 'vs-table',
@@ -103,15 +104,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   public readonly rowHeight = 48;
   public readonly headerHeight = 56;
   public readonly columnWidth = 135;
-  public readonly columnDataTypes = {
-    text: TableColumnDataType.Text,
-    changes: TableColumnDataType.Changes,
-    date: TableColumnDataType.Date,
-    icon: TableColumnDataType.Icon,
-    currency: TableColumnDataType.Currency,
-    number: TableColumnDataType.Number,
-    calc: TableColumnDataType.Calculate,
-  };
+  public readonly columnDataTypes = TableColumnDataType;
   public readonly selection = new SelectionModel<T>(true, []);
   public readonly filter$ = new BehaviorSubject<string>('');
   public readonly columnFilter$ = new BehaviorSubject<{[key: string]: ColumnFilter}>({});
@@ -328,13 +321,25 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   }
 
   public exportData(): void {
-    const columns = this.filterHiddenColumns();
-    const modColumns = columns.filter((c) => !!c.calculate);
-    const negateColumns = columns.filter((c) => !!c.negateValue);
+    const visibleColumns = this.filterHiddenColumns();
+    const modColumns = visibleColumns.filter((c) => !!c.calculate);
+    const negateColumns = visibleColumns.filter((c) => !!c.negateValue);
+    const columns = visibleColumns.reduce((prev, curr) => {
+      const col = { ...curr };
+      prev.push(col);
+      if (col.extraField) {
+        col.title = col.field;
+        prev.push(new CurrencyColumn({
+          title: col.extraField,
+          field: col.extraField,
+        }))
+      }
+      return prev;
+    }, [] as TableColumn<T>[]);
     const data = this.filteredData.map((row) => {
       const copy: any = { ...row };
       modColumns.forEach((col) => {
-        if (col.dataType !== this.columnDataTypes.icon) {
+        if (col.dataType !== TableColumnDataType.Icon) {
           copy[col.field] = copy[this.calcColumnPrefix + col.field];
         }
         delete copy[this.calcColumnPrefix + col.field];
@@ -463,11 +468,11 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         `${change.oldValue}`.toLowerCase().includes(filter) || `${change.newValue}`.toLowerCase().includes(filter));
       const filterFunc = columnFilter.column.calculate ?
         ((row: any) => (columnFilter.column as CalculateColumn<T>).calculate(row).includes(filter)) :
-        columnFilter.column.dataType === this.columnDataTypes.changes ? changesFilter :
+        columnFilter.column.dataType === TableColumnDataType.Changes ? changesFilter :
         ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase().includes(filter));
       const inverseFilterFunc = columnFilter.column.calculate ?
         ((row: any) => !(columnFilter.column as CalculateColumn<T>).calculate(row).includes(filter)) :
-        columnFilter.column.dataType === this.columnDataTypes.changes ? inverseChangesFilter :
+        columnFilter.column.dataType === TableColumnDataType.Changes ? inverseChangesFilter :
           ((row: any) => !`${row[columnFilter.column.field]}`.toLowerCase().includes(filter));
       this.filteredData = this.filteredData.filter(columnFilter.invert ? inverseFilterFunc : filterFunc);
     }
@@ -481,8 +486,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
 
     if (columnFilter.range.value.start || columnFilter.range.value.end) {
       if (columnFilter.range.value.start && columnFilter.range.value.end) {
-        const getValue = columnFilter.column.dataType === this.columnDataTypes.currency ||
-          columnFilter.column.dataType === this.columnDataTypes.number ?
+        const getValue = columnFilter.column.dataType === TableColumnDataType.Number || columnFilter.column.dataType === TableColumnDataType.Currency ?
           columnFilter.column.negateValue ? ((row: any) => -row[columnFilter.column.field]) :
           ((row: any) => row[columnFilter.column.field]) :
           ((row: any) => `${row[columnFilter.column.field]}`.toLowerCase());
@@ -498,7 +502,7 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
           const end = columnFilter.range.value.end;
           return value < 0 ? (start >= value && value >= end) : (start <= value && value <= end);
         };
-        const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
+        const filterFunc = columnFilter.column.dataType === TableColumnDataType.Date ? dateFilter : defaultFilter;
         this.filteredData = this.filteredData.filter(filterFunc);
       } else {
         const dateFilter = (row: any) => {
@@ -508,19 +512,19 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
         };
         const defaultFilter = (row: any) =>
           row[columnFilter.column.field] == columnFilter.range.value.start || columnFilter.range.value.end;
-        const filterFunc = columnFilter.column.dataType === this.columnDataTypes.date ? dateFilter : defaultFilter;
+        const filterFunc = columnFilter.column.dataType === TableColumnDataType.Date ? dateFilter : defaultFilter;
         this.filteredData = this.filteredData.filter(filterFunc);
       }
     }
 
     if (columnFilter.selection.hasValue()) {
-      const filterFunc = columnFilter.column.dataType === this.columnDataTypes.changes ?
+      const filterFunc = columnFilter.column.dataType === TableColumnDataType.Changes ?
         ((row: any) => !!(row.changes &&
           intersection(row.changes.map((change: any) => change.field), columnFilter.selection.selected).length)) :
         columnFilter.column.calculate ? ((row: any) =>
             columnFilter.selection.selected.indexOf((columnFilter.column as CalculateColumn<T>).calculate(row)) > -1) :
           ((row: any) => columnFilter.selection.selected.indexOf(`${row[columnFilter.column.field]}`) > -1);
-      const inverseFilterFunc = columnFilter.column.dataType === this.columnDataTypes.changes ?
+      const inverseFilterFunc = columnFilter.column.dataType === TableColumnDataType.Changes ?
         ((row: any) => !(row.changes &&
           intersection(row.changes.map((change: any) => change.field), columnFilter.selection.selected).length)) :
         columnFilter.column.calculate ? ((row: any) =>
@@ -543,9 +547,12 @@ export class VsTableComponent<T> implements OnInit, AfterViewInit, OnChanges, On
   private calculateColumnSummaries(): void {
     this.columns
       .filter((c) => c.sum)
-      .forEach((c) =>
-        this.columnSummaries[c.field] = this.filteredData.reduce((prev, curr) =>
-          round(prev + Number(curr[c.field] || 0), 2), 0));
+      .forEach((c) => {
+        [c.field, c.extraField].filter((field): field is Extract<keyof T, string> => !!field).forEach((field) => {
+          this.columnSummaries[field] = this.filteredData.reduce((prev, curr) =>
+            round(prev + Number(curr[field] || 0), 2), 0);
+        });
+      });
   }
 
   private filterHiddenColumns(): TableColumn<T>[] {

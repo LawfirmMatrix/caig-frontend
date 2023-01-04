@@ -14,12 +14,17 @@ import {
 import {
   WithholdingsByStateAndSettlementComponent
 } from './components/state-and-settlement/withholdings-by-state-and-settlement.component';
+import {WwBySsComponent} from './components/ww-by-ss/ww-by-ss.component';
 
 export const reportsList: Routes = [
   {
     path: 'state-tax-report',
     component: StateTaxComponent,
     data: { hasSsn: true },
+  },
+  {
+    path: 'gross-wages-and-withholdings-by-state-and-settlement',
+    component: WwBySsComponent,
   },
   {
     path: 'gross-wages-by-state-and-settlement',

@@ -20,6 +20,7 @@ import {
 import {
   WithholdingsByStateAndSettlementComponent
 } from './components/state-and-settlement/withholdings-by-state-and-settlement.component';
+import {WwBySsComponent} from './components/ww-by-ss/ww-by-ss.component';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import {
     PaymentsByDateComponent,
     GrossWagesByStateAndSettlementComponent,
     WithholdingsByStateAndSettlementComponent,
+    WwBySsComponent,
   ],
 })
 export class ReportsModule { }

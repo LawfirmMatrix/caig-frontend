@@ -87,7 +87,7 @@
         <mat-icon class="column-filter"
                   aria-label="Filter by column"
                   #trigger="matMenuTrigger"
-                  [style.display]="column !== mouseoverColumn && !trigger.menuOpen && !columnFilter$.value[column.field].isActive ? 'none' : 'initial'"
+                  [style.display]="column.extraField || (column !== mouseoverColumn && !trigger.menuOpen && !columnFilter$.value[column.field].isActive) ? 'none' : 'initial'"
                   [color]="columnFilter$.value[column.field].isActive ? 'accent' : undefined"
                   [ngClass]="column.fxLayoutAlign === 'end center' ? 'left' : 'right'"
                   [matMenuTriggerFor]="columnFilterMenu">
@@ -102,13 +102,13 @@
                   color="warn">
           close
         </mat-icon>
-        <div [mat-sort-header]="column.field" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
+        <div [mat-sort-header]="column.field" [disabled]="!!column.extraField" [arrowPosition]="column.fxLayoutAlign === 'end center' ? 'before' : 'after'">{{column.title}}</div>
         <mat-menu #columnFilterMenu="matMenu" classList="mat-app-background">
           <div fxLayout="column" class="column-filter-viewport" (keydown.tab)="$event.stopPropagation()" (click)="$event.stopPropagation()" [ngSwitch]="column.dataType">
-            <mat-form-field color="accent" [style.display]="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes ? 'initial' : 'none'">
+            <mat-form-field color="accent" [style.display]="column.dataType === columnDataTypes.Text || column.dataType === columnDataTypes.Changes ? 'initial' : 'none'">
               <input autocomplete="off"
                      matInput
-                     [type]="column.dataType === columnDataTypes.currency || column.dataType === columnDataTypes.number ? 'number' : 'text'"
+                     [type]="column.dataType === columnDataTypes.Currency || column.dataType === columnDataTypes.Number ? 'number' : 'text'"
                      #colFilterInput="matInput"
                      [disabled]="columnFilter$.value[column.field].noValue"
                      (keyup)="columnFilterChange(column, colFilterInput.value)"
@@ -118,7 +118,7 @@
                 <mat-icon color="warn">close</mat-icon>
               </button>
             </mat-form-field>
-            <mat-divider *ngIf="column.dataType === columnDataTypes.text || column.dataType === columnDataTypes.changes"></mat-divider>
+            <mat-divider *ngIf="column.dataType === columnDataTypes.Text || column.dataType === columnDataTypes.Changes"></mat-divider>
             <div class="filter-blank" fxLayout="row" fxLayoutGap="10px">
               <mat-checkbox [checked]="columnFilter$.value[column.field].noValue"
                             #noValueCheckbox
@@ -127,32 +127,32 @@
               <b>{{noValuePlaceholder}}</b>
             </div>
             <mat-divider style="margin-bottom: 16px"></mat-divider>
-            <vs-table-date-filter *ngSwitchCase="columnDataTypes.date"
+            <vs-table-date-filter *ngSwitchCase="columnDataTypes.Date"
                                   [columnFilter$]="columnFilter$"
                                   [field]="column.field"
                                   [disabled]="noValueCheckbox.checked"></vs-table-date-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.currency"
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.Currency"
                                     [columnFilter$]="columnFilter$"
                                     [field]="column.field"
                                     [disabled]="noValueCheckbox.checked"></vs-table-number-filter>
-            <vs-table-number-filter *ngSwitchCase="columnDataTypes.number"
+            <vs-table-number-filter *ngSwitchCase="columnDataTypes.Number"
                                     [columnFilter$]="columnFilter$"
                                     [field]="column.field"
                                     [disabled]="noValueCheckbox.checked"></vs-table-number-filter>
-            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.icon"
+            <vs-table-icon-filter *ngSwitchCase="columnDataTypes.Icon"
                                   [data]="data"
                                   [filteredData]="filteredData"
                                   [column]="column"
                                   [columnFilter$]="columnFilter$"
                                   [disabled]="noValueCheckbox.checked"></vs-table-icon-filter>
-            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.changes"
+            <vs-table-changes-filter *ngSwitchCase="columnDataTypes.Changes"
                                      [data]="data"
                                      [filteredData]="filteredData"
                                      [column]="column"
                                      [menuOpen]="trigger.menuOpen"
                                      [columnFilter$]="columnFilter$"
                                      [disabled]="noValueCheckbox.checked"></vs-table-changes-filter>
-            <vs-table-default-filter *ngSwitchCase="columnDataTypes.calc"
+            <vs-table-default-filter *ngSwitchCase="columnDataTypes.Calculate"
                                      [data]="data"
                                      [filteredData]="filteredData"
                                      [column]="column"
@@ -261,12 +261,12 @@
                    class="stretch-badge"
                    [matBadgeColor]="column.badge ? column.badge.color : undefined"
                    [matTooltip]="column.tooltip ? column.tooltip(row) : ''">
-                <div *ngSwitchCase="columnDataTypes.date">{{row[column.field] | date:column.format}}</div>
-                <div *ngSwitchCase="columnDataTypes.currency">{{(column.negateValue ? -row[column.field] : row[column.field]) | currency:'USD':'$' | accounting}}</div>
-                <div *ngSwitchCase="columnDataTypes.number">{{(column.negateValue ? -row[column.field] : row[column.field]) | number:column.format}}</div>
-                <div *ngSwitchCase="columnDataTypes.calc">{{row[calcColumnPrefix + column.field]}}</div>
-                <div *ngSwitchCase="columnDataTypes.icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
-                <div *ngSwitchCase="columnDataTypes.changes">
+                <div *ngSwitchCase="columnDataTypes.Date">{{row[column.field] | date:column.format}}</div>
+                <vs-table-currency-cell *ngSwitchCase="columnDataTypes.Currency" [row]="row" [column]="column"></vs-table-currency-cell>
+                <div *ngSwitchCase="columnDataTypes.Number">{{(column.negateValue ? -row[column.field] : row[column.field]) | number:column.format}}</div>
+                <div *ngSwitchCase="columnDataTypes.Calculate">{{row[calcColumnPrefix + column.field]}}</div>
+                <div *ngSwitchCase="columnDataTypes.Icon"><mat-icon>{{row[calcColumnPrefix + column.field]}}</mat-icon></div>
+                <div *ngSwitchCase="columnDataTypes.Changes">
                   <div *ngFor="let item of row[column.field]; let last = last;" fxLayout="column">
                     <b>{{item.field}}:</b>
                     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
@@ -343,8 +343,8 @@
     <td *ngIf="!visibleColumns.length" fxFlex></td>
     <td *ngFor="let column of visibleColumns" [fxFlex]="column.fxFlex" [fxLayoutAlign]="column.fxLayoutAlign" [style.minWidth.px]="columnWidth">
       <div *ngIf="column.sum" [ngSwitch]="column.dataType">
-        <div *ngSwitchCase="columnDataTypes.currency">{{(column.negateValue ? -columnSummaries[column.field] : columnSummaries[column.field]) | currency:'USD':'$' | accounting}}</div>
-        <div *ngSwitchCase="columnDataTypes.number">{{(column.negateValue ? -columnSummaries[column.field] : columnSummaries[column.field]) | number:column.format}}</div>
+        <vs-table-currency-cell *ngSwitchCase="columnDataTypes.Currency" [row]="columnSummaries" [column]="column"></vs-table-currency-cell>
+        <div *ngSwitchCase="columnDataTypes.Number">{{(column.negateValue ? -columnSummaries[column.field] : columnSummaries[column.field]) | number:column.format}}</div>
         <div *ngSwitchDefault>-</div>
       </div>
     </td>

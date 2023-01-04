@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1px">
+  <div>
+    {{(column.negateValue ? -row[column.field] : row[column.field]) | currency:'USD':'$' | accounting}}
+  </div>
+  <div *ngIf="column.extraField" style="width: 100%; border-top: 1px solid;"></div>
+  <div *ngIf="column.extraField">
+    {{row[column.extraField] | currency:'USD':'$' | accounting}}
+  </div>
+</div>

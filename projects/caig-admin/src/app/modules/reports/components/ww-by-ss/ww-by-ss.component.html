@@ -1,0 +1,35 @@
+<div fxFlexFill fxLayout="column" fxLayoutGap="12px">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+    <mat-card fxFlex>
+      <mat-card-header>
+        <mat-card-title>Filters</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="filter-container">
+          <dynamic-form [form]="form" [fields]="fields"></dynamic-form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card fxFlex="25">
+      <mat-card-header>
+        <mat-card-title>Table Rows</mat-card-title>
+      </mat-card-header>
+      <mat-card-content fxLayoutAlign="center center">
+        <mat-button-toggle-group [value]="rowView$.value" (change)="rowView$.next($event.value)">
+          <mat-button-toggle value="settlement">Settlement</mat-button-toggle>
+          <mat-button-toggle value="state">State</mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex>
+    <vs-table
+      *ngIf="columns$ | async as columns"
+      id="state-and-settlement-{{rowView$.value}}"
+      [disableSelection]="true"
+      [columns]="columns"
+      [data]="data$ | async"
+      [disableRowClick]="true">
+    </vs-table>
+  </div>
+</div>

@@ -31,6 +31,7 @@ import {ExportDataComponent} from './components/export-data/export-data.componen
 import {MatDialogModule} from '@angular/material/dialog';
 import {FilterTogglesComponent} from './components/column-filter/filter-toggles/filter-toggles.component';
 import {PipesModule} from 'pipes';
+import {CurrencyCellComponent} from './components/currency-cell/currency-cell.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {PipesModule} from 'pipes';
     ChangesFilterComponent,
     ExportDataComponent,
     FilterTogglesComponent,
+    CurrencyCellComponent,
   ],
   imports: [
     CommonModule,

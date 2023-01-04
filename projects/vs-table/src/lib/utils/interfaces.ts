@@ -76,6 +76,7 @@ export interface TableColumn<T> {
   format?: string;
   fxFlex?: number;
   negateValue?: boolean;
+  extraField?: Extract<keyof T, string>;
 }
 
 export interface ICalculateColumn<T> extends TableColumn<T> {

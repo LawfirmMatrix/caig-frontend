@@ -1,0 +1,16 @@
+.filter-container {
+  width: 180px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+}
+
+mat-button-toggle {
+  width: 90px;
+}
+
+mat-card {
+  height: 125px;
+  min-width: 200px;
+}
