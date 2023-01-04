@@ -25,7 +25,7 @@
   <div fxFlex>
     <vs-table
       *ngIf="columns$ | async as columns"
-      id="tax-info"
+      id="state-and-settlement-{{rowView$.value}}"
       [disableSelection]="true"
       [columns]="columns"
       [data]="data$ | async"
