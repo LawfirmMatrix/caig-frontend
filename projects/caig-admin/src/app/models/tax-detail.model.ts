@@ -36,3 +36,15 @@ export interface TaxDetail {
   ssn?: string;
   payrollDate?: string;
 }
+
+export interface StateTaxDetail {
+  settlementId: number;
+  settlementCode: string;
+  states: StateWithDetail[];
+}
+
+export interface StateWithDetail {
+  state: string;
+  totalBp: number;
+  stateTaxes: number;
+}

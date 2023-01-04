@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, catchError, of} from 'rxjs';
-import {TaxDetail} from '../../../models/tax-detail.model';
+import {TaxDetail, StateTaxDetail} from '../../../models/tax-detail.model';
 import {omitBy} from 'lodash-es';
 import {Router} from '@angular/router';
 
@@ -16,6 +16,10 @@ export class ReportDataService {
   public paymentDetail(fromDate?: string, toDate?: string, allSettlements?: boolean, taxState?: string, includeSsn?: boolean): Observable<TaxDetail[]> {
     const params = sanitizeParams(fromDate, toDate, allSettlements, taxState, includeSsn);
     return this.decryptionErrorHandler(this.http.get<TaxDetail[]>(`${ReportDataService.baseUrl}/paymentdetail`, { params }), includeSsn);
+  }
+  public stateTaxDetail(fromDate?: string, toDate?: string): Observable<StateTaxDetail[]> {
+    const params = sanitizeParams(fromDate, toDate);
+    return this.http.get<StateTaxDetail[]>(`${ReportDataService.baseUrl}/statetaxdetail`, { params });
   }
   private decryptionErrorHandler(request$: Observable<any>, includeSsn: boolean | undefined): Observable<any> {
     return request$.pipe(

@@ -6,7 +6,6 @@ import {UntypedFormGroup} from '@angular/forms';
 import {FieldBase, DateRangeField, CheckboxField} from 'dynamic-form';
 import {isEqual} from 'lodash-es';
 import {coerceBooleanProperty} from "@angular/cdk/coercion";
-import {TaxDetail} from '../../../models/tax-detail.model';
 
 export abstract class TaxDetailComponent {
   public form = new UntypedFormGroup({});
@@ -42,7 +41,7 @@ export abstract class TaxDetailComponent {
       distinctUntilChanged(isEqual),
       shareReplay(),
     );
-  public data$: Observable<TaxDetail[] | null> = this.model$
+  public data$: Observable<any[] | null> = this.model$
     .pipe(
       switchMap((model) =>
         this.dataService.taxDetail(model.dates.start, model.dates.end, model.allSettlements, model.state, model.includeSsn)

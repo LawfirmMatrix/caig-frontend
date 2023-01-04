@@ -16,6 +16,7 @@ import {TaxDetailComponent} from '../tax-detail.component';
 import {groupBy, sumBy} from 'lodash-es';
 import * as moment from 'moment';
 import {TreeData, TreeNode} from 'vs-tree-viewer';
+import {statesMap} from '../../../../core/util/consts';
 
 @Component({
   selector: 'app-state-tax',
@@ -114,7 +115,7 @@ export class StateTaxComponent extends TaxDetailComponent {
         for (let year in quarteredYears) {
           monthedYears[year] = { };
           for (let quarter in quarteredYears[year]) {
-            monthedYears[year][quarter] = groupBy(quarteredYears[year][quarter], (row) => moment(row.payrollDate).month());
+            monthedYears[year][quarter] = groupBy(quarteredYears[year][quarter], (row) => moment(row.payrollDate).month() + 1);
           }
         }
 
@@ -259,71 +260,6 @@ export class StateTaxComponent extends TaxDetailComponent {
     this.router.navigate([], {queryParams: {tabIndex}, queryParamsHandling: 'merge', replaceUrl: true});
   }
 }
-
-const statesMap: {[key: string]: string} = {
-  AA: 'U.S. Armed Forces - Americas',
-  AE: 'U.S. Armed Forces - Europe',
-  AK: 'Alaska',
-  AL: 'Alabama',
-  AP: 'U.S. Armed Forces - Pacific',
-  AR: 'Arkansas',
-  AS: 'American Samoa',
-  AZ: 'Arizona',
-  CA: 'California',
-  CO: 'Colorado',
-  CT: 'Connecticut',
-  DC: 'District of Columbia',
-  DE: 'Delaware',
-  FL: 'Florida',
-  FM: 'Federated States of Micronesia',
-  GA: 'Georgia',
-  GU: 'Guam',
-  HI: 'Hawaii',
-  IA: 'Iowa',
-  ID: 'Idaho',
-  IL: 'Illinois',
-  IN: 'Indiana',
-  KS: 'Kansas',
-  KY: 'Kentucky',
-  LA: 'Louisiana',
-  MA: 'Massachusetts',
-  MD: 'Maryland',
-  ME: 'Maine',
-  MH: 'Marshall Islands',
-  MI: 'Michigan',
-  MN: 'Minnesota',
-  MO: 'Missouri',
-  MP: 'Northern Mariana Islands',
-  MS: 'Mississippi',
-  MT: 'Montana',
-  NC: 'North Carolina',
-  ND: 'North Dakota',
-  NE: 'Nebraska',
-  NH: 'New Hampshire',
-  NJ: 'New Jersey',
-  NM: 'New Mexico',
-  NV: 'Nevada',
-  NY: 'New York',
-  OH: 'Ohio',
-  OK: 'Oklahoma',
-  OR: 'Oregon',
-  PA: 'Pennsylvania',
-  PR: 'Puerto Rico',
-  PW: 'Palau',
-  RI: 'Rhode Island',
-  SC: 'South Carolina',
-  SD: 'South Dakota',
-  TN: 'Tennessee',
-  TX: 'Texas',
-  UT: 'Utah',
-  VA: 'Virginia',
-  VI: 'Virgin Islands',
-  VT: 'Vermont',
-  WA: 'Washington',
-  WI: 'Wisconsin',
-  WV: 'West Virginia',
-  WY: 'Wyoming',
-};
 
 export interface TaxDetailNode extends TreeNode<TaxDetailNode> {
 

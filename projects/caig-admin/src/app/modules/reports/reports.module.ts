@@ -14,6 +14,12 @@ import {TaxInfoComponent} from './components/tax-info/tax-info.component';
 import {VsTreeViewerModule} from 'vs-tree-viewer';
 import {PaymentsByEmployeeComponent} from './components/payments-by-employee/payments-by-employee.component';
 import {PaymentsByDateComponent} from './components/payments-by-date/payments-by-date.component';
+import {
+  GrossWagesByStateAndSettlementComponent
+} from './components/state-and-settlement/gross-wages-by-state-and-settlement.component';
+import {
+  WithholdingsByStateAndSettlementComponent
+} from './components/state-and-settlement/withholdings-by-state-and-settlement.component';
 
 @NgModule({
   imports: [
@@ -36,6 +42,8 @@ import {PaymentsByDateComponent} from './components/payments-by-date/payments-by
     TaxInfoComponent,
     PaymentsByEmployeeComponent,
     PaymentsByDateComponent,
+    GrossWagesByStateAndSettlementComponent,
+    WithholdingsByStateAndSettlementComponent,
   ],
 })
 export class ReportsModule { }

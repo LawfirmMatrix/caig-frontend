@@ -8,6 +8,12 @@ import {StateTaxComponent} from './components/state-tax/state-tax.component';
 import {PaymentsByEmployeeComponent} from './components/payments-by-employee/payments-by-employee.component';
 import {TaxInfoComponent} from './components/tax-info/tax-info.component';
 import {PaymentsByDateComponent} from './components/payments-by-date/payments-by-date.component';
+import {
+  GrossWagesByStateAndSettlementComponent
+} from './components/state-and-settlement/gross-wages-by-state-and-settlement.component';
+import {
+  WithholdingsByStateAndSettlementComponent
+} from './components/state-and-settlement/withholdings-by-state-and-settlement.component';
 
 export const reportsList: Routes = [
   {
@@ -16,9 +22,12 @@ export const reportsList: Routes = [
     data: { hasSsn: true },
   },
   {
-    path: 'gross-wages-and-withholdings-by-state-and-settlement',
-    component: NoContentComponent,
-    data: { disabled: true },
+    path: 'gross-wages-by-state-and-settlement',
+    component: GrossWagesByStateAndSettlementComponent,
+  },
+  {
+    path: 'withholdings-by-state-and-settlement',
+    component: WithholdingsByStateAndSettlementComponent,
   },
   {
     path: 'withholdings-by-date-and-settlement',
