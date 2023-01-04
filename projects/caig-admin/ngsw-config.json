@@ -38,6 +38,8 @@
           "New report - State Tax Report",
           "New report - Payments by Date",
           "New report - Payments by Employee",
+          "New report - Gross Wages by State and Settlement",
+          "New report - Withholdings by State and Settlement",
           "Reports that contain encrypted employee social security numbers can now be decrypted by appropriate users."
         ],
         "Employees": [
