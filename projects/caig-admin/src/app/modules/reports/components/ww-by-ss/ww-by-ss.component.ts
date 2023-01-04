@@ -90,7 +90,7 @@ export class WwBySsComponent extends TaxDetailComponent {
               title: settlementCode,
               field: settlementCode + WwBySsComponent.GROSS_WAGES,
               sum: true,
-              extraField: WwBySsComponent.WITHHOLDINGS,
+              extraField: settlementCode + WwBySsComponent.WITHHOLDINGS,
             })));
             return cols;
           default:
