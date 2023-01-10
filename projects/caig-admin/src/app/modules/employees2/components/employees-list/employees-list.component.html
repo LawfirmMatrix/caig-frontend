@@ -1,0 +1,31 @@
+<div fxFlexFill fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <h1>Employees</h1>
+    <div fxFlex style="overflow: auto">
+      <app-toolbar-buttons align="end center" [buttons]="toolbarButtons"></app-toolbar-buttons>
+    </div>
+  </div>
+  <div fxFlexOffset="12px" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <div class="view-mode label">View Modes</div>
+    <mat-button-toggle-group fxFlex name="viewMode" aria-label="View Mode" [value]="viewMode" (change)="viewModeChange($event.value)">
+      <mat-button-toggle fxFlex *ngFor="let mode of viewModes | keyvalue:viewModeCompare" [value]="mode.value">{{mode.key}}</mat-button-toggle>
+    </mat-button-toggle-group>
+    <div fxLayoutAlign="end center">
+      <div class="filters label">Filters</div>
+      <button mat-fab (click)="openFilters()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+    </div>
+  </div>
+  <vs-table fxFlex
+            fxFlexOffset="10px"
+            [data]="employees$ | async"
+            [columns]="tableColumns"
+            [rowMenuItems]="rowMenuItems"
+            [tableMenuItems]="tableMenuItems"
+            [textPainter]="settlementIdPainter"
+            [rowTooltip]="rowTooltip"
+            (rowClick)="viewEmployee($event.row)"
+            id="employees-list">
+  </vs-table>
+</div>

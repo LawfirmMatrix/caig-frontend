@@ -39,7 +39,7 @@ const routes: Routes = [
           },
           {
             path: 'employees',
-            loadChildren: () => import('./modules/employees/employees.module').then(m => m.EmployeesModule),
+            loadChildren: () => import('./modules/employees2/employees.module').then(m => m.EmployeesModule),
             data: { animation: 'employees' },
             canActivate: [ CaigSurveyPortalGuard ],
           },
